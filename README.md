@@ -1,6 +1,6 @@
 # Collaboration networks in Open-source software development
 
-# Installation and usage
+## Installation and usage
 
-# Citation
+## Citation
 When using this library, please consider citing the following paper:
