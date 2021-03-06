@@ -9,19 +9,19 @@ git_repo_url = 'https://github.com/gotec/git2net.git'
 local_directory = '.'
 git_repo_dir = '../git2net'
 
-# if os.path.exists(git_repo_dir):
-#     shutil.rmtree(git_repo_dir)
+if os.path.exists(git_repo_dir):
+    shutil.rmtree(git_repo_dir)
 
-#repo = git2.clone_repository(git_repo_url, git_repo_dir) # Clones a non-bare repository
+repo = git2.clone_repository(git_repo_url, git_repo_dir) # Clones a non-bare repository
 
 sqlite_db_file = 'git2net.db'
 
-# Remove database if exists
+# # Remove database if exists
 if os.path.exists(sqlite_db_file):
     os.remove(sqlite_db_file)
 
 max_modifications = 1
-#max_modifications = 5
+# #max_modifications = 5
     
 git2net.mine_git_repo(git_repo_dir, sqlite_db_file, max_modifications=max_modifications)
 
