@@ -1,6 +1,10 @@
 ## build folder
 
 latex/build
+notebooks/repos
+notebooks/repos/*
+notebooks/databases
+notebooks/databases/*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
