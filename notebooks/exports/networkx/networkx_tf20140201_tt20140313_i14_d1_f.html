@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html><body>
 <style>
-    text.active_zPYEOPlV {
+    text.active_WaEppmPr {
         text-anchor: middle;
         font-size: 8px;
         font-family: Arial, Helvetica, sans-serif;
         fill: #000000;
         opacity: 1.0;
     }
-    text.hidden_zPYEOPlV {
+    text.hidden_WaEppmPr {
         opacity: 0;
     }
-    line.tlinks_zPYEOPlV {
+    line.tlinks_WaEppmPr {
         stroke: #cccccc;
         stroke-opacity: 0.4;
         stroke-width: 2;
     }
-    line.active_zPYEOPlV {
+    line.active_WaEppmPr {
         stroke: #ff0000;
         stroke-opacity: 1.0;
         stroke-width: 4;
     }
-    line.hidden_zPYEOPlV {
+    line.hidden_WaEppmPr {
         stroke: rgb(255, 255, 255);
         stroke-opacity: 0;
         stroke-width: 0px;
     }
-    circle.active_zPYEOPlV {
+    circle.active_WaEppmPr {
         stroke: #222;
         fill: #ff0000;
         fill-opacity: 1;
         stroke-width: 2px;
     }
-    circle.tnodes_zPYEOPlV {
+    circle.tnodes_WaEppmPr {
         fill: #cccccc;
         stroke: #222;
         fill-opacity: 1;
@@ -40,13 +40,13 @@
     }
 </style>
 
-<svg width="400" height="400" id="zPYEOPlV">
+<svg width="400" height="400" id="WaEppmPr">
     <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
-        id='zPYEOPlV_time_txt'>t</text>
+        id='WaEppmPr_time_txt'>t</text>
     <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
-        id='zPYEOPlV_start_txt'>stop</text>
+        id='WaEppmPr_start_txt'>stop</text>
     <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
-        id='zPYEOPlV_restart_txt'>restart</text>
+        id='WaEppmPr_restart_txt'>restart</text>
 </svg>
 
 <script charset="utf-8" src="https://d3js.org/d3.v4.min.js"></script>
@@ -98,13 +98,13 @@ require(["d3"], function(d3) {
         });
     };
 
-    var svg = d3.select("#zPYEOPlV"),
+    var svg = d3.select("#WaEppmPr"),
         width = +svg.attr("width"),
         height = +svg.attr("height"),
         radius = 5.0,
         color = d3.scaleOrdinal(d3.schemeCategory20b);
 
-    var temporal_net = {"nodes": [{"id": "n_1", "group": 1}, {"id": "n_9", "group": 1}], "links": [{"source": "n_1", "target": "n_9", "width": 1, "time": 18}, {"source": "n_9", "target": "n_1", "width": 1, "time": 18}, {"source": "n_1", "target": "n_9", "width": 1, "time": 19}, {"source": "n_9", "target": "n_1", "width": 1, "time": 19}, {"source": "n_1", "target": "n_9", "width": 1, "time": 20}, {"source": "n_9", "target": "n_1", "width": 1, "time": 20}, {"source": "n_1", "target": "n_9", "width": 1, "time": 21}, {"source": "n_9", "target": "n_1", "width": 1, "time": 21}, {"source": "n_1", "target": "n_9", "width": 1, "time": 22}, {"source": "n_9", "target": "n_1", "width": 1, "time": 22}, {"source": "n_1", "target": "n_9", "width": 1, "time": 23}, {"source": "n_9", "target": "n_1", "width": 1, "time": 23}, {"source": "n_1", "target": "n_9", "width": 1, "time": 24}, {"source": "n_9", "target": "n_1", "width": 1, "time": 24}, {"source": "n_1", "target": "n_9", "width": 1, "time": 25}, {"source": "n_9", "target": "n_1", "width": 1, "time": 25}, {"source": "n_1", "target": "n_9", "width": 1, "time": 26}, {"source": "n_9", "target": "n_1", "width": 1, "time": 26}, {"source": "n_1", "target": "n_9", "width": 1, "time": 27}, {"source": "n_9", "target": "n_1", "width": 1, "time": 27}, {"source": "n_1", "target": "n_9", "width": 1, "time": 28}, {"source": "n_9", "target": "n_1", "width": 1, "time": 28}, {"source": "n_1", "target": "n_9", "width": 1, "time": 29}, {"source": "n_9", "target": "n_1", "width": 1, "time": 29}]};
+    var temporal_net = {"nodes": [{"id": "n_18", "group": 1}, {"id": "n_54", "group": 1}, {"id": "n_57", "group": 1}, {"id": "n_59", "group": 1}, {"id": "n_61", "group": 1}], "links": [{"source": "n_18", "target": "n_54", "width": 1, "time": 7}, {"source": "n_54", "target": "n_18", "width": 1, "time": 7}, {"source": "n_18", "target": "n_54", "width": 1, "time": 8}, {"source": "n_54", "target": "n_18", "width": 1, "time": 8}, {"source": "n_18", "target": "n_54", "width": 1, "time": 9}, {"source": "n_54", "target": "n_18", "width": 1, "time": 9}, {"source": "n_18", "target": "n_54", "width": 1, "time": 10}, {"source": "n_54", "target": "n_18", "width": 1, "time": 10}, {"source": "n_18", "target": "n_54", "width": 1, "time": 11}, {"source": "n_54", "target": "n_18", "width": 1, "time": 11}, {"source": "n_18", "target": "n_54", "width": 1, "time": 12}, {"source": "n_54", "target": "n_18", "width": 1, "time": 12}, {"source": "n_18", "target": "n_54", "width": 1, "time": 13}, {"source": "n_54", "target": "n_18", "width": 1, "time": 13}, {"source": "n_18", "target": "n_54", "width": 1, "time": 14}, {"source": "n_54", "target": "n_18", "width": 1, "time": 14}, {"source": "n_18", "target": "n_54", "width": 1, "time": 15}, {"source": "n_54", "target": "n_18", "width": 1, "time": 15}, {"source": "n_54", "target": "n_18", "width": 1, "time": 16}, {"source": "n_18", "target": "n_54", "width": 1, "time": 16}, {"source": "n_54", "target": "n_18", "width": 1, "time": 17}, {"source": "n_18", "target": "n_54", "width": 1, "time": 17}, {"source": "n_54", "target": "n_18", "width": 1, "time": 18}, {"source": "n_18", "target": "n_54", "width": 1, "time": 18}, {"source": "n_57", "target": "n_59", "width": 1, "time": 18}, {"source": "n_59", "target": "n_57", "width": 1, "time": 18}, {"source": "n_54", "target": "n_18", "width": 1, "time": 19}, {"source": "n_18", "target": "n_54", "width": 1, "time": 19}, {"source": "n_57", "target": "n_59", "width": 1, "time": 19}, {"source": "n_59", "target": "n_57", "width": 1, "time": 19}, {"source": "n_57", "target": "n_59", "width": 1, "time": 20}, {"source": "n_59", "target": "n_57", "width": 1, "time": 20}, {"source": "n_57", "target": "n_59", "width": 1, "time": 21}, {"source": "n_59", "target": "n_57", "width": 1, "time": 21}, {"source": "n_57", "target": "n_59", "width": 1, "time": 22}, {"source": "n_59", "target": "n_57", "width": 1, "time": 22}, {"source": "n_57", "target": "n_59", "width": 1, "time": 23}, {"source": "n_59", "target": "n_57", "width": 1, "time": 23}, {"source": "n_57", "target": "n_59", "width": 1, "time": 24}, {"source": "n_59", "target": "n_57", "width": 1, "time": 24}, {"source": "n_57", "target": "n_59", "width": 1, "time": 25}, {"source": "n_57", "target": "n_61", "width": 1, "time": 25}, {"source": "n_59", "target": "n_57", "width": 1, "time": 25}, {"source": "n_59", "target": "n_61", "width": 1, "time": 25}, {"source": "n_61", "target": "n_57", "width": 1, "time": 25}, {"source": "n_61", "target": "n_59", "width": 1, "time": 25}]};
     var tsperframe = 1;
     var msperframe = 700;
     var look_ahead = 0;
@@ -154,13 +154,13 @@ require(["d3"], function(d3) {
         .attr("class", "everything");
 
     var link = g.append("g")
-        .attr("class", "tlinks_zPYEOPlV")
+        .attr("class", "tlinks_WaEppmPr")
         .selectAll("line")
         .data(links, function(d){return d.id;})
         .enter().append("line")
         .attr("id", function(d) { return d.id; });
 
-    var node_g = g.append("g").attr("class", "tnodes_zPYEOPlV")
+    var node_g = g.append("g").attr("class", "tnodes_WaEppmPr")
         .selectAll("circle")
         .data(temporal_net.nodes, function(d){return d.id;})
         .enter()
@@ -170,7 +170,7 @@ require(["d3"], function(d3) {
             .attr('id', function(d) { return d.id; })
             .attr("r", radius)
             // .attr("fill", function(d) { return color(d.group); })
-            .attr("class", "tnodes_zPYEOPlV")
+            .attr("class", "tnodes_WaEppmPr")
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
@@ -180,7 +180,7 @@ require(["d3"], function(d3) {
     .attr("x", [0, 5][0])
     .attr("y", [0, 5][1])
     .attr("id", function(d) {return d.id; })
-    .attr("class", "active_zPYEOPlV")
+    .attr("class", "active_WaEppmPr")
     .text(function(d) { return d.id; });
 
     node.append("title").text(function(d) { return d.id; });
@@ -191,21 +191,21 @@ require(["d3"], function(d3) {
 
     // build mapping to DOM objects once
     // for performance reasons
-    var time_txt = d3.select('#zPYEOPlV_time_txt');
+    var time_txt = d3.select('#WaEppmPr_time_txt');
     var edges_to_dom = {};
     var nodes_to_dom = {};
 
     links.forEach(function(link){
-        edges_to_dom[link.id] = d3.select('#zPYEOPlV #'+link.id);
+        edges_to_dom[link.id] = d3.select('#WaEppmPr #'+link.id);
     });
 
     temporal_net.nodes.forEach(function(n){
-        nodes_to_dom[n.id] = d3.select('#zPYEOPlV #'+n.id);
+        nodes_to_dom[n.id] = d3.select('#WaEppmPr #'+n.id);
     });
 
     // attach event handlers
-    d3.select('#zPYEOPlV_start_txt').on("click", pauseAnimation);
-    d3.select('#zPYEOPlV_restart_txt').on("click", restartAnimation);
+    d3.select('#WaEppmPr_start_txt').on("click", pauseAnimation);
+    d3.select('#WaEppmPr_restart_txt').on("click", restartAnimation);
 
     simulation.nodes(temporal_net.nodes).on("tick", ticked);
     // simulation.force("link").links(links);
@@ -232,7 +232,7 @@ require(["d3"], function(d3) {
             try {
                 // edges_to_dom[l.id].attr('class', 'links');
                 links_by_id[id].strength = hidden_link_strength;
-                edges_to_dom[id].attr('class', 'hidden_zPYEOPlV');
+                edges_to_dom[id].attr('class', 'hidden_WaEppmPr');
             }
             catch(err){
                 console.log('Error: Could not find DOM object with id ' + id);
@@ -241,7 +241,7 @@ require(["d3"], function(d3) {
         // reset all nodes to inactive
         for (id in nodes_to_dom) {
             try{
-                nodes_to_dom[id].attr("class", "tnodes_zPYEOPlV");
+                nodes_to_dom[id].attr("class", "tnodes_WaEppmPr");
             }
             catch(err){
                 console.log('Error: Could not find DOM object with id ' + id);
@@ -258,19 +258,19 @@ require(["d3"], function(d3) {
                     if (ti >= time-tsperframe+1 && ti <= time) {
                         node_ids = id.split('-');
                         try {
-                            edges_to_dom[id].attr('class', 'active_zPYEOPlV').moveToFront();
+                            edges_to_dom[id].attr('class', 'active_WaEppmPr').moveToFront();
                         }
                         catch(err){
                             console.log('Error: Could not find DOM link with id ' + id);
                         }
                         try {
-                            nodes_to_dom[node_ids[0]].attr('class', 'active_zPYEOPlV').moveToFront();
+                            nodes_to_dom[node_ids[0]].attr('class', 'active_WaEppmPr').moveToFront();
                         }
                         catch(err){
                             console.log('Error: Could not find DOM node with id ' + node_ids[0]);
                         }
                         try {
-                            nodes_to_dom[node_ids[1]].attr('class', 'active_zPYEOPlV').moveToFront();
+                            nodes_to_dom[node_ids[1]].attr('class', 'active_WaEppmPr').moveToFront();
                         }
                         catch(err){
                             console.log('Error: Could not find DOM node with id ' + node_ids[1]);
@@ -278,7 +278,7 @@ require(["d3"], function(d3) {
                     }
                     // links in current time slice that are not active
                     else{
-                        edges_to_dom[id].attr('class', 'tlinks_zPYEOPlV');
+                        edges_to_dom[id].attr('class', 'tlinks_WaEppmPr');
                     }
                 });
             }
@@ -296,13 +296,13 @@ require(["d3"], function(d3) {
         if (run_status) {
             run_status = false;
             clearInterval(intervl);
-            d3.select('#zPYEOPlV_start_txt').html('start');
+            d3.select('#WaEppmPr_start_txt').html('start');
             console.log('Paused animation.')
         }
         else {
             intervl = setInterval(time_step, msperframe);
             run_status = true;
-            d3.select('#zPYEOPlV_start_txt').html('stop');
+            d3.select('#WaEppmPr_start_txt').html('stop');
             console.log('Resumed animation.')
         }
 
@@ -317,7 +317,7 @@ require(["d3"], function(d3) {
             clearInterval(intervl);
         time = mintime;
         time_txt.html('t = ' + time);
-        d3.select('#zPYEOPlV_start_txt').html('stop');
+        d3.select('#WaEppmPr_start_txt').html('stop');
         run_status = true;
         intervl = setInterval(time_step, msperframe);
         console.log('Restarted animation.')
