@@ -6,6 +6,8 @@ notebooks/repos
 notebooks/repos/*
 notebooks/databases
 notebooks/databases/*
+notebooks/.ipynb_checkpoints/*
+notebooks/.ipynb_checkpoints/
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
