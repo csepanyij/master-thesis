@@ -1,5 +1,6 @@
 ## build folder
-
+.vscode/
+.vscode/*
 latex/build
 notebooks/repos
 notebooks/repos/*
