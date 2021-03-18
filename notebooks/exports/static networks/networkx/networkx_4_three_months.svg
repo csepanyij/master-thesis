@@ -1,3 +1,120 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" id="glOKdpmH">        
-    <text x="20" y="20" font-family="sans-serif" font-size="14px" fill="#666" style="cursor: pointer" id="glOKdpmH_svg_txt">[save svg]</text>
-<defs><marker id="end" viewBox="0 -5 20 20" refX="34" refY="0" markerWidth="15" markerHeight="15" orient="auto"><path d="M0,-5 L20,0 L0,5 z" fill="#999" stroke="none"/></marker></defs><g class="everything"><g class="links_glOKdpmH"><line stroke-width="0.5" stroke="#999999" x1="316.1268047473794" y1="274.1179867515611" x2="312.45763146061154" y2="228.7642643791176"/><line stroke-width="0.30000000000000004" stroke="#999999" x1="266.4035621022832" y1="367.69001503662986" x2="348.69390134722124" y2="401.6738535937158"/><line stroke-width="0.1" stroke="#999999" x1="266.4035621022832" y1="367.69001503662986" x2="232.33733425507336" y2="390.2795725957293"/><line stroke-width="0.25" stroke="#999999" x1="312.45763146061154" y1="228.7642643791176" x2="316.1268047473794" y2="274.1179867515611"/><line stroke-width="0.8666666666666667" stroke="#999999" x1="317.3964117104421" y1="258.89554879782276" x2="266.9042982316743" y2="228.7218679058841"/><line stroke-width="0.8" stroke="#999999" x1="317.3964117104421" y1="258.89554879782276" x2="258.0707683007738" y2="277.806490778901"/><line stroke-width="0.06666666666666667" stroke="#999999" x1="317.3964117104421" y1="258.89554879782276" x2="348.69390134722124" y2="401.6738535937158"/><line stroke-width="0.9999999999999999" stroke="#999999" x1="266.9042982316743" y1="228.7218679058841" x2="317.3964117104421" y2="258.89554879782276"/><line stroke-width="0.8333333333333333" stroke="#999999" x1="266.9042982316743" y1="228.7218679058841" x2="258.0707683007738" y2="277.806490778901"/><line stroke-width="1" stroke="#999999" x1="385.30627379415057" y1="383.845493849713" x2="348.69390134722124" y2="401.6738535937158"/><line stroke-width="1" stroke="#999999" x1="258.0707683007738" y1="277.806490778901" x2="317.3964117104421" y2="258.89554879782276"/><line stroke-width="1" stroke="#999999" x1="258.0707683007738" y1="277.806490778901" x2="266.9042982316743" y2="228.7218679058841"/><line stroke-width="0.08571428571428572" stroke="#999999" x1="348.69390134722124" y1="401.6738535937158" x2="266.4035621022832" y2="367.69001503662986"/><line stroke-width="0.02857142857142857" stroke="#999999" x1="348.69390134722124" y1="401.6738535937158" x2="317.3964117104421" y2="258.89554879782276"/><line stroke-width="0.08571428571428572" stroke="#999999" x1="348.69390134722124" y1="401.6738535937158" x2="385.30627379415057" y2="383.845493849713"/><line stroke-width="1" stroke="#999999" x1="232.33733425507336" y1="390.2795725957293" x2="266.4035621022832" y2="367.69001503662986"/></g><g class="nodes_glOKdpmH"><g><circle id="n_54" r="5" fill="#99ccff" cx="316.1268047473794" cy="274.1179867515611"><title>n_54</title></circle><text x="0" y="-7" id="n_54" class="label_glOKdpmH" transform="translate(316.1268047473794,274.1179867515611)" cx="316.1268047473794" cy="274.1179867515611">n_54</text></g><g><circle id="n_1" r="5" fill="#99ccff" cx="266.4035621022832" cy="367.69001503662986"><title>n_1</title></circle><text x="0" y="-7" id="n_1" class="label_glOKdpmH" transform="translate(266.4035621022832,367.69001503662986)" cx="266.4035621022832" cy="367.69001503662986">n_1</text></g><g><circle id="n_18" r="5" fill="#99ccff" cx="312.45763146061154" cy="228.7642643791176"><title>n_18</title></circle><text x="0" y="-7" id="n_18" class="label_glOKdpmH" transform="translate(312.45763146061154,228.7642643791176)" cx="312.45763146061154" cy="228.7642643791176">n_18</text></g><g><circle id="n_55" r="5" fill="#99ccff" cx="358.2243584841322" cy="353.651542145634"><title>n_55</title></circle><text x="0" y="-7" id="n_55" class="label_glOKdpmH" transform="translate(358.2243584841322,353.651542145634)" cx="358.2243584841322" cy="353.651542145634">n_55</text></g><g><circle id="n_56" r="5" fill="#99ccff" cx="189.12971234555627" cy="272.7460809502218"><title>n_56</title></circle><text x="0" y="-7" id="n_56" class="label_glOKdpmH" transform="translate(189.12971234555627,272.7460809502218)" cx="189.12971234555627" cy="272.7460809502218">n_56</text></g><g><circle id="n_57" r="5" fill="#99ccff" cx="317.3964117104421" cy="258.89554879782276"><title>n_57</title></circle><text x="0" y="-7" id="n_57" class="label_glOKdpmH" transform="translate(317.3964117104421,258.89554879782276)" cx="317.3964117104421" cy="258.89554879782276">n_57</text></g><g><circle id="n_58" r="5" fill="#99ccff" cx="278.93111505873964" cy="414.091055784591"><title>n_58</title></circle><text x="0" y="-7" id="n_58" class="label_glOKdpmH" transform="translate(278.93111505873964,414.091055784591)" cx="278.93111505873964" cy="414.091055784591">n_58</text></g><g><circle id="n_59" r="5" fill="#99ccff" cx="266.9042982316743" cy="228.7218679058841"><title>n_59</title></circle><text x="0" y="-7" id="n_59" class="label_glOKdpmH" transform="translate(266.9042982316743,228.7218679058841)" cx="266.9042982316743" cy="228.7218679058841">n_59</text></g><g><circle id="n_60" r="5" fill="#99ccff" cx="385.30627379415057" cy="383.845493849713"><title>n_60</title></circle><text x="0" y="-7" id="n_60" class="label_glOKdpmH" transform="translate(385.30627379415057,383.845493849713)" cx="385.30627379415057" cy="383.845493849713">n_60</text></g><g><circle id="n_61" r="5" fill="#99ccff" cx="258.0707683007738" cy="277.806490778901"><title>n_61</title></circle><text x="0" y="-7" id="n_61" class="label_glOKdpmH" transform="translate(258.0707683007738,277.806490778901)" cx="258.0707683007738" cy="277.806490778901">n_61</text></g><g><circle id="n_62" r="5" fill="#99ccff" cx="357.8174409128295" cy="166.13664197269955"><title>n_62</title></circle><text x="0" y="-7" id="n_62" class="label_glOKdpmH" transform="translate(357.8174409128295,166.13664197269955)" cx="357.8174409128295" cy="166.13664197269955">n_62</text></g><g><circle id="n_63" r="5" fill="#99ccff" cx="348.69390134722124" cy="401.6738535937158"><title>n_63</title></circle><text x="0" y="-7" id="n_63" class="label_glOKdpmH" transform="translate(348.69390134722124,401.6738535937158)" cx="348.69390134722124" cy="401.6738535937158">n_63</text></g><g><circle id="n_64" r="5" fill="#99ccff" cx="175.41176038758937" cy="214.3710459317253"><title>n_64</title></circle><text x="0" y="-7" id="n_64" class="label_glOKdpmH" transform="translate(175.41176038758937,214.3710459317253)" cx="175.41176038758937" cy="214.3710459317253">n_64</text></g><g><circle id="n_14" r="5" fill="#99ccff" cx="438.5739971921582" cy="267.87929104943595"><title>n_14</title></circle><text x="0" y="-7" id="n_14" class="label_glOKdpmH" transform="translate(438.5739971921582,267.87929104943595)" cx="438.5739971921582" cy="267.87929104943595">n_14</text></g><g><circle id="n_65" r="5" fill="#99ccff" cx="232.33733425507336" cy="390.2795725957293"><title>n_65</title></circle><text x="0" y="-7" id="n_65" class="label_glOKdpmH" transform="translate(232.33733425507336,390.2795725957293)" cx="232.33733425507336" cy="390.2795725957293">n_65</text></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" id="yIfMRjNx">
+    <text x="20" y="20" font-family="sans-serif" font-size="14px" fill="#666" style="cursor: pointer" id="yIfMRjNx_svg_txt">[save svg]</text>
+    <defs>
+        <marker id="end" viewBox="0 -5 20 20" refX="34" refY="0" markerWidth="15" markerHeight="15" orient="auto">
+            <path d="M0,-5 L20,0 L0,5 z" fill="#999" stroke="none" />
+        </marker>
+    </defs>
+    <g class="everything">
+        <g class="links_yIfMRjNx">
+            <line stroke-width="0.5" stroke="#999999" x1="316.1268047473794" y1="274.1179867515611" x2="312.45763146061154" y2="228.7642643791176" />
+            <line stroke-width="0.30000000000000004" stroke="#999999" x1="266.4035621022832" y1="367.69001503662986" x2="348.69390134722124" y2="401.6738535937158" />
+            <line stroke-width="0.1" stroke="#999999" x1="266.4035621022832" y1="367.69001503662986" x2="232.33733425507336" y2="390.2795725957293" />
+            <line stroke-width="0.25" stroke="#999999" x1="312.45763146061154" y1="228.7642643791176" x2="316.1268047473794" y2="274.1179867515611" />
+            <line stroke-width="0.8666666666666667" stroke="#999999" x1="317.3964117104421" y1="258.89554879782276" x2="266.9042982316743" y2="228.7218679058841" />
+            <line stroke-width="0.8" stroke="#999999" x1="317.3964117104421" y1="258.89554879782276" x2="258.0707683007738" y2="277.806490778901" />
+            <line stroke-width="0.06666666666666667" stroke="#999999" x1="317.3964117104421" y1="258.89554879782276" x2="348.69390134722124" y2="401.6738535937158" />
+            <line stroke-width="0.9999999999999999" stroke="#999999" x1="266.9042982316743" y1="228.7218679058841" x2="317.3964117104421" y2="258.89554879782276" />
+            <line stroke-width="0.8333333333333333" stroke="#999999" x1="266.9042982316743" y1="228.7218679058841" x2="258.0707683007738" y2="277.806490778901" />
+            <line stroke-width="1" stroke="#999999" x1="385.30627379415057" y1="383.845493849713" x2="348.69390134722124" y2="401.6738535937158" />
+            <line stroke-width="1" stroke="#999999" x1="258.0707683007738" y1="277.806490778901" x2="317.3964117104421" y2="258.89554879782276" />
+            <line stroke-width="1" stroke="#999999" x1="258.0707683007738" y1="277.806490778901" x2="266.9042982316743" y2="228.7218679058841" />
+            <line stroke-width="0.08571428571428572" stroke="#999999" x1="348.69390134722124" y1="401.6738535937158" x2="266.4035621022832" y2="367.69001503662986" />
+            <line stroke-width="0.02857142857142857" stroke="#999999" x1="348.69390134722124" y1="401.6738535937158" x2="317.3964117104421" y2="258.89554879782276" />
+            <line stroke-width="0.08571428571428572" stroke="#999999" x1="348.69390134722124" y1="401.6738535937158" x2="385.30627379415057" y2="383.845493849713" />
+            <line stroke-width="1" stroke="#999999" x1="232.33733425507336" y1="390.2795725957293" x2="266.4035621022832" y2="367.69001503662986" />
+        </g>
+        <g class="nodes_yIfMRjNx">
+            <g>
+                <circle id="n_54" r="5" fill="#99ccff" cx="316.1268047473794" cy="274.1179867515611">
+                    <title>n_54</title>
+                </circle>
+                <text x="0" y="-7" id="n_54" class="label_yIfMRjNx" transform="translate(316.1268047473794,274.1179867515611)" cx="316.1268047473794" cy="274.1179867515611">n_54</text>
+            </g>
+            <g>
+                <circle id="n_1" r="5" fill="#99ccff" cx="266.4035621022832" cy="367.69001503662986">
+                    <title>n_1</title>
+                </circle>
+                <text x="0" y="-7" id="n_1" class="label_yIfMRjNx" transform="translate(266.4035621022832,367.69001503662986)" cx="266.4035621022832" cy="367.69001503662986">n_1</text>
+            </g>
+            <g>
+                <circle id="n_18" r="5" fill="#99ccff" cx="312.45763146061154" cy="228.7642643791176">
+                    <title>n_18</title>
+                </circle>
+                <text x="0" y="-7" id="n_18" class="label_yIfMRjNx" transform="translate(312.45763146061154,228.7642643791176)" cx="312.45763146061154" cy="228.7642643791176">n_18</text>
+            </g>
+            <g>
+                <circle id="n_55" r="5" fill="#99ccff" cx="358.2243584841322" cy="353.651542145634">
+                    <title>n_55</title>
+                </circle>
+                <text x="0" y="-7" id="n_55" class="label_yIfMRjNx" transform="translate(358.2243584841322,353.651542145634)" cx="358.2243584841322" cy="353.651542145634">n_55</text>
+            </g>
+            <g>
+                <circle id="n_56" r="5" fill="#99ccff" cx="189.12971234555627" cy="272.7460809502218">
+                    <title>n_56</title>
+                </circle>
+                <text x="0" y="-7" id="n_56" class="label_yIfMRjNx" transform="translate(189.12971234555627,272.7460809502218)" cx="189.12971234555627" cy="272.7460809502218">n_56</text>
+            </g>
+            <g>
+                <circle id="n_57" r="5" fill="#99ccff" cx="317.3964117104421" cy="258.89554879782276">
+                    <title>n_57</title>
+                </circle>
+                <text x="0" y="-7" id="n_57" class="label_yIfMRjNx" transform="translate(317.3964117104421,258.89554879782276)" cx="317.3964117104421" cy="258.89554879782276">n_57</text>
+            </g>
+            <g>
+                <circle id="n_58" r="5" fill="#99ccff" cx="278.93111505873964" cy="414.091055784591">
+                    <title>n_58</title>
+                </circle>
+                <text x="0" y="-7" id="n_58" class="label_yIfMRjNx" transform="translate(278.93111505873964,414.091055784591)" cx="278.93111505873964" cy="414.091055784591">n_58</text>
+            </g>
+            <g>
+                <circle id="n_59" r="5" fill="#99ccff" cx="266.9042982316743" cy="228.7218679058841">
+                    <title>n_59</title>
+                </circle>
+                <text x="0" y="-7" id="n_59" class="label_yIfMRjNx" transform="translate(266.9042982316743,228.7218679058841)" cx="266.9042982316743" cy="228.7218679058841">n_59</text>
+            </g>
+            <g>
+                <circle id="n_60" r="5" fill="#99ccff" cx="385.30627379415057" cy="383.845493849713">
+                    <title>n_60</title>
+                </circle>
+                <text x="0" y="-7" id="n_60" class="label_yIfMRjNx" transform="translate(385.30627379415057,383.845493849713)" cx="385.30627379415057" cy="383.845493849713">n_60</text>
+            </g>
+            <g>
+                <circle id="n_61" r="5" fill="#99ccff" cx="258.0707683007738" cy="277.806490778901">
+                    <title>n_61</title>
+                </circle>
+                <text x="0" y="-7" id="n_61" class="label_yIfMRjNx" transform="translate(258.0707683007738,277.806490778901)" cx="258.0707683007738" cy="277.806490778901">n_61</text>
+            </g>
+            <g>
+                <circle id="n_62" r="5" fill="#99ccff" cx="357.8174409128295" cy="166.13664197269955">
+                    <title>n_62</title>
+                </circle>
+                <text x="0" y="-7" id="n_62" class="label_yIfMRjNx" transform="translate(357.8174409128295,166.13664197269955)" cx="357.8174409128295" cy="166.13664197269955">n_62</text>
+            </g>
+            <g>
+                <circle id="n_63" r="5" fill="#99ccff" cx="348.69390134722124" cy="401.6738535937158">
+                    <title>n_63</title>
+                </circle>
+                <text x="0" y="-7" id="n_63" class="label_yIfMRjNx" transform="translate(348.69390134722124,401.6738535937158)" cx="348.69390134722124" cy="401.6738535937158">n_63</text>
+            </g>
+            <g>
+                <circle id="n_64" r="5" fill="#99ccff" cx="175.41176038758937" cy="214.3710459317253">
+                    <title>n_64</title>
+                </circle>
+                <text x="0" y="-7" id="n_64" class="label_yIfMRjNx" transform="translate(175.41176038758937,214.3710459317253)" cx="175.41176038758937" cy="214.3710459317253">n_64</text>
+            </g>
+            <g>
+                <circle id="n_14" r="5" fill="#99ccff" cx="438.5739971921582" cy="267.87929104943595">
+                    <title>n_14</title>
+                </circle>
+                <text x="0" y="-7" id="n_14" class="label_yIfMRjNx" transform="translate(438.5739971921582,267.87929104943595)" cx="438.5739971921582" cy="267.87929104943595">n_14</text>
+            </g>
+            <g>
+                <circle id="n_65" r="5" fill="#99ccff" cx="232.33733425507336" cy="390.2795725957293">
+                    <title>n_65</title>
+                </circle>
+                <text x="0" y="-7" id="n_65" class="label_yIfMRjNx" transform="translate(232.33733425507336,390.2795725957293)" cx="232.33733425507336" cy="390.2795725957293">n_65</text>
+            </g>
+        </g>
+    </g>
+</svg>
