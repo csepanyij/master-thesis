@@ -9,6 +9,10 @@ notebooks/databases/*
 notebooks/.ipynb_checkpoints/*
 notebooks/.ipynb_checkpoints/
 
+javacore.*
+*.phd
+*.dmp
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
