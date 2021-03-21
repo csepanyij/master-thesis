@@ -2,42 +2,101 @@
 \section{Introduction}
 In recent years open source software solutions have become widely popular and frequently used in both scientific and enterprise use, which can be attributed to a number of factors, most importantly the ease of development and deployment of IT projects, improved cybersecurity and enhanced scalability \cite{pwcLeadingBenefitsOpensource2016}. This increases the contribution to open source projects from enterprises and individuals alike. Due to its nature, open source software projects are driven by community contributions, and depend heavily on active participation in all phases of the project. Because there is a high dependency on the community in open source software projects, by understanding how contributions are included and what patterns emerge we can gain valuable insight into the project's current state and its trajectory.
 
-
-\subsection{Motivation of research problem and research question}
-
-rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+\dots
 
 % Summary of background literature and state of the art solutions
 \subsection{Literature review}
-rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+\begin{itemize}
+    \item Open-source software development properties
+    \begin{itemize}
+        \item centralized vs decentralized
+        \item No collocation
+        \item Enterprise support
+        \item Version control, issue tracking
+    \end{itemize}
+    \item Relevant social aspects of OS projects
+    \item State of the art
+    \begin{itemize}
+        \item Collaboration by coediting files
+        \item Contributors form dynamic social networks
+        \item Problem of analysing changes over time in a network
+        \item Other studies in this field...
+    \end{itemize}
+    \item Preliminary analysis results (pandas, networkx, \dots)
+\end{itemize}
+
+
+\subsection{Motivation of research problem and research question}
+
+\begin{itemize}
+    \item Importance of OS project analysis based on lit rew
+    \item Analysing effects of large events within the lifecycle of the OS project in order to improve them or adapt
+    \begin{itemize}
+        \item Planned, foreseeable changes (e.g. upcoming major release)
+        \item Unforeseeable changes (e.g. end of support, pandemic)
+    \end{itemize}
+    \item Research questions
+    \begin{itemize}
+        \item What social patterns emerge within large-scale open-source software projects?
+        \begin{itemize}
+            \item Are there smaller "core" collaborator networks connected with weak links or do they form one large interconnected network?
+            \item Are there usually key contributors, who are central to the project and collaborate with most contributors, or is it completely decentralized?
+            \item How does the size of the project change these properties?
+        \end{itemize}
+        \item How does the structure of OS software development collaboration change over time?
+        \begin{itemize}
+            \item Are there any major changes over the natural project lifecycle? Are they visible in the collaboration network? (e.g. planning, developing, bugfixing, sunset?)
+            \item How does a sudden major event change the participation and development?
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
 
 \section{Proposed research method}
 
-rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+\begin{itemize}
+    \item Developing a tool, that can extract the collaboration information from any OS project (from GitHub/git repository)
+    \item Data cleaning - method to merge authors, excluding common folders, etc\dots
+    \item Qualitative research
+    \begin{itemize}
+        \item Observing collaboration statistics and networks in order to discover patterns: connected components, centrality, changes over time
+    \end{itemize}
+    \item Quantitative research
+    \begin{itemize}
+        \item Composing a large set of repositories (different sizes, properties)
+        \item Detecting past changes automatically based on changes in measured statistics
+    \end{itemize}
+\end{itemize}
 
 \section{Outline of thesis}
+\begin{itemize}
+    \item Literature review
+    \begin{itemize}
+        \item Network analysis, relevant metrics
+        \item Properties of social collaboration networks
+    \end{itemize}
+    \item Used repositories, selection criteria
+    \item Data cleaning - files, authors, max modifications
+    \item Implementation
+    \begin{itemize}
+        \item \dots
+    \end{itemize}
+    \item Qualitative analysis
+    \item Quantitative analysis
+    \item Conclusion
+\end{itemize}
 
-\subsection{Preliminary literature list}
+\subsection{(Preliminary literature list - in references)}
 
 \subsection{Work plan including milestones}
 
-Table \ref{table1} is an example of a table.
-
-
-
-\begin{table}[]
-\centering
-\caption{Example of a table}
-\label{table1}
-\begin{tabular}{lllll}
- 1 & a & - & - & - \\
- 2 & b & - & - & - \\
- 3 & c & - & - & - \\
- 4 & d & - & - &-
-\end{tabular}
-\end{table}
-rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus \cite{sekaraFundamentalStructuresDynamic2016}.
-\newline
-\newline
-
-``This is a direct quote.'' \cite{goteAnalysingTimeStampedCoEditing2019} 
+\begin{itemize}
+    \item Data cleaning - files, authors, max modifications
+    \item Implementation
+    \begin{itemize}
+        \item \dots
+    \end{itemize}
+    \item Qualitative analysis
+    \item Quantitative analysis
+    \item Conclusion
+\end{itemize}
