@@ -36,42 +36,37 @@ El Asir et al. \cite{elasriPeripheryCoreTemporal2017} used a K-means classificat
 % AUTHOR NAME HARDCODED HERE
 A literature review conducted by McClean et al. \cite{mccleanSocialNetworkAnalysis2021} systematically analysed the state-of-the-art research of 46 scientific papers in the field of FLOSS social networks, and categorised them into three groups based on topic: structure, lifecycle and communication. They conclude, that the existence of core-periphery structure in OSS projects are well established in the field, which is also an indicator of a healthy FLOSS software. Regarding the lifecycle, generally the core development team does not change significantly over time, however, the project becomes more decentralised and distributed as it matures. A lack of research regarding temporal analyses were identified in the most current knowledge, which was suggested as a future research area in this field. \\
 
-\begin{itemize}
+%\begin{itemize}
 %   \item Relevant social aspects of OS projects
 %   \item State of the art
 %   \item Collaboration by coediting files
 %   \item Contributors form dynamic social networks
-    \item Problem of analysing changes over time in a network
+%    \item Problem of analysing changes over time in a network
 %   \item Other studies in this field...
-\end{itemize}
+%\end{itemize}
 
 
 \section{Motivation of research problem and research questions}
-Because there is a high dependency on the community in open source software projects, by understanding how contributions are included and what patterns emerge we can gain valuable insight into the project's current state and its trajectory. \\
+Because there is a high dependency on the community in open source software projects, by understanding how contributions are included and what patterns emerge we can gain valuable insight into the project's current state and its trajectory. As stated before, SNA analysis of OSS have been extensively studied, but there is a lack of research regarding temporal models analyzing the lifecycle of a FLOSS project. \\
 
-\begin{itemize}
-    \item Importance of OS project analysis based on lit rew
-    \item Analysing effects of large events within the lifecycle of the OS project in order to improve them or adapt
-    \begin{itemize}
-        \item Planned, foreseeable changes (e.g. upcoming major release)
-        \item Unforeseeable changes (e.g. end of support, pandemic)
-    \end{itemize}
-    \item Research questions
-    \begin{itemize}
-        \item What social patterns emerge within large-scale open-source software projects?
-        \begin{itemize}
-            \item Are there smaller "core" collaborator networks connected with weak links or do they form one large interconnected network?
-            \item Are there usually key contributors, who are central to the project and collaborate with most contributors, or is it completely decentralized?
-            \item How does the size of the project change these properties?
-        \end{itemize}
-        \item How does the structure of OS software development collaboration change over time?
-        \begin{itemize}
-            \item Are there any major changes over the natural project lifecycle? Are they visible in the collaboration network? (e.g. planning, developing, bugfixing, sunset?)
-            \item How does a sudden major event change the participation and development?
-        \end{itemize}
-    \end{itemize}
-    \item Preliminary analysis results (pandas, networkx, \dots)
-\end{itemize}
+The goal of this proposal paper is to fill in this gap by examining OSS project collaboration networks over time using SNA metrics. More specifically, one part of the research will focus on the evolution of such collaboration networks and comparing and contrasting these networks with the software outcome. The second part will focus on events during a project, and how it affects the developer collaboration. The research questions, which are broken down into subquestions, are as follows:
+
+\begin{enumerate}
+    \item \textbf{How does the temporal lifecycle information of a project influence its success?} \\
+    
+    \begin{enumerate}
+        \item \textit{Based on temporal models of collaboration, is it possible to predict the outcome of the project?} Since it has been proven that the core collaborators do not change much over the course of the OS software development, our assumption is that any sudden or long-term change, that is not consistent with the other observed projects, can have a significant impact on the outcome (negative or positive alike).
+        \item \textit{Can stages of a FLOSS project with a maturity model be observed?} As most OS software starts with a small collaborator basis and grows over time, it can be assumed, that each project goes through the same steps of open source maturity levels. On the other hand, it is also possible that due to the uniqueness of each project, no such stages are observable. 
+    \end{enumerate}
+
+    \item \textbf{How do major events in the project lifecycle change the collaboration network of the project?}
+    \begin{enumerate}
+        \item \textit{Do planned or foreseeable events change the collaboration structure?} Major software version releases can be considered foreseeable events of the project lifecycle, which could have an effect on the developer collaboration. For example, there might be a higher rate of interaction between contributors just before a new version is released to clear up the backlog of tasks. But it is also possible, that commit and change rates drop during this time, because the focus shifts to stability and testing instead of new features.
+        \item \textit{How unforeseeable internal or external events affect FLOSS collaboration?} Sudden shocks to the project, such as an announcement of disinterest from major users of the software, discontinued enterprise support of the project, large-scale global events like the pandemic, or sudden employee firings can have significant effect on the core and periphery collaborators alike. By analysing the collaboration network before, during and after such changes, we might be able to recognise patterns, that regularly occur around these events.
+    \end{enumerate}
+\end{enumerate}
+
+Preliminary analysis results (pandas, networkx, \dots)
 
 
 \section{Proposed research method}
