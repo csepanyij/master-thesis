@@ -66,18 +66,20 @@ The goal of this proposal paper is to fill in this gap by examining OSS project 
     \end{enumerate}
 \end{enumerate}
 
+\section{Proposed research method}
+To find answers to the research questions above, first we propose a repository analyzer tool, which mines collaboration data from FLOSS projects, generates static snapshot collaboration networks at each given time interval and calculates SNA metrics for each snapshot. Then these metrics can be aggregated over time, or plotted against time to discover changes in the network. The \texttt{git2net}\footnote{https://github.com/gotec/git2net} \cite{goteAnalysingTimeStampedCoEditing2019} Python library provides the necessary tools to mine any project repository that uses git version control. It also incorporates temporal network generation capability, which can be used as a source for creating static collaboration networks aggregated over a given period of time. \\
+
+We propose a hybrid methodology of qualitative and quantitative research. First, as part of the qualitative research, we choose a small number of repositories to be analyzed. We observe the number of connected components, centrality, number of nodes and mean degree SNA metrics in order to discover the core and peripherial collaborators. \dots \\
+
 Preliminary analysis results (pandas, networkx, \dots)
 
-
-\section{Proposed research method}
-
 \begin{itemize}
-    \item Developing a tool, that can extract the collaboration information from any OS project (from GitHub/git repository)
-    \item Data cleaning - method to merge authors (with gambit), excluding common folders, etc\dots
+%    \item Developing a tool, that can extract the collaboration information from any OS project (from GitHub/git repository)
+%    \item Data cleaning - method to merge authors (with gambit), excluding common folders, etc\dots
     \item Qualitative research
-    \begin{itemize}
-        \item Observing collaboration statistics and networks in order to discover patterns: connected components, centrality, changes over time
-    \end{itemize}
+    % \begin{itemize}
+    %     \item Observing collaboration statistics and networks in order to discover patterns: connected components, centrality, changes over time
+    % \end{itemize}
     \item Quantitative research
     \begin{itemize}
         \item Composing a large set of repositories (different sizes, properties)
