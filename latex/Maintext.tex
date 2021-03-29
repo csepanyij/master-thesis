@@ -75,8 +75,11 @@ After discovering the collaboration structure over time, we will match the break
 
 Quantitative research
 \begin{itemize}
-    \item Composing a large set of repositories (different sizes, properties)
+    \item Composing a large set of repositories (different sizes, properties) with their success or failure
+    \item Gathering major events for the repositories (version releases, external events, global events)
     \item Detecting past changes automatically based on changes in measured statistics
+    \item How do changes and reoccurring patterns match the events?
+    \item What structures can be noticed before a major success or failure of a project?
 \end{itemize}
 
 \subsection{Preliminary research}
@@ -90,14 +93,14 @@ Preliminary results confirm these expected behaviours. One of the largest Python
 %     \item Mean degree of nodes
 % \end{itemize}
 
+These metrics are observed for a preiod of two years by generating a collaboration network on each day in the given timespan. Two incorporated intervals were chosen: the blue lines consider a one-month time period on each day, whereas the red lines take into account one week at once. The difference between the darker and the lighter shades of red and blue represent different network generation methods. The dark-colored plot lines show the statistics generated for the weighted one mode projection (WOMP) bidirected networks \cite{stramWeightedOneMode2017}, while the lighter colors plot the weighted Jaccard similarity networks. It is important to note that the weighted Jaccard similarity excludes nodes with 0 degrees, meaning developers, who did not collaborate during the observed period, but did contribute to the project, are excluded. This does not hold true for the WOMP method. \\
+
 \begin{figure}[h!]
     \centering
     \includegraphics{figures/pandas.png}
     \caption{Pandas metrics over time, marking the major v1.0 release with a dashed vertical line.}
     \label{fig:pandas}
 \end{figure}
-
-These metrics are observed for a preiod of two years by generating a collaboration network on each day in the given timespan. Two incorporated intervals were chosen: the blue lines consider a one-month time period on each day, whereas the red lines take into account one week at once. The difference between the darker and the lighter shades of red and blue represent different network generation methods. The dark-colored plot lines show the statistics generated for the weighted one mode projection (WOMP) bidirected networks \cite{stramWeightedOneMode2017}, while the lighter colors plot the weighted Jaccard similarity networks. It is important to note that the weighted Jaccard similarity excludes nodes with 0 degrees, meaning developers, who did not collaborate during the observed period, but did contribute to the project, are excluded. This does not hold true for the WOMP method. \\
 
 In the plots for the \texttt{pandas} in Figure \ref{fig:pandas}, we can observe a drop in the SNA metrics around the major release date, where the release date is the lowest local value in all metrics except for node count (number of developers), then a sharp increase afterwards. Because the node count did not experience this drop and stayed relatively stable, we can conclude that the collaboration between developers have changed temporarily. One theory is that most features of the new version have already been implemented ahead of the release date, and new features were put on hold in order to keep the released version stable, therefore only minor fixes are applied just before the release. \\
 
