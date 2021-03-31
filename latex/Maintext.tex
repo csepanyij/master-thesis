@@ -67,20 +67,23 @@ The goal of this proposal paper is to fill in this gap by examining OSS project 
 \end{enumerate}
 
 \section{Proposed research method}
-To find answers to the research questions above, first we propose a repository analyzer tool, which mines collaboration data from FLOSS projects, generates static snapshot collaboration networks at each given time interval and calculates SNA metrics for each snapshot. Then these metrics can be aggregated over time, or plotted against time to discover changes in the network. The \texttt{git2net}\footnote{https://github.com/gotec/git2net} \cite{goteAnalysingTimeStampedCoEditing2019} Python library provides the necessary tools to mine any project repository that uses git version control. It also incorporates temporal network generation capability, which can be used as a source for creating static collaboration networks aggregated over a given period of time. \\
+To find answers to the research questions above, first we propose a repository analyzer tool, which mines collaboration data from FLOSS projects, generates static snapshot collaboration networks at each given time interval and calculates SNA metrics for each snapshot. Then these metrics can be aggregated over time, or plotted against time to discover changes in the network. The \texttt{git2net}\footnote{\url{https://github.com/gotec/git2net}} \cite{goteAnalysingTimeStampedCoEditing2019} Python library provides the necessary tools to mine any project repository that uses git version control. It also incorporates temporal network generation capability, which can be used as a source for creating static collaboration networks aggregated over a given period of time. \\
+
 
 We propose a hybrid methodology of qualitative and quantitative research. First, as part of the qualitative research, we choose a small number of repositories to be analyzed. We observe the number of connected components, centrality, number of nodes and mean degree SNA metrics in order to discover the core and peripherial collaborators over the project lifecycles. The basis of collaboration, due to the unavailability of other means of communication, is coediting files. Based on the state of the art research in this field, file coediting proves to be an effective and easy way to represent collaboration between developers. \\
 
 After discovering the collaboration structure over time, we will match the breakpoints and unexpected spikes or troughs to events within the lifespan of the project. We expect that the key SNA metrics will show a periodicity around planned releases and other reoccurring events (e.g. holiday season). Outstanding values without reoccurrence, on the other hand, are more likely to be consequences of unexpected events. In these cases, it should be observed whether the network is capable of reorganizing itself, or does the event leave a permanent mark on the collaboration structure. A categorization of unexpected events and the level of impact each category has should be observed. \\
 
-Quantitative research
-\begin{itemize}
-    \item Composing a large set of repositories (different sizes, properties) with their success or failure
-    \item Gathering major events for the repositories (version releases, external events, global events)
-    \item Detecting past changes automatically based on changes in measured statistics
-    \item How do changes and reoccurring patterns match the events?
-    \item What structures can be noticed before a major success or failure of a project?
-\end{itemize}
+For the quantitative research to be conducted, we will gather a large set of repositories along with major events in its lifecycles. We will then run the miner for all repositories, and with the findings of the qualitative research, we will try to detect all major events and their type (planned or unexpected). We will utilize the \texttt{ruptures} \footnote{\url{https://github.com/deepcharles/ruptures}} library to detect changes in the continuous SNA metrics. If the model is capable to accurately recognise events, then we can also apply it on any repository to detect changes, which will allow us to discover changes in the collaboration network that are not related to publicly known events or releases. \\
+
+% Quantitative research
+% \begin{itemize}
+%     \item Composing a large set of repositories (different sizes, properties) with their success or failure
+%     \item Gathering major events for the repositories (version releases, external events, global events)
+%     \item Detecting past changes automatically based on changes in measured statistics
+%     \item How do changes and reoccurring patterns match the events?
+%     \item What structures can be noticed before a major success or failure of a project?
+% \end{itemize}
 
 \subsection{Preliminary research}
 Preliminary results confirm these expected behaviours. One of the largest Python libraries, \texttt{pandas} have been analysed on a weekly and monthly aggregation level by plotting  SNA metrics around a major version release (v1.0 released on January 29, 2020). \\
