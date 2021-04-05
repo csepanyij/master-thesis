@@ -8,6 +8,7 @@ notebooks/databases
 notebooks/databases/*
 notebooks/.ipynb_checkpoints/*
 notebooks/.ipynb_checkpoints/
+__pycache__
 
 javacore.*
 *.phd
