@@ -42,21 +42,21 @@ for repo_name in repositories:
     git_repo_dir = '../notebooks/repos/{r}4analysis'.format(r=repo_name) 
     sqlite_db_file = '../notebooks/databases/{r}/{r2}.db'.format(r=repo_name, r2=repo_name.split('/')[1])
 
-    if os.path.exists(git_repo_dir) and os.path.exists(sqlite_db_file):
-        print('Skipping already fully mined repository.')
-        continue
-    else:
-        # 1. Clone project
-        print('Phase 1: Cloning repository...')
-        mining.clone_repo(git_repo_dir, git_repo_url)
-        print('Done.\n')
+    if os.path.exists('../notebooks/databases/{r}/disambiguation.csv'.format(r=repo_name)):
+        skip_disambig = True
 
-        # 2. Mine project
-        print('Phase 2: Mining repository...\n')
-        mining.mine_repo(git_repo_dir, sqlite_db_file)
-        time.sleep(3)
-        print('Done.\n')
+    # 1. Clone project
+    print('Phase 1: Cloning repository...')
+    mining.clone_repo(git_repo_dir, git_repo_url)
+    print('Done.\n')
 
+    # 2. Mine project
+    print('Phase 2: Mining repository...\n')
+    mining.mine_repo(git_repo_dir, sqlite_db_file)
+    time.sleep(3)
+    print('Done.\n')
+
+    if not skip_disambig:
         # 3. Disambiguate
         print('Phase 3: Disambiguating authors...\n')
         aliases.gambit_aliases(sqlite_db_file, repo_name)
