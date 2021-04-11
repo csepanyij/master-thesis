@@ -16,8 +16,10 @@ On the other hand, Free/Libre Open Source Software (FLOSS) projects usually do n
 Because contribution to FLOSS projects are voluntary, participants have a different motivation for taking part than in commercial software development. According to El Asir et al. \cite{elasriPeripheryCoreTemporal2017}, FLOSS participation can be motivated by internal and external factors. Internal factors include self-improvement, learning and contribution as a hobbi or pass-time activity  \cite{alexanderharsWorkingFreeMotivations2002,yunwenyeUnderstandingMotivationOpen2003}, whereas external factors are motivated by marketing and demonstrating certain skills, thus increasing and improving employability \cite{alexanderharsWorkingFreeMotivations2002}. \\
 
 % Summary of background literature and state of the art solutions
-\section{Related work}
+\section{Background and rationale}
 
+\subsection{Collaboration in FLOSS projects}
+% - FLOSS definition
 % AUTHOR NAME HARDCODED HERE
 Collaboration networks of open source software (OSS) have been a subject of many academic research. Raymond \cite{crowstonSocialStructureFree2005} has defined collaboration based on bug report interaction, and observed the collaboration network of 124 large-scale SourceForge projects. The generated networks have widely different centralization properties, but it was observed that larger sized projects tend to be more decentralized. The broad community roles contributors tend to take have been also identified in \cite{crowstonSocialStructureFree2005}, which have been coined as the \textit{onion model} in \cite{martinez-romoUsingSocialNetwork2008} (Figure \ref{fig:onion1}). \\
 
@@ -36,6 +38,8 @@ El Asir et al. \cite{elasriPeripheryCoreTemporal2017} used a K-means classificat
 % AUTHOR NAME HARDCODED HERE
 A literature review conducted by McClean et al. \cite{mccleanSocialNetworkAnalysis2021} systematically analysed the state-of-the-art research of 46 scientific papers in the field of FLOSS social networks, and categorised them into three groups based on topic: structure, lifecycle and communication. They conclude, that the existence of core-periphery structure in OSS projects are well established in the field, which is also an indicator of a healthy FLOSS software. Regarding the lifecycle, generally the core development team does not change significantly over time, however, the project becomes more decentralised and distributed as it matures. A lack of research regarding temporal analyses were identified in the most current knowledge, which was suggested as a future research area in this field. \\
 
+\subsection{Social network of Open-source projects}
+\dots
 %\begin{itemize}
 %   \item Relevant social aspects of OS projects
 %   \item State of the art
@@ -66,11 +70,11 @@ The goal of this proposal paper is to fill in this gap by examining OSS project 
     \end{enumerate}
 \end{enumerate}
 
-\section{Proposed research method}
-To find answers to the research questions above, first we propose a repository analyzer tool, which mines collaboration data from FLOSS projects, generates static snapshot collaboration networks at each given time interval and calculates SNA metrics for each snapshot. Then these metrics can be aggregated over time, or plotted against time to discover changes in the network. The \texttt{git2net}\footnote{\url{https://github.com/gotec/git2net}} \cite{goteAnalysingTimeStampedCoEditing2019} Python library provides the necessary tools to mine any project repository that uses git version control. It also incorporates temporal network generation capability, which can be used as a source for creating static collaboration networks aggregated over a given period of time. \\
+\subsection{Research methodology}
+To find answers to the research questions above, first we build a repository analyzer tool, which mines collaboration data from FLOSS projects, generates static snapshot collaboration networks at each given time interval and calculates SNA metrics for each snapshot. Then these metrics can be aggregated over time, or plotted against time to discover changes in the network. The \texttt{git2net}\footnote{\url{https://github.com/gotec/git2net}} \cite{goteAnalysingTimeStampedCoEditing2019} Python library provides the necessary tools to mine any project repository that uses git version control. It also incorporates temporal network generation capability, which can be used as a source for creating static collaboration networks aggregated over a given period of time. \\
 
 
-We propose a hybrid methodology of qualitative and quantitative research. First, as part of the qualitative research, we choose a small number of repositories to be analyzed. We observe the number of connected components, centrality, number of nodes and mean degree SNA metrics in order to discover the core and peripherial collaborators over the project lifecycles. The basis of collaboration, due to the unavailability of other means of communication, is coediting files. Based on the state of the art research in this field, file coediting proves to be an effective and easy way to represent collaboration between developers. \\
+We apply a hybrid methodology of qualitative and quantitative research. First, as part of the qualitative research, we choose a small number of repositories to be analyzed. We observe the number of connected components, centrality, number of nodes and mean degree SNA metrics in order to discover the core and peripherial collaborators over the project lifecycles. The basis of collaboration, due to the unavailability of other means of communication, is coediting files. Based on the state of the art research in this field, file coediting proves to be an effective and easy way to represent collaboration between developers. \\
 
 After discovering the collaboration structure over time, we will match the breakpoints and unexpected spikes or troughs to events within the lifespan of the project. We expect that the key SNA metrics will show a periodicity around planned releases and other reoccurring events (e.g. holiday season). Outstanding values without reoccurrence, on the other hand, are more likely to be consequences of unexpected events. In these cases, it should be observed whether the network is capable of reorganizing itself, or does the event leave a permanent mark on the collaboration structure. A categorization of unexpected events and the level of impact each category has should be observed. \\
 
@@ -85,93 +89,65 @@ For the quantitative research to be conducted, we will gather a large set of rep
 %     \item What structures can be noticed before a major success or failure of a project?
 % \end{itemize}
 
-\subsection{Preliminary research}
-Preliminary results confirm these expected behaviours. One of the largest Python libraries, \texttt{pandas} have been analysed on a weekly and monthly aggregation level by plotting  SNA metrics around a major version release (v1.0 released on January 29, 2020). \\
 
-% \begin{itemize}
-%     \item Number of nodes (N)
-%     \item Network density
-%     \item Clustering coefficient
-%     \item Number of connected components
-%     \item Mean degree of nodes
-% \end{itemize}
+\section{Gitminer implementation}
+% - what do we want to achieve with the gitminer
+%  - generate networks of collaboration
+%    - what should be the basis of collaboration
+%  - filter for time
+%  - generate statistics
+\subsection{git2net miner}
+% - git2net: database of commits and edits
+% - repo_tools: release versions and tags
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics{figures/pandas.png}
-    \caption{Pandas metrics over time, marking the major v1.0 release with a dashed vertical line.}
-    \label{fig:pandas}
-\end{figure}
+\subsection{Data cleaning and disambiguation}
+% - issue of authors changing their names, having multiple identities
+% - solution: first it was looking at email-name pairs, then: gambit
+% - issue of special characters in node names --> replace with numbers
+% - issue of same named files being merged
+%  --> solution: remove duplicate files (rationale: these are mostly technical files)
 
-These metrics are observed for a preiod of two years by generating a collaboration network on each day in the given timespan. Two incorporated intervals were chosen: the blue lines consider a one-month time period on each day, whereas the red lines take into account one week at once. The difference between the darker and the lighter shades of red and blue represent different network generation methods. The dark-colored plot lines show the statistics generated for the weighted one mode projection (WOMP) bidirected networks \cite{stramWeightedOneMode2017}, while the lighter colors plot the weighted Jaccard similarity networks. It is important to note that the weighted Jaccard similarity excludes nodes with 0 degrees, meaning developers, who did not collaborate during the observed period, but did contribute to the project, are excluded. This does not hold true for the WOMP method. \\
+\subsection{Collaboration networks}
+% - Pathpy and networkx libraries
 
-In the plots for the \texttt{pandas} in Figure \ref{fig:pandas}, we can observe a drop in the SNA metrics around the major release date, where the release date is the lowest local value in all metrics except for node count (number of developers), then a sharp increase afterwards. Because the node count did not experience this drop and stayed relatively stable, we can conclude that the collaboration between developers have changed temporarily. One theory is that most features of the new version have already been implemented ahead of the release date, and new features were put on hold in order to keep the released version stable, therefore only minor fixes are applied just before the release. \\
+\subsubsection{Temporal networks}
+% - preserves the time axis, but hard to visualize
+% - snapshots are taken of the network, each edge only exist at a defined timestamp or timestamps
+% - method of generating static networks
+%(figure of a temporal network: subplots with timestamps visible)
+\subsubsection{Static networks}
+% - Easily visualizable
+% - Looses time aspect, only considers a given period of time aggregated
+% - Can be weighted
+%    WOMP and weighted Jaccard methods (calculation, single nodes removed, etc...)
+% (One WOMP and one Jaccard network)
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics{figures/wasmtime.png}
-    \caption{Wasmtime SNA metrics over time around unexpected layoff events marked with dashed vertical lines}
-    \label{fig:wasmtime}
-\end{figure}
+\subsection{Graph statistics aggregation}
+% - "Seeker" scanning over time
+% - parameters: delta, interval, from, to
+% - size of the project matters
+% - activity determines the scale (less activity = small interval (week), vice versa)
+% - helps: commits per day plot (insert)
 
-Similarly, the project \texttt{wasmtime} was analysed for the same metrics and plotted on Figure \ref{fig:wasmtime}. Wasmtime is a project supported by Mozilla, who heavily contributed to the project. However, in 2020 Mozilla announced the layoff of a substantial amount (70) of employees on January 15 and another round of layoffs on August 11. These events can be considered as sudden external shocks, which can affect the project structure. This is confirmed by the SNA plots, as we can see a drop or low-point on the announcement day, then a sharp increase in all measured statistics for multiple months right after the layoff announcements in both cases. This could indicate that collaboration actually increased right after the announcement, because currently worked tasks are wrapped up or discarded due to the diminished support effort. \\
+\section{Collaboration pattern analysis}
+\subsection{Observed projects and events}
+% - which projects (Servo, pandas, numpy, networkx, seaborn, wasmtime, ruptures (?))
+% - expected: Big releases
+% - unexpected: layoffs
+\subsection{SNA metrics analysis}
+%....
+\subsection{Results}
+%....
 
 
-%\begin{itemize}
-%    \item Developing a tool, that can extract the collaboration information from any OS project (from GitHub/git repository)
-%    \item Data cleaning - method to merge authors (with gambit), excluding common folders, etc\dots
-    %\item Qualitative research
-    % \begin{itemize}
-    %     \item Observing collaboration statistics and networks in order to discover patterns: connected components, centrality, changes over time
-    % \end{itemize}
+% (\item Automatic event recognition)
+%     (\item Event detection implementation (ruptures))
+%     (\item Collaboration network change detection)
+\section{Quantitative analysis of projects during crunch time}
+\subsection{Collaboration network changes}
+\subsection{Prediction of outcome based on collaboration changes}
 
-%\end{itemize}
+\section{Discussion and results}
+\section{Conclusion and future work}
 
 \section{Outline of thesis}
-
-The thesis will adhere to the following outline:
-
-\begin{enumerate}[label*=\arabic*.]
-    \item Introduction
-    \item Background and rationale
-    \begin{enumerate}[label*=\arabic*.]
-        \item FLOSS project properties
-        \item Social Netowrk Analysis 
-    \end{enumerate}
-    \item Research questions and methodology
-    \item Gitminer implementation
-    \begin{enumerate}[label*=\arabic*.]
-        \item git2net miner
-        \item Data cleaning and disambiguation
-        \item Temporal networks
-        \item Static networks
-        \item Grahp statistics aggregation
-    \end{enumerate}
-    \item Collaboration pattern analysis
-    \begin{enumerate}[label*=\arabic*.]
-        \item Observed projects and events
-        \item SNA metrics analysis
-        \item Results
-    \end{enumerate}
-    \item Automatic event recognition
-    \begin{enumerate}[label*=\arabic*.]
-        \item Event detection implementation (ruptures)
-        \item Collaboration network change detection
-    \end{enumerate}
-    \item Discussion and results
-    \item Conclusion and future work
-    \item References
-\end{enumerate}
-
-% \subsection{Work plan including milestones}
-
-% \begin{itemize}
-%     \item Data cleaning - files, authors, max modifications
-%     \item Implementation
-%     \begin{itemize}
-%         \item \dots
-%     \end{itemize}
-%     \item Qualitative analysis
-%     \item Quantitative analysis
-%     \item Conclusion
-% \end{itemize}
