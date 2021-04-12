@@ -25,5 +25,5 @@ def mine_repo(git_repo_dir, sqlite_db_file, max_modifications=100, delete_existi
     #print(git_repo_dir)
     #print(sqlite_db_file)
         
-    git2net.mine_git_repo(git_repo_dir, sqlite_db_file, max_modifications=max_modifications, no_of_processes=7)
+    git2net.mine_git_repo(git_repo_dir, sqlite_db_file, max_modifications=max_modifications, no_of_processes=7, timeout=30)
     git2net.mining_state_summary(git_repo_dir, sqlite_db_file)
