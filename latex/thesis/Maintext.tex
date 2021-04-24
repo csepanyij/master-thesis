@@ -41,16 +41,12 @@ A literature review conducted by McClean et al. \cite{mccleanSocialNetworkAnalys
 \subsection{Social network of Open-source projects}
 In a larger FLOSS project, developers usually cannot understand every part of the project, therefore collaboration is required with eachother. The network created by the collaborators can be considered as a social network, because collaboration requires some kind of social interaction with eachother. Social network theory describes how social interaction patterns affect the individual behaviour \cite{martinez-torresGeneticSearchPatterns2012}. We can model an OSS project's social network as a graph, where nodes represent collaborators (developers, bug reporters, etc\dots) and edges represent the social interaction between them. In mathematical terms\dots \\
 
-The type of the social interaction determines the created network, therefore choosing the basis of collaboration can have a significant impact on the network structure.
-\dots (mailing list vs file file edits vs line edits)
+The type of the social interaction determines the created network, therefore choosing the basis of collaboration can have a significant impact on the network structure. The common types of developer social networks (DSNs) are Version Control System-based (VCS-DSN), Bug Tracking System-based (BTS-DSN) networks and DNSs, that are purely based on social elements \cite{aljemabiEmpiricalStudyEvolution2018}. The VCS-DSN take the version control application as a source for network generation by recording collaboration based on co-edits of the same module, file or code section. Choosing the granularity can impact the precision of true collaborations represented in the network. Co-edits by multiple developers to a single module or file does not necessarily mean actual collaboration was required from the authors, as the parts edited could work functionally independent from eachother. By increasing the granularity to file sections (classes or functions within a single file) or even lines, we can be more certain, that coordination was required, but we risk leaving out semantically connected parts of the project \cite{joblinEvolutionaryTrendsDeveloper2017}. In contrast to VCS-DSNs' purely technical approach, the BTS-DSNs use semi-technical bases for connecting participants, such as comments on issues, bugs or reviews \cite{elasriPeripheryCoreTemporal2017}. These artifacts, although being tightly related to specific sections of the source code, allow for taking into account conversational elements as contribution. For example, participants, who do not contribute directly to the software source code, but actively review and comment, are also considered. Lastly, social networks of developers can be constructed on project participation, following, starring or through communication means like mailing lists. The technical aspect of collaboration is minimized in such DNSs, and they are more fit for project organization and communication analyses in FLOSS projects (mailing list vs file file edits vs line edits) \\
 
-"Recently, various types of DSNs with different features and methods have been constructed. The common types of DSN are Project Participation-based DSN (PP-DSN), Version Control System-based DSN (VCS-DSN), and Bug Tracking System-based DSN (BTS-DSN) as well as other DSNs such as Email-based DSN, Follow-based social network, and forked-based sharing system. The composition of a DSN consists of developers as nodes and links between developers as edges" \cite{aljemabiEmpiricalStudyEvolution2018}
-"three undirected, weighted cumulative networks: The first network is related to Files co-edition Network (FCN) where \dots The second is Committed Comments Network (CCN) where \dots Finally, the Review's comments Network (RCN) based on comments interactions on reviews. Figure 1 illustrates the three examples of
-generated graphs" \cite{elasriPeripheryCoreTemporal2017} \\
 
 \subsubsection{Global SNA metrics}
 \begin{itemize}
-    \item Specifically, the network centralization is calculated as the sum of the differences between the maximum and each individual's centrality score, normalized to range from 0 to 1 by dividing by the 
+    \item Specifically, the network centralization is calculated as the sum of the differences between the maximum and each individual's centrality score, normalized to range from 0 to 1 by dividing by the 
     theoretical maximum centralization.  \cite{crowstonHierarchyCentralizationFree2006}
     \item \cite{klugUnderstandingGroupDynamics}
 \end{itemize}
@@ -147,12 +143,21 @@ For the quantitative research to be conducted, we will gather a large set of rep
 %    WOMP and weighted Jaccard methods (calculation, single nodes removed, etc...)
 % (One WOMP and one Jaccard network)
 
-\subsection{Graph statistics aggregation}
-% - "Seeker" scanning over time
+\subsection{Core and periphery}
+% - Core identification method: 20th percentile on degree: \cite{joblinEvolutionaryTrendsDeveloper2017}
+
+\subsection{Network statistics}
+% - Time window scanning over time
 % - parameters: delta, interval, from, to
 % - size of the project matters
 % - activity determines the scale (less activity = small interval (week), vice versa)
 % - helps: commits per day plot (insert)
+\subsubsection{Centralization}
+% - from: \cite{crowstonHierarchyCentralizationFree2006}
+
+\subsubsection{Hierarchy}
+% - how does hierarchy change over time, around events
+% - from: \cite{joblinEvolutionaryTrendsDeveloper2017}
 
 \section{Collaboration pattern analysis}
 \subsection{Observed projects and events}
