@@ -135,10 +135,9 @@ The mining output is also stored in a \texttt{sqlite} relational database, which
 %  - filter for time
 %  - generate statistics
 
-% - git2net: database of commits and edits
-% - repo_tools: release versions and tags
-
 \subsection{Data cleaning and disambiguation}
+
+The collaboration networks with the \texttt{git2net} library 
 % - issue of authors changing their names, having multiple identities
 % - solution: first it was looking at email-name pairs, then: gambit
 % - issue of special characters in node names --> replace with numbers
@@ -147,12 +146,61 @@ The mining output is also stored in a \texttt{sqlite} relational database, which
 
 \subsection{Collaboration networks}
 % - Pathpy and networkx libraries
+When creating a DSN from the mined data, we have multiple methods at hand. The \texttt{git2net} library provides its own co-editing network function, which returns a temporal network of collaborators. This uses the co-authorship algorithm developed by Gote et. al. \cite{goteAnalysingTimeStampedCoEditing2019}, however, we would like to have more control over the network generation method, such as simple file-based co-authorship in order to customize the network for our needs, like weighing each relation or generating undirected graphs. \\
 
-\subsubsection{Temporal networks}
-% - preserves the time axis, but hard to visualize
-% - snapshots are taken of the network, each edge only exist at a defined timestamp or timestamps
-% - method of generating static networks
-%(figure of a temporal network: subplots with timestamps visible)
+\subsubsection{Temporal bipartite network}
+As a first step, we generate a temporal bipartite network of authors and their edited files with the \texttt{git2net} built-in \textit{get\_bipartite\_network} method. A temporal network is a \texttt{pathpy} \footnote{\href{https://www.pathpy.net/}{https://www.pathpy.net/}} graph object, which contains a collection of timestamped graphs of a single network at each point in time within the observed timeframe. Such a snapshot $S_t = (U, V, E_t)$, where $U$ is the set of authors, $V$ is the set of files and $E_t$ is the set of file edits as edges at $t$ timestamp. By connecting the authors, who touched the same files, and removing the nodes representing the edited files (converting the bipartite network to a regular network), we can observe the evolution of the collaboration over time, represented in Figure \ref{fig:temporal net}. \\
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/temporal/0.png}
+        \caption{}
+        \label{fig:temporal net A}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/temporal/1.png}
+        \caption{}
+        \label{fig:temporal net B}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/temporal/2.png}
+        \caption{}
+        \label{fig:temporal net C}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/temporal/3.png}
+        \caption{}
+        \label{fig:temporal net D}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/temporal/4.png}
+        \caption{}
+        \label{fig:temporal net E}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/temporal/5.png}
+        \caption{}
+        \label{fig:temporal net F}
+    \end{subfigure}
+    \caption{Sequential snapshots of the \texttt{networkx} collaboration network with a moving time-window of 30 days and 7-day steps.}
+    \label{fig:temporal net}
+\end{figure}
+
+Although a temporal network preserves the time aspect of the graph by the edges being tied to the time dimension of the graph, calculating network metrics like centrality on such networks is infeasible. Visualization also proves to be difficult in representations where animation is not possible. Therefore, we aggregate the network over a given timeframe into a static network. All nodes within the temporal net are preserved, and all directed edges are added to the network with the edge weight representing how many times that author edited the file. \\
+
+
 \subsubsection{Static networks}
 % - Easily visualizable
 % - Looses time aspect, only considers a given period of time aggregated
