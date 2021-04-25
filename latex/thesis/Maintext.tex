@@ -44,14 +44,9 @@ In a larger FLOSS project, developers usually cannot understand every part of th
 The type of the social interaction determines the created network, therefore choosing the basis of collaboration can have a significant impact on the network structure. The common types of developer social networks (DSNs) are Version Control System-based (VCS-DSN), Bug Tracking System-based (BTS-DSN) networks and DNSs, that are purely based on social elements \cite{aljemabiEmpiricalStudyEvolution2018}. The VCS-DSN take the version control application as a source for network generation by recording collaboration based on co-edits of the same module, file or code section. Choosing the granularity can impact the precision of true collaborations represented in the network. Co-edits by multiple developers to a single module or file does not necessarily mean actual collaboration was required from the authors, as the parts edited could work functionally independent from eachother. By increasing the granularity to file sections (classes or functions within a single file) or even lines, we can be more certain, that coordination was required, but we risk leaving out semantically connected parts of the project \cite{joblinEvolutionaryTrendsDeveloper2017}. In contrast to VCS-DSNs' purely technical approach, the BTS-DSNs use semi-technical bases for connecting participants, such as comments on issues, bugs or reviews \cite{elasriPeripheryCoreTemporal2017}. These artifacts, although being tightly related to specific sections of the source code, allow for taking into account conversational elements as contribution. For example, participants, who do not contribute directly to the software source code, but actively review and comment, are also considered. Lastly, social networks of developers can be constructed on project participation, following, starring or through communication means like mailing lists. The technical aspect of collaboration is minimized in such DNSs, and they are more fit for project organization and communication analyses in FLOSS projects (mailing list vs file file edits vs line edits) \\
 
 
-\subsubsection{Global SNA metrics}
-\begin{itemize}
-    \item Specifically, the network centralization is calculated as the sum of the differences between the maximum and each individual's centrality score, normalized to range from 0 to 1 by dividing by the 
-    theoretical maximum centralization.  \cite{crowstonHierarchyCentralizationFree2006}
-    \item \cite{klugUnderstandingGroupDynamics}
-\end{itemize}
+% \subsubsection{Global SNA metrics}
 
-\subsubsection{Local SNA metrics}
+% \subsubsection{Local SNA metrics}
 
 %\begin{itemize}
 %   \item Relevant social aspects of OS projects
@@ -112,12 +107,34 @@ For the quantitative research to be conducted, we will gather a large set of rep
 
 
 \section{Gitminer implementation}
+To find answers to the research questions, we implement an analysis tool to mine and analyze project repositories, which allows us to generate collaboration networks and network metrics for the analysed projects. \\
+
+\subsection{\texttt{git2net} miner}
+The process begins with the project mining. After cloning the repository, the \texttt{git2net} \cite{goteAnalysingTimeStampedCoEditing2019} library is used to collect data related to commits. Specifically, who is the author of each commit, which files were modified (created, edited, deleted) with the commit, and when was the commit created. Additionally, the lines edited by the author within each commit are collected separately, allowing for a more fine-grained collaboration network generation if necessary. The results are collected into an \texttt{sqlite} \footnote{\href{https://www.sqlite.org/index.html}{https://www.sqlite.org/index.html}} database file's \textit{commits} and \textit{edits} tables. \\
+
+The \texttt{git2net} mining process by default collects all the commits throughout the project's lifecycle. However, the processing time of each commit differs based on the number of edits, the affected number of files and the file types as well, which makes collecting certain commits very resource-intense and time-costly. Therefore, we exclude every commit, which contains more than 100 file modifications, during each repository mining using the \textit{max\_modifications} parameter. As observed by Gote et al \cite{goteAnalysingTimeStampedCoEditing2019}, this exclusion criteria does not affect significanly the generated network, because they are mostly merge commits or project restructurings, which do not mark any true collaboration effort between developers. During the data mining in certain repositories, we encountered commits, that were not mineable with this method and the mining process halted, presumably due to processing error because of binary file changes in these commits. We also excluded these commits from our data mining process.\\
+
+This exclusion criteria resulted in an average of 3\% of commits excluded in all repositories subject to our analyses, with the highest excluded commit rate being 20\%.
+
+\subsection{\texttt{repo\_tools} miner} 
+
+We use the \texttt{repo\_tools} \footnote{\href{https://github.com/wschuell/repo\_tools/}{https://github.com/wschuell/repo\_tools/}} Python library to query the Github API for additional repository data extraction, such as:
+
+\begin{itemize}
+    \item Releases
+    \item Tags
+    \item Issues
+    \item Stars and followers
+\end{itemize}
+
+The mining output is also stored in a \texttt{sqlite} relational database, which is queried later on during the analysis. 
+
 % - what do we want to achieve with the gitminer
 %  - generate networks of collaboration
 %    - what should be the basis of collaboration
 %  - filter for time
 %  - generate statistics
-\subsection{git2net miner}
+
 % - git2net: database of commits and edits
 % - repo_tools: release versions and tags
 
@@ -154,6 +171,9 @@ For the quantitative research to be conducted, we will gather a large set of rep
 % - helps: commits per day plot (insert)
 \subsubsection{Centralization}
 % - from: \cite{crowstonHierarchyCentralizationFree2006}
+"Specifically, the network centralization is calculated as the sum of the differences between the maximum and each individual's centrality score, normalized to range from 0 to 1 by dividing by the theoretical maximum centralization.   \cite{crowstonHierarchyCentralizationFree2006}"
+
+\cite{klugUnderstandingGroupDynamics}
 
 \subsubsection{Hierarchy}
 % - how does hierarchy change over time, around events
