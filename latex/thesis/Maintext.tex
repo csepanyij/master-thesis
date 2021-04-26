@@ -135,17 +135,16 @@ The mining output is also stored in a \texttt{sqlite} relational database, which
 %  - filter for time
 %  - generate statistics
 
-\subsection{Data cleaning and disambiguation}
+\subsection{Data preprocessing}
 
-The collaboration networks with the \texttt{git2net} library 
-% - issue of authors changing their names, having multiple identities
-% - solution: first it was looking at email-name pairs, then: gambit
-% - issue of special characters in node names --> replace with numbers
-% - issue of same named files being merged
-%  --> solution: remove duplicate files (rationale: these are mostly technical files)
+The collaboration networks with the \texttt{git2net} library connect the authors to their edited files using only file and author names instead of IDs. This creates an issue when generating the networks, because authors with the same name will show up as one node, and they will be connected to the files they touched combined. Furthermore, authors that change their displayed name ('author\_name' field in the mining database) or log in from diferent accounts, where they have different names, will show up as multiple nodes instead of a single vertex. \\
+
+We utilize the \texttt{gambit} \cite{goteGambitOpenSource2021} rule-based disambiguation tool to resolve the author names. Furthermore, the created networks have issues when the node names contain special characters or spaces. Therefore, after disambiguation, we replace every unique author name with its ID number. \\
+
+As the files are also labelled by their filename property in the network outputs, the same filenames but in different folders are also displayed as single nodes. In order not to create false collaborations, we simply remove the files from the network with filenames, that occur more than once in all the repository subdirectories. We argue that this does not remove any significant collaboration data, since most files sharing their name with other files are technicaly files, like \texttt{\_\_init\_\_.py} for a Python project. \\
 
 \subsection{Collaboration networks}
-% - Pathpy and networkx libraries
+
 When creating a DSN from the mined data, we have multiple methods at hand. The \texttt{git2net} library provides its own co-editing network function, which returns a temporal network of collaborators. This uses the co-authorship algorithm developed by Gote et. al. \cite{goteAnalysingTimeStampedCoEditing2019}, however, we would like to have more control over the network generation method, such as simple file-based co-authorship in order to customize the network for our needs, like weighing each relation or generating undirected graphs. \\
 
 \subsubsection{Temporal bipartite network}
@@ -198,12 +197,19 @@ As a first step, we generate a temporal bipartite network of authors and their e
     \label{fig:temporal net}
 \end{figure}
 
-Although a temporal network preserves the time aspect of the graph by the edges being tied to the time dimension of the graph, calculating network metrics like centrality on such networks is infeasible. Visualization also proves to be difficult in representations where animation is not possible. Therefore, we aggregate the network over a given timeframe into a static network. All nodes within the temporal net are preserved, and all directed edges are added to the network with the edge weight representing how many times that author edited the file. \\
-
+Although a temporal network preserves the time aspect of the graph by the edges being tied to the time dimension of the graph, calculating network metrics like centrality on such networks is infeasible. Visualization also proves to be difficult in representations where animation is not possible. Therefore, we aggregate the bipartite network over a given timeframe into a static network. All nodes within the temporal net are preserved, and all directed edges are added to the network with the edge weight representing how many times that author edited the file. \\
 
 \subsubsection{Static networks}
-% - Easily visualizable
-% - Looses time aspect, only considers a given period of time aggregated
+The generated static weighed bipartite network looses its time-varying component, but now we are able to manipulate and calculate complex statistics over it. Figure \ref{fig:bipartite} is an example of such a network. As a next step, we convert the the bipartite network into an authors' network by removing the nodes representing files. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/bipartite.png}
+    \caption{A bipartite network of authors (green) and edited files (light blue) in the \texttt{pandas} project within the timeframe 31/01/2021 and 15/02/2021}
+    \label{fig:bipartite}
+\end{figure}
+
+
 % - Can be weighted
 %    WOMP and weighted Jaccard methods (calculation, single nodes removed, etc...)
 % (One WOMP and one Jaccard network)
