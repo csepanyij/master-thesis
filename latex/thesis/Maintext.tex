@@ -213,7 +213,13 @@ We have multiple methods to convert the directed and weighted bipartite network 
 
 \[ w_{ab}^{A \rightarrow A} = \sum_{j=1}^m \frac{w_{aj}}{W_a^F} \]
 
-where $W_a^F$ is the sum of all outgoing edge weights from author $a$ to all files $F$ denoted as $W_a^F = \sum_{i=1}^n w_{ai}$. This creates a bidirectional weighted collaboration network between authors $a_1$ and $a_2$, where the weight $w_{12}$ represents the relative collaboration effort of $a_1$ towards $a_2$ compared to all the other developers $a_1$ has collaborated with. Conseqently, every edge is in the rage $[0,1]$ in the resulting WOMP network.
+where $W_a^F$ is the sum of all outgoing edge weights from author $a$ to all files $F$ denoted as $W_a^F = \sum_{i=1}^n w_{ai}$. This creates a bidirectional weighted collaboration network between authors $a_1$ and $a_2$, where the weight $w_{12}$ represents the relative collaboration effort of $a_1$ towards $a_2$ compared to all the other developers $a_1$ has collaborated with. Conseqently, every edge is in the rage $[0,1]$ in the resulting WOMP network. \\
+
+A disadvantage of the WOMP method is, that the generated collaboration network is bidirectional, meaning if there was any common authored files between $a_1$ and $a_2$, then there will be both $w_{12}$ and $w_{21}$ connecting them. To simplify the network, we want to generate an authors network, where the edges are undirected. For this, we are using the weighted Jaccard method on the files-authors bipartite network:
+
+\[ w_{ab} = \frac{\sum_{f \in F}min(f_a, f_b)}{\sum_{f \in F}max(f_a, f_b)} \]
+
+For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and maximum weights the authors have towards each file, then we divide the sum of minimums with the sum of maximums.
 
 % - Can be weighted
 %    WOMP and weighted Jaccard methods (calculation, single nodes removed, etc...)
