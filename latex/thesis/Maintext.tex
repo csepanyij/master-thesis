@@ -154,42 +154,42 @@ As a first step, we generate a temporal bipartite network of authors and their e
     \centering
     \begin{subfigure}{0.3\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/temporal/0.png}
+        \includegraphics[width=0.92\textwidth]{figures/temporal/0.png}
         \caption{}
         \label{fig:temporal net A}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.3\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/temporal/1.png}
+        \includegraphics[width=0.92\textwidth]{figures/temporal/1.png}
         \caption{}
         \label{fig:temporal net B}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.3\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/temporal/2.png}
+        \includegraphics[width=0.92\textwidth]{figures/temporal/2.png}
         \caption{}
         \label{fig:temporal net C}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.3\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/temporal/3.png}
+        \includegraphics[width=0.92\textwidth]{figures/temporal/3.png}
         \caption{}
         \label{fig:temporal net D}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.3\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/temporal/4.png}
+        \includegraphics[width=0.92\textwidth]{figures/temporal/4.png}
         \caption{}
         \label{fig:temporal net E}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.3\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/temporal/5.png}
+        \includegraphics[width=0.92\textwidth]{figures/temporal/5.png}
         \caption{}
         \label{fig:temporal net F}
     \end{subfigure}
@@ -204,11 +204,16 @@ The generated static weighed bipartite network looses its time-varying component
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/bipartite.png}
+    \includegraphics[width=0.7\textwidth]{figures/bipartite.png}
     \caption{A bipartite network of authors (green) and edited files (light blue) in the \texttt{pandas} project within the timeframe 31/01/2021 and 15/02/2021}
     \label{fig:bipartite}
 \end{figure}
 
+We have multiple methods to convert the directed and weighted bipartite network into a projection of authors. We could simply remove the files and connect each author, that worked on the same file, however, the end result would be an unweighted graph. This would falsely show, that all collaborations are weighed equally, which is clearly not the case, as multiple continuous edits on the same file from both parties should represent a stronger collaborative connection. Therefore, firstly we implement the Weighted One-Mode Projection (WOMP) method \cite{stramWeightedOneMode2017}, The WOMP method converts the bipartite network $G(A,F,E)$, where $E$ is the edge list containing tuples $(a_i,f_i,w_{ij})$, and $w_{ij} \in E$ is the weight between author $a_i \in A$ and file $f_i \in F$. With this notation, a weighted directed edge can be calculated for any $a_a, a_b \in A$ as follows:
+
+\[ w_{ab}^{A \rightarrow A} = \sum_{j=1}^m \frac{w_{aj}}{W_a^F} \]
+
+where $W_a^F$ is the sum of all outgoing edge weights from author $a$ to all files $F$ denoted as $W_a^F = \sum_{i=1}^n w_{ai}$. This creates a bidirectional weighted collaboration network between authors $a_1$ and $a_2$, where the weight $w_{12}$ represents the relative collaboration effort of $a_1$ towards $a_2$ compared to all the other developers $a_1$ has collaborated with. Conseqently, every edge is in the rage $[0,1]$ in the resulting WOMP network.
 
 % - Can be weighted
 %    WOMP and weighted Jaccard methods (calculation, single nodes removed, etc...)
