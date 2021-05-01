@@ -204,7 +204,7 @@ The generated static weighed bipartite network looses its time-varying component
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/bipartite.png}
+    \includegraphics[width=0.65\textwidth]{figures/bipartite.png}
     \caption{A bipartite network of authors (green) and edited files (light blue) in the \texttt{pandas} project within the timeframe 31/01/2021 and 15/02/2021}
     \label{fig:bipartite}
 \end{figure}
@@ -219,11 +219,14 @@ A disadvantage of the WOMP method is, that the generated collaboration network i
 
 \[ w_{ab} = \frac{\sum_{f \in F}min(f_a, f_b)}{\sum_{f \in F}max(f_a, f_b)} \]
 
-For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and maximum weights the authors have towards each file, then we divide the sum of minimums with the sum of maximums.
+For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and maximum weights the authors have towards each file, then we divide the sum of minimums with the sum of maximums. This results in the undirected author-author network with edge weights in range $[0, 1]$. By default, this method removes isolated contributors, who do not collaborate with eachother, but are actively editing the files. We add these nodes manually. FIgure \ref{fig:jaccard} shows the final author network. \\
 
-% - Can be weighted
-%    WOMP and weighted Jaccard methods (calculation, single nodes removed, etc...)
-% (One WOMP and one Jaccard network)
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/jaccard.png}
+    \caption{Weighted Jaccard similarity collaboration network of \texttt{pandas} generated from the bipartite network in Figure \ref{fig:bipartite}.}
+    \label{fig:jaccard}
+\end{figure}
 
 \subsection{Core and periphery}
 % - Core identification method: 20th percentile on degree: \cite{joblinEvolutionaryTrendsDeveloper2017}
