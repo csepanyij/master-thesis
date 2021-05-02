@@ -110,7 +110,7 @@ For the quantitative research to be conducted, we will gather a large set of rep
 To find answers to the research questions, we implement an analysis tool to mine and analyze project repositories, which allows us to generate collaboration networks and network metrics for the analysed projects. \\
 
 \subsection{\texttt{git2net} miner}
-The process begins with the project mining. After cloning the repository, the \texttt{git2net} \cite{goteAnalysingTimeStampedCoEditing2019} library is used to collect data related to commits. Specifically, who is the author of each commit, which files were modified (created, edited, deleted) with the commit, and when was the commit created. Additionally, the lines edited by the author within each commit are collected separately, allowing for a more fine-grained collaboration network generation if necessary. The results are collected into an \texttt{sqlite} \footnote{\href{https://www.sqlite.org/index.html}{https://www.sqlite.org/index.html}} database file's \textit{commits} and \textit{edits} tables. \\
+The process begins with the project mining. After cloning the repository, the \texttt{git2net} \cite{goteAnalysingTimeStampedCoEditing2019} library is used to collect data related to commits. Specifically, who is the author of each commit, which files were modified (created, edited, deleted) with the commit, and when was the commit created. Additionally, the lines edited by the author within each commit are collected separately, allowing for a more fine-grained collaboration network generation if necessary. The results are collected into an \texttt{sqlite} \footnote{\url{https://www.sqlite.org/index.html}} database file's \textit{commits} and \textit{edits} tables. \\
 
 The \texttt{git2net} mining process by default collects all the commits throughout the project's lifecycle. However, the processing time of each commit differs based on the number of edits, the affected number of files and the file types as well, which makes collecting certain commits very resource-intense and time-costly. Therefore, we exclude every commit, which contains more than 100 file modifications, during each repository mining using the \textit{max\_modifications} parameter. As observed by Gote et al \cite{goteAnalysingTimeStampedCoEditing2019}, this exclusion criteria does not affect significanly the generated network, because they are mostly merge commits or project restructurings, which do not mark any true collaboration effort between developers. During the data mining in certain repositories, we encountered commits, that were not mineable with this method and the mining process halted, presumably due to processing error because of binary file changes in these commits. We also excluded these commits from our data mining process.\\
 
@@ -118,7 +118,7 @@ This exclusion criteria resulted in an average of 3\% of commits excluded in all
 
 \subsection{\texttt{repo\_tools} miner} 
 
-We use the \texttt{repo\_tools} \footnote{\href{https://github.com/wschuell/repo\_tools/}{https://github.com/wschuell/repo\_tools/}} Python library to query the Github API for additional repository data extraction, such as:
+We use the \texttt{repo\_tools} \footnote{\url{https://github.com/wschuell/repo\_tools/}} Python library to query the Github API for additional repository data extraction, such as:
 
 \begin{itemize}
     \item Releases
@@ -148,7 +148,7 @@ As the files are also labelled by their filename property in the network outputs
 When creating a DSN from the mined data, we have multiple methods at hand. The \texttt{git2net} library provides its own co-editing network function, which returns a temporal network of collaborators. This uses the co-authorship algorithm developed by Gote et. al. \cite{goteAnalysingTimeStampedCoEditing2019}, however, we would like to have more control over the network generation method, such as simple file-based co-authorship in order to customize the network for our needs, like weighing each relation or generating undirected graphs. \\
 
 \subsubsection{Temporal bipartite network}
-As a first step, we generate a temporal bipartite network of authors and their edited files with the \texttt{git2net} built-in \textit{get\_bipartite\_network} method. A temporal network is a \texttt{pathpy} \footnote{\href{https://www.pathpy.net/}{https://www.pathpy.net/}} graph object, which contains a collection of timestamped graphs of a single network at each point in time within the observed timeframe. Such a snapshot $S_t = (U, V, E_t)$, where $U$ is the set of authors, $V$ is the set of files and $E_t$ is the set of file edits as edges at $t$ timestamp. By connecting the authors, who touched the same files, and removing the nodes representing the edited files (converting the bipartite network to a regular network), we can observe the evolution of the collaboration over time, represented in Figure \ref{fig:temporal net}. \\
+As a first step, we generate a temporal bipartite network of authors and their edited files with the \texttt{git2net} built-in \textit{get\_bipartite\_network} method. A temporal network is a \texttt{pathpy} \footnote{\url{https://www.pathpy.net/}} graph object, which contains a collection of timestamped graphs of a single network at each point in time within the observed timeframe. Such a snapshot $S_t = (U, V, E_t)$, where $U$ is the set of authors, $V$ is the set of files and $E_t$ is the set of file edits as edges at $t$ timestamp. By connecting the authors, who touched the same files, and removing the nodes representing the edited files (converting the bipartite network to a regular network), we can observe the evolution of the collaboration over time, represented in Figure \ref{fig:temporal net}. \\
 
 \begin{figure}
     \centering
@@ -211,13 +211,13 @@ The generated static weighed bipartite network looses its time-varying component
 
 We have multiple methods to convert the directed and weighted bipartite network into a projection of authors. We could simply remove the files and connect each author, that worked on the same file, however, the end result would be an unweighted graph. This would falsely show, that all collaborations are weighed equally, which is clearly not the case, as multiple continuous edits on the same file from both parties should represent a stronger collaborative connection. Therefore, firstly we implement the Weighted One-Mode Projection (WOMP) method \cite{stramWeightedOneMode2017}, The WOMP method converts the bipartite network $G(A,F,E)$, where $E$ is the edge list containing tuples $(a_i,f_i,w_{ij})$, and $w_{ij} \in E$ is the weight between author $a_i \in A$ and file $f_i \in F$. With this notation, a weighted directed edge can be calculated for any $a_a, a_b \in A$ as follows:
 
-\[ w_{ab}^{A \rightarrow A} = \sum_{j=1}^m \frac{w_{aj}}{W_a^F} \]
+\[ w_{ab}^{A \rightarrow A} = \sum_{j=1}^m \frac{w_{aj}}{W_a^F}, \]
 
 where $W_a^F$ is the sum of all outgoing edge weights from author $a$ to all files $F$ denoted as $W_a^F = \sum_{i=1}^n w_{ai}$. This creates a bidirectional weighted collaboration network between authors $a_1$ and $a_2$, where the weight $w_{12}$ represents the relative collaboration effort of $a_1$ towards $a_2$ compared to all the other developers $a_1$ has collaborated with. Conseqently, every edge is in the rage $[0,1]$ in the resulting WOMP network. \\
 
 A disadvantage of the WOMP method is, that the generated collaboration network is bidirectional, meaning if there was any common authored files between $a_1$ and $a_2$, then there will be both $w_{12}$ and $w_{21}$ connecting them. To simplify the network, we want to generate an authors network, where the edges are undirected. For this, we are using the weighted Jaccard method on the files-authors bipartite network:
 
-\[ w_{ab} = \frac{\sum_{f \in F}min(f_a, f_b)}{\sum_{f \in F}max(f_a, f_b)} \]
+\[ w_{ab} = \frac{\sum_{f \in F}min(f_a, f_b)}{\sum_{f \in F}max(f_a, f_b)}. \]
 
 For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and maximum weights the authors have towards each file, then we divide the sum of minimums with the sum of maximums. This results in the undirected author-author network with edge weights in range $[0, 1]$. By default, this method removes isolated contributors, who do not collaborate with eachother, but are actively editing the files. We add these nodes manually. Figure \ref{fig:jaccard} shows the final author network. \\
 
@@ -237,8 +237,20 @@ We use the degree centrality of each node (i.e. developer) to identify the core 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.62\textwidth]{figures/degree_centrality.png}
-    \caption{Degree centrality represented on the \texttt{pandas} collaboration network. Darker colors represent a higher degree centrality value. The four highlighted nodes are in the highest 20th percentile of degree centrality, classifying as members of the core developers.}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.98\textwidth]{figures/degree_centrality.png}
+        \caption{Pandas}
+        \label{fig:centrality a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.98\textwidth]{figures/degree_centrality_curl.png}
+        \caption{Curl}
+        \label{fig:centrality b}
+    \end{subfigure}
+    \caption{Degree centrality within the \texttt{pandas} and \texttt{curl} projects' collaboration networks. Darker colors represent a higher degree centrality value. The  highlighted nodes are in the highest 20th percentile of degree centrality, classifying as members of the core developers. We can observe in both one-month periods, that \texttt{pandas} is much more decentralized, whereas \texttt{curl} is largely dependent on one developer.}
     \label{fig:degree centrality}
 \end{figure}
 
@@ -246,17 +258,38 @@ We use the degree centrality of each node (i.e. developer) to identify the core 
 
 The degree \textit{centrality} can be calculated for every node, however, through our analysis we would also like to measue a global \textit{centralization} metric, which is applicable to the whole network. As suggested by Crowston and Howison \cite{crowstonHierarchyCentralizationFree2006}, we calculate the degree \textit{centralization} by summing the differences between the maximum and each node's degree \textit{centrality}. 
 
-\[ C_D(A) = \frac{\sum_{i=1}^n(C_d(a*)-C_d(a_i))}{H} \]
+\[ C_D(A) = \frac{\sum_{i=1}^n(C_d(a*)-C_d(a_i))}{H}, \]
 
 where $C_d(a)$ is the degree \textit{centrality} of an author $a$, $a*$ is the author with the highest degree \textit{centrality} value, and $n$ is the number of authors in the collaboration network $A$. The value $H$ is for normalizing the sum by dividing by the theoretical maximum \textit{centralization}. Since the \textit{centrality} values are already in the range $[0, 1]$, we only need to normalize for the network's size. We get the highest centrality score with a star graph, where each node is only connected to a single central node, which has exactly one edge to all other nodes. The central node has a centrality of 1 in this case, whereas all the other $n-1$ nodes have $C_d(a) = \frac{1}{n-1}$. This means that in case of a star graph:
 
-\[ H = (n-1) (1-\frac{1}{n-1}) = n-2 \]
+\[ H = (n-1) (1-\frac{1}{n-1}) = n-2. \]
 
-Within certain timeframes, when a project is inactive, it could happen, that the network contains 2 nodes or less. We define $C_D(A) = 0$ if $|A| = n <=2$. The resulting output will now always have a value in $[0, 1]$, where 1 means a completely centralized netwrok (star graph) and 0 means a completely decentralized network. It is important to emphasize that a centralization score of 0 does not necessarily mean that there is no collaboration and every developer is isolated. Rather it means that each developer is co-authoring with just as many authors, as the others do.
+Within certain timeframes, when a project is inactive, it could happen, that the network contains 2 nodes or less. We define $C_D(A) = 0$ if $|A| = n <=2$. The resulting output will always have a value in $[0, 1]$, where 1 means a completely centralized network (star graph) and 0 means a completely decentralized network. It is important to emphasize that a centralization score of 0 does not necessarily mean that there is no collaboration and every developer is isolated. Rather it means that each developer is co-authoring with just as many authors, as the others do. \\
 
 % - Gini coefficient
 
-\cite{klugUnderstandingGroupDynamics}
+% - \cite{klugUnderstandingGroupDynamics}
+
+\subsubsection{Clustering coefficient}
+
+While centralization helps us describe the centralness of the network and how much it is centered around a single, or a small number of developers, it does not help us describing the structure of the network in more detail. Our goal is to gain an understanding of also the modularity of our network, meaning how much developers tend to cluster together \cite{joblinEvolutionaryTrendsDeveloper2017}. We expect that authors form smaller clusters, which are more tightly connected together, and these clusters have somewhat weaker ties to other clusters. This builds on the assumption that the social network of the software follows the modules which build up the software itself, thus authors of a specific function should also cluster together within the network \cite{conwayHowCommitteesInvent1968, joblinEvolutionaryTrendsDeveloper2017}. To measure this "clusteredness", we calculate the \textit{local clustering coefficient} for each node. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/loc_clust_coeff.png}
+    \caption{The local clustering coefficient demonstrated on an unweighted network of 4 vertices \cite{jedrzejewskiRoleComplexNetworks2016}.}
+    \label{fig:loc clust coeff}
+\end{figure}
+
+The \textit{local clustering coefficient} quantifies on a scale $[0, 1]$ how likely it is that a node's neighbours are also neighbours. We use the number of how many triangles (also called clique, triplet) is every node a part of. This is illustrated for unweighted networks on Figure \ref{fig:loc clust coeff} with the formula:
+
+\[ C_i = \frac{2T(i)}{deg(i)(deg(i)-1)}, \]
+
+where $T(i)$ is the number of triangles through node $i$ and $deg(i)$ is the degree of i. However, in a weighted network we also have to consider the edge weights, since it is easy to see that a clustering coefficient of 1 with also the maximum weighted edges in a triplet does not represent the same clustering as being connected with a weak links. We expect weaker links connecting larger clusters, whereas stronger links within each cluster. Therefore, we use geometric averaging of the subgraph edge weights (as implemented by the \texttt{networkx}\footnote{\url{https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.clustering.html}} library \cite{onnelaIntensityCoherenceMotifs2005}):
+
+\[ c_i = \frac{\sum_{jk}(\hat{w}_{ij}\hat{w}_{ik}\hat{w}_{jk})^{1/3}}{deg(i)(deg(i)-1)}. \]
+
+The $\hat{w}_{ij}$ represents the normalized weight of edge $e_{ij}$ over the maximum weight in the network. \\
 
 \subsubsection{Hierarchy}
 % - how does hierarchy change over time, around events
