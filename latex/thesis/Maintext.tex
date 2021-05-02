@@ -219,7 +219,7 @@ A disadvantage of the WOMP method is, that the generated collaboration network i
 
 \[ w_{ab} = \frac{\sum_{f \in F}min(f_a, f_b)}{\sum_{f \in F}max(f_a, f_b)} \]
 
-For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and maximum weights the authors have towards each file, then we divide the sum of minimums with the sum of maximums. This results in the undirected author-author network with edge weights in range $[0, 1]$. By default, this method removes isolated contributors, who do not collaborate with eachother, but are actively editing the files. We add these nodes manually. FIgure \ref{fig:jaccard} shows the final author network. \\
+For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and maximum weights the authors have towards each file, then we divide the sum of minimums with the sum of maximums. This results in the undirected author-author network with edge weights in range $[0, 1]$. By default, this method removes isolated contributors, who do not collaborate with eachother, but are actively editing the files. We add these nodes manually. Figure \ref{fig:jaccard} shows the final author network. \\
 
 \begin{figure}
     \centering
@@ -228,8 +228,31 @@ For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and 
     \label{fig:jaccard}
 \end{figure}
 
-\subsection{Core and periphery}
-% - Core identification method: 20th percentile on degree: \cite{joblinEvolutionaryTrendsDeveloper2017}
+\subsection{Core and periphery, centralization}
+A critical part of the OSS software projects is the existence of core and periphery developers. It has been observed, that in each FLOSS project there are a small number of developers, who provide the vast majority of development effort into the project. It has been also established, that the members of core developers do not change substantially during the project's lifecycle. However, there was no effort on whether there is a change in the collaboration pattern, especially before, during or after a major lifecycle event. Therefore, we make efforts identifying the core developer network to observe these changes. \\
+
+We use the degree centrality of each node (i.e. developer) to identify the core members. Degree centrality of a node is the fraction of all possible nodes it is connected to. We can calculate it by dividing the degree with $n-1$, where $n = |G|$ the number of nodes within the network. Since the core developers contribute the majority of commits and edits of the project, they are expected to be connected with more nodes. Joblin et. al. \cite{joblinClassifyingDevelopersCore2016, joblinEvolutionaryTrendsDeveloper2017} have also identified degree centrality as the best predictor of core developers. In cases, where binary classification of core or periphery is needed, we assign developers to the core network if their degree centrality score is in the top 20th percentile, otherwise they are considered as periphery. We also take note, that this method does not consider the weighted edges, only the number of edges (degree) a node has. Although this method could be refined to consider the node degree weighted with the edges, we argue that this could lead to invalidity. In case of two developers, who only contributed to one file, they will be represented with a strong connection and would receive a high weighted degree value, whereas a core contributor, who edits many files, can have many weak connections but these might not add up to one strong connection of the two isolated developers when weighted with the edge weights. It is clear, that a developer with many connections, regardless of the strength of the collaboration, should be considered core. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.62\textwidth]{figures/degree_centrality.png}
+    \caption{Degree centrality represented on the \texttt{pandas} collaboration network. Darker colors represent a higher degree centrality value. The four highlighted nodes are in the highest 20th percentile of degree centrality, classifying as members of the core developers.}
+    \label{fig:degree centrality}
+\end{figure}
+
+The degree \textit{centrality} can be calculated for every node, however, through our analysis we would also like to measue a global \textit{centralization} metric, which is applicable to the whole network. As suggested by Crowston and Howison \cite{crowstonHierarchyCentralizationFree2006}, we calculate the degree \textit{centralization} by summing the differences between the maximum and each node's degree \textit{centrality}. 
+
+\[ C_D(A) = \frac{\sum_{i=1}^n(C_d(a*)-C_d(a_i))}{H} \]
+
+where $C_d(a)$ is the degree \textit{centrality} of an author $a$, $a*$ is the author with the highest degree \textit{centrality} value, and $n$ is the number of authors in the collaboration network $A$. Since the \textit{centrality} values are already in the range $[0, 1]$, the 
+
+\subsubsection{Centralization}
+% - from: \cite{crowstonHierarchyCentralizationFree2006}
+"Specifically, the network centralization is calculated as the sum of the differences between the maximum and each individual's centrality score, normalized to range from 0 to 1 by dividing by the theoretical maximum centralization.   \cite{crowstonHierarchyCentralizationFree2006}"
+
+% - Gini coefficient
+
+\cite{klugUnderstandingGroupDynamics}
 
 \subsection{Network statistics}
 % - Time window scanning over time
@@ -237,11 +260,9 @@ For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and 
 % - size of the project matters
 % - activity determines the scale (less activity = small interval (week), vice versa)
 % - helps: commits per day plot (insert)
-\subsubsection{Centralization}
-% - from: \cite{crowstonHierarchyCentralizationFree2006}
-"Specifically, the network centralization is calculated as the sum of the differences between the maximum and each individual's centrality score, normalized to range from 0 to 1 by dividing by the theoretical maximum centralization.   \cite{crowstonHierarchyCentralizationFree2006}"
 
-\cite{klugUnderstandingGroupDynamics}
+% - The efficiency of a project’s workflow (measured by the percentagesof issues assigned to specific developers). \cite{jarczykSurgicalTeamsGitHub2018}
+
 
 \subsubsection{Hierarchy}
 % - how does hierarchy change over time, around events
