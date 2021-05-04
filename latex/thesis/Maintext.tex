@@ -292,6 +292,29 @@ where $T(i)$ is the number of triangles through node $i$ and $deg(i)$ is the deg
 The $\hat{w}_{ij}$ represents the normalized weight of edge $e_{ij}$ over the maximum weight in the network. \\
 
 \subsubsection{Hierarchy}
+The degree centrality and the clustering coefficient are in themselves able to express meaningful aspects of the developer social network, however, by combining the two metrics, we can also assess how hierarchical the network is. In a scale-free social hierarchical network (such as the collaboration network), nodes tend to cluster around a single or a few hubs, which are more likely to have weak connections to other hubs \cite{ravaszHierarchicalOrganizationComplex2003, joblinEvolutionaryTrendsDeveloper2017}. The nodes within these formed groups are relatively stronger than the connections connecting the hubs, but they are less likely to connect to nodes outside of their group. Therefore in a hierarchical network, the hubs have a high degree number and a low clustering coefficient, whereas the group members clustering around the hubs have a high clustering coefficient, but low degree numbers. \\
+
+We can visualize the degree of hierarchy by plotting each node's  clustering coefficient against the number of degrees, shown in Figure \ref{fig:hierarchy}. In hierarchical networks, the plotted linear regression trendline will decrease steeply, as there is a negative correlation between the degree and clustering coefficient. In networks, where this cannot be observed, the trendline stays flat, meaning these two metrics are independent from eachother and the structure is not hierarchical. To measure the hierarchical level numerically within a network, we take the trendline's slope, which is $\beta_1$ in $y=\beta_1x + \beta_0$ linear regression equation. \\
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.98\textwidth]{figures/hierarchical.png}
+        \caption{Highly hierarchical network}
+        \label{fig:hierarchical}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.98\textwidth]{figures/hierarchy_plot.png}
+        \caption{Network hierarchy}
+        \label{fig:hierarchy plot}
+    \end{subfigure}
+    \caption{Hierarchical network and its corresponding degree number vs clustering coefficient plot.}
+    \label{fig:hierarchy}
+\end{figure}
+
 % - how does hierarchy change over time, around events
 % - from: \cite{joblinEvolutionaryTrendsDeveloper2017}
 
