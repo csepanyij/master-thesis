@@ -317,7 +317,21 @@ We can visualize the degree of hierarchy by plotting each node's  clustering coe
 
 In every network isolated authors can be observed, who are only working on files that noone else has edited (in the given timeframe). These nodes can skew the hierarchy score, because an isolated node's degree and clustering coefficient are by definition 0, which disproportionately makes the trendline much flatter. Therefore, we remove the isolated nodes from the network. If the network only contains isolated nodes, and there is no linear regression to be calculated, we set the hierarchy value to 0.
 
-\subsubsection{Release measures}
+\subsubsection{Release and issue measures}
+\begin{itemize}
+    \item Releases --> \cite{senApplicationSurvivalModel2015}
+    \begin{itemize}
+        \item Basic metrics: issues opened, issues closed, avg issue time, etc\dots
+        \item Releases are gathered from tags --> cleaning (beta versions, etc\dots)
+        \item 
+    \end{itemize}
+    \item Issues
+    \begin{itemize}
+        \item features vs bugs --> based on text
+        \item survival analysis
+        \item "survival probabilities for project issues after 1, 2, 3, 7, 30, 100,and 365 days. " \cite{jarczykSurgicalTeamsGitHub2018}
+    \end{itemize}
+\end{itemize}
 % - issues opened
 % - issues closed
 % - avg issue open time
@@ -342,7 +356,7 @@ In every network isolated authors can be observed, who are only working on files
 % - unexpected: layoffs
 \subsection{SNA metrics analysis}
 \subsubsection{K-cores}
-Besides taking the 20th percentile of the top clustering coefficients to identify the number of core developers in the network, we ....
+Besides taking the 20th percentile of the top clustering coefficients to identify the number of core developers in the network, we .... \cite{batageljAlgorithmCoresDecomposition2003}
 % - 20th percentile of k-core nodes
 % - alternative to identifying the core members
 %....
