@@ -294,7 +294,7 @@ The $\hat{w}_{ij}$ represents the normalized weight of edge $e_{ij}$ over the ma
 \subsubsection{Hierarchy}
 The degree centrality and the clustering coefficient are in themselves able to express meaningful aspects of the developer social network, however, by combining the two metrics, we can also assess how hierarchical the network is. In a scale-free social hierarchical network (such as the collaboration network), nodes tend to cluster around a single or a few hubs, which are more likely to have weak connections to other hubs \cite{ravaszHierarchicalOrganizationComplex2003, joblinEvolutionaryTrendsDeveloper2017}. The nodes within these formed groups are relatively stronger than the connections connecting the hubs, but they are less likely to connect to nodes outside of their group. Therefore in a hierarchical network, the hubs have a high degree number and a low clustering coefficient, whereas the group members clustering around the hubs have a high clustering coefficient, but low degree numbers. \\
 
-We can visualize the degree of hierarchy by plotting each node's  clustering coefficient against the number of degrees, shown in Figure \ref{fig:hierarchy}. In hierarchical networks, the plotted linear regression trendline will decrease steeply, as there is a negative correlation between the degree and clustering coefficient. In networks, where this cannot be observed, the trendline stays flat, meaning these two metrics are independent from eachother and the structure is not hierarchical. To measure the hierarchical level numerically within a network, we take the trendline's slope, which is $\beta_1$ in $y=\beta_1x + \beta_0$ linear regression equation. \\
+We can visualize the degree of hierarchy by plotting each node's  clustering coefficient against the number of degrees, shown in Figure \ref{fig:hierarchy}. In hierarchical networks, the plotted linear regression trendline will decrease steeply, as there is a negative correlation between the degree and clustering coefficient. In networks, where this cannot be observed, the trendline stays flat, meaning these two metrics are independent from eachother and the structure is not hierarchical. To measure the hierarchical level numerically within a network, we take the trendline's slope, which is $\beta_1$ in the $y=\beta_1x + \beta_0$ general linear regression equation. \\
 
 \begin{figure}
     \centering
@@ -315,14 +315,15 @@ We can visualize the degree of hierarchy by plotting each node's  clustering coe
     \label{fig:hierarchy}
 \end{figure}
 
-% - how does hierarchy change over time, around events
-% - from: \cite{joblinEvolutionaryTrendsDeveloper2017}
+In every network isolated authors can be observed, who are only working on files that noone else has edited (in the given timeframe). These nodes can skew the hierarchy score, because an isolated node's degree and clustering coefficient are by definition 0, which disproportionately makes the trendline much flatter. Therefore, we remove the isolated nodes from the network. If the network only contains isolated nodes, and there is no linear regression to be calculated, we set the hierarchy value to 0.
 
-\subsubsection{K-cores}
-% - 20th percentile of k-core nodes
-% - alternative to identifying the core members
+\subsubsection{Release measures}
+% - issues opened
+% - issues closed
+% - avg issue open time
+% - more... from: \cite{jarczykSurgicalTeamsGitHub2018}
 
-\subsection{Network statistics}
+\subsection{Time window}
 % - Time window scanning over time
 % - parameters: delta, interval, from, to
 % - size of the project matters
@@ -340,6 +341,10 @@ We can visualize the degree of hierarchy by plotting each node's  clustering coe
 % - expected: Big releases
 % - unexpected: layoffs
 \subsection{SNA metrics analysis}
+\subsubsection{K-cores}
+Besides taking the 20th percentile of the top clustering coefficients to identify the number of core developers in the network, we ....
+% - 20th percentile of k-core nodes
+% - alternative to identifying the core members
 %....
 \subsection{Results}
 %....
