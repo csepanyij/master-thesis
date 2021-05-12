@@ -233,7 +233,7 @@ A critical part of the OSS software projects is the existence of core and periph
 
 \subsubsection{Degree centrality}
 
-We use the degree centrality of each node (i.e. developer) to identify the core members. Degree centrality of a node is the fraction of all possible nodes it is connected to. We can calculate it by dividing the degree with $n-1$, where $n = |G|$ the number of nodes within the network. Since the core developers contribute the majority of commits and edits of the project, they are expected to be connected with more nodes. Joblin et. al. \cite{joblinClassifyingDevelopersCore2016, joblinEvolutionaryTrendsDeveloper2017} have also identified degree centrality as the best predictor of core developers. In cases, where binary classification of core or periphery is needed, we assign developers to the core network if their degree centrality score is in the top 20th percentile, otherwise they are considered as periphery. We also take note, that this method does not consider the weighted edges, only the number of edges (degree) a node has. Although this method could be refined to consider the node degree weighted with the edges, we argue that this could lead to invalidity. In case of two developers, who only contributed to one file, they will be represented with a strong connection and would receive a high weighted degree value, whereas a core contributor, who edits many files, can have many weak connections but these might not add up to one strong connection of the two isolated developers when weighted with the edge weights. It is clear, that a developer with many connections, regardless of the strength of the collaboration, should be considered core. \\
+We use the degree centrality of each node (i.e. developer) to identify the core members. Degree centrality of a node is the fraction of all possible nodes it is connected to. We can calculate it by dividing the degree with $n-1$, where $n = |G|$ the number of nodes within the network. Since the core developers contribute the majority of commits and edits of the project, they are expected to be connected with more nodes. Joblin et. al. \cite{joblinClassifyingDevelopersCore2016, joblinEvolutionaryTrendsDeveloper2017} have also identified degree centrality as the best predictor of core developers. In cases, where binary classification of core or periphery is needed, we assign developers to the core network if their degree centrality score is in the top 20th percentile, otherwise they are considered as periphery. We also take note, that this method does not consider the weighted edges, only the number of edges (degree) a node has. Although this method could be refined to consider the node degree weighted with the edges, we argue that this could lead to invalidity. In case of two developers, who only contributed to one file, they will be represented with a strong connection and would receive a high weighted degree value, whereas a core contributor, who edits many files, can have many weak connections but these might not add up to one strong connection of the two isolated developers when weighted with the edge weights. It is clear, that a developer with many connections, regardless of the strength of the collaboration, should be considered core. Figure \ref{fig:degree centrality} shows two examples for degree centrality within a collaboration network. In the figure, darker colors represent a higher degree centrality value. The  highlighted nodes are in the highest 20th percentile of degree centrality, classifying as members of the core developers. We can observe in both one-month periods, that \texttt{pandas} is much more decentralized, whereas \texttt{curl} is largely dependent on one developer.\\
 
 \begin{figure}
     \centering
@@ -250,7 +250,7 @@ We use the degree centrality of each node (i.e. developer) to identify the core 
         \caption{Curl}
         \label{fig:centrality b}
     \end{subfigure}
-    \caption{Degree centrality within the \texttt{pandas} and \texttt{curl} projects' collaboration networks. Darker colors represent a higher degree centrality value. The  highlighted nodes are in the highest 20th percentile of degree centrality, classifying as members of the core developers. We can observe in both one-month periods, that \texttt{pandas} is much more decentralized, whereas \texttt{curl} is largely dependent on one developer.}
+    \caption{Degree centrality within the \texttt{pandas} and \texttt{curl} projects' collaboration networks. }
     \label{fig:degree centrality}
 \end{figure}
 
@@ -373,15 +373,49 @@ The release type contains the semantic version of the release, which was gathere
 
 \subsubsection{Project issues and measures}
 
+To measure the productivity within the project, we collect some basic information regarding the GitHub issues. Issues keep track of bugs, beatures and tasks, contributors can comment and discuss the task at hand within an issue, and it can be assigned to users and milestones can be set. We collect the following information of issues:
+
 \begin{itemize}
-    \item Issues
-    \begin{itemize}
-        \item Basic metrics: issues opened, issues closed, avg issue time, etc\dots
-        \item features vs bugs --> based on text
-        \item survival analysis
-        \item "survival probabilities for project issues after 1, 2, 3, 7, 30, 100,and 365 days. " \cite{jarczykSurgicalTeamsGitHub2018}
-    \end{itemize}
+    \item Issue title
+    \item Issue number
+    \item Created at
+    \item Closed at
+    \item Open for
+    \item Bug or feature
 \end{itemize}
+
+The \textit{issue title} is a short description of the issue. Most projects create their own convention of naming and tagging issues, for example each issue starts with a 3-letter abbreviation of a category, e.g. \texttt{BUG} or \texttt{DOC}. \textit{Issue number} is a unique number for each issue, that is increased sequentially. \textit{Created at} is the date and time of the issue being created, and \textit{closed at} is the time when it was closed. If the issue was still open on the day of data mining (May 9 2021), this field is empty. The \textit{open for} field is the difference between the \textit{closed at} and \textit{created at} dates, or it is empty if the issue was never closed. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/issues_open.png}
+    \caption{Survival curves of the \texttt{pandas} library.}
+    \label{fig:survival}
+\end{figure}
+
+The last measure is \textit{bug or feature}. Because issues can cover a wide range of possible topics, from discussions to performance, it is worth categorizing them to analyse the differences. However, categorization in practice proves to be difficult due to the different conventions each project uses, and because GitHub does not apply any constraints to the text of the title. We are searching for specific keywords in the \textit{issue title} to categorize each issue into either a bug or a feature. We also drop some of the words from the text, because they would give us 'false positive' matches. If keywords for both or neither categories are found, the issue is marked as unknown. The dropped words, as well as the bug and feature keywords can be seen in Table \ref{tab:keywords} Although this simple method can already classify 10-15 percent of issues, it would require extensive manual effort to further improve this ratio. In future research, sentiment analysis of issue titles and issue descriptions could achieve much higher percentages. \\
+
+Statistics for issues like average close time also prove to be difficult, because there are continuously open issues, which inevitably leads to the fact that a large portion of issues were still open and continue to be open. For these issues, we cannot know the issue close time, and if we try to calculate global measures by aggregating all (or portion) of issues, we have to consider the \textit{survival bias} \cite{jarczykSurgicalTeamsGitHub2018}. Figure \ref{fig:survival} shows the issues survival curve of the \texttt{pandas} library. It is clearly visible, that a large portion (20 percent) of issues are not closed, and if we left them out of aggregate values such as average open time, our data will be skewed. Nevertheless, we can see in the example, that the categorization of issues makes a difference, as bugs get closed a bit earlier than an average (unknown) issue, because after the same amount of days passign for both categories, more bugs tend to be closed in this example. In contrast, features have a high life expectancy, as they are more likely to be still open than a bug, if the same number of days pass. The reason could be that features take longer to develop and plan than bugs, which is consistent with the findings of Jarczky et. al. \cite{jarczykSurgicalTeamsGitHub2018}. \\
+
+\begin{table}
+    \centering
+        \begin{tabular}{| c | c | c |}
+            \hline
+            \textbf{Drop words} & \textbf{Bug keywords} & \textbf{Feature keywords} \\
+            \hline \hline
+            debug & bug & feature \\
+            debugger & defect & enhancement \\
+             & incorrect & improvement \\
+             & unexpected & suggestion \\
+             & error & wishlist \\
+             & missing & wish list \\
+             & warning & \\
+             & problem & \\
+            \hline
+        \end{tabular}
+    \caption{Keywords and drop words for \textit{bug} and \textit{feature} categorization.}
+    \label{tab:keywords}
+\end{table}
 
 \subsection{Time window}
 % - Time window scanning over time
