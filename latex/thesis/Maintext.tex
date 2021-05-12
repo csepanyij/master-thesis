@@ -9,7 +9,7 @@ In recent years open source software solutions have become widely popular and fr
 
 Software development in a corporate environment usually follows a strict hierarchial structure, where each participant is given a precise position and responsibility, like project manager, scrum master, senior or junior developer, and employees do not tend to work outside of their assigned tasks and territories. The main purpose of maintaining software development structures is for the company to ensure that the outcome of the project is in accordance with the business objective, adheres to the pre-set quality criteria and it is completed in a given timeframe; in other words to asses the risks associated with the business objective of the software project \cite{surekaUsingSocialNetwork2011}. This is achieved by breaking down the developed software into smaller, less complex components, and grouping the developers into managable teams, where the communication is moderated between teams \cite{birdLatentSocialStructure2008}. \\
 
-% Open-source software development properties
+% Open-source software development propertie
 As opposed to commercial software development, Free/Libre Open Source Software (FLOSS) projects usually do not follow an organizational hierarchy, and are usually self-organizing and dynamic \cite{birdLatentSocialStructure2008}. Issues, bugs and progress are tracked openly, and everyone is encouraged to contribute based on the current topics and expertise, but purely on a volunteering basis. The lack of access restriction to certain modules allows for much more spontaneous interaction between developers, which generate large, complex networks \cite{martinez-romoUsingSocialNetwork2008}. These complex networks can be seen as large social networks of developers based on collaboration. \\
 
 % AUTHOR NAME HARDCODED HERE
@@ -317,13 +317,63 @@ We can visualize the degree of hierarchy by plotting each node's  clustering coe
 
 In every network isolated authors can be observed, who are only working on files that noone else has edited (in the given timeframe). These nodes can skew the hierarchy score, because an isolated node's degree and clustering coefficient are by definition 0, which disproportionately makes the trendline much flatter. Therefore, we remove the isolated nodes from the network. If the network only contains isolated nodes, and there is no linear regression to be calculated, we set the hierarchy value to 0.
 
-\subsubsection{Release and issue measures}
+\subsection{Project measures}
+
+One of our assuptions is that the collaboration network structure changes depending on the project's lifecycle. In order to discover cause and effect relationships between the network structure and project lifecycle, we gather basic project metrics to pinpoint the time and date of events, as well as the effort required within the project. We achieve this by gathering the dates of each release, and the quality and relative stress is measured by the issues within the project (create and close times).
+
+\subsubsection{Release and release measures}
+
+To measure the network changes around releases, first we collect the list of releases for the given project. Our goal is to gather the version number of each release, as well as the dates they were released. There are two relevant APIs regarding the release version numbers: GitHub releases and Git tags. Tags are marked and annotated commits supported by Git, therefore other projects, that are not on GitHub can also have tags. \textit{Tags} are most commonly used to mark new release versions, but they can also be used to annotate other information, such as release editions or milestones. On the other hand, a \textit{Release} is a high-level GitHub concept, which allows the project organizers to announce Git tags as project releases by adding a version number, release notes and binary artifacts \cite{olsonReleaseYourSoftware2013}. A commit, that represents a new GitHub release, must be tagged, but a tagged commit does not necessarily need to be a new GitHub release. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/semantic-versioning.png}
+    \caption{Semantic versioning. Figure source: \cite{SemanticVersioningUT2018}.}
+    \label{fig:semver}
+\end{figure}
+
+Throughout our analysis, we use the tags as indicators of a new release, because there could be new versions of a software, that are not released publicly, and therefore do not have a GitHub release. Furthermore, GitHub only announced the Releases workflow in 2013, when the release versioning by Git tags was already a common practice. This means, that releases before 2013 can only be analysed via the repository tags. \\
+
+Most large-scale OSS proejcts follow the semantic versioning convention, but only to a certain extent. The majority of tags follow the major-minor-patch (also known as breaking-feature-fix) semantic version naming convention in the format of X.Y.Z, where X is the major number, Y is the minor number, and Z is the patch number \cite{preston-wernerSemanticVersioning}. At the end, optionally pre-release and build data can be marked, for example: \textit{1.11.6-pre}. The major number signifies an API-breaking change compared to the previous release, meaning backwards compatibility is not guaranteed for depending applications. Minor releases add new features, but compatibility is ensured with the older version. Patch releases usually handle bugs and security updates within the package. \\
+
+During the network analysis, we expect the network measures to change around a release, but it is also expected, that a larger release, that required more collaboration, will have a greater impact, while smaller changes have smaller or no impact at all. The issue with the semantic versioning and release names is that there are no constraints, which would enforce a strict version naming, and it is entirely up to the developers to set the tag names. This leads to inconveniences when measuring collaboration effort through release version number, because a patch might require more collaboration effort than a minor release, and a minor release within one project could require significantly more teamwork than in another. Furthermore, tag names can be inconsistent, and there could be version numbers, that do not adhere to the major-minor-patch naming convention at all (e.g. test releases, or releases like 'latest-release-v11'). The possibility to add extra information at the end of tag names, like \texttt{-beta} or \texttt{rc} further complicates tracking the collaboration effort, because the majority of collaboration effort might happen before the \texttt{rc} version, or it might happen after it. As it can also be seen in Table \ref{tab:releases}, the \texttt{v0.14.0rc1} tag contains more modifications than the final \texttt{v0.14.0} version, whereas the \texttt{v1.2.0rc0} only contains a small fraction of modifications compared to \texttt{v1.2.0}. \\
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{| c | c | c | c | c | c | c | c | c |}
+            \hline
+            \textbf{Index} & \textbf{Name} & \textbf{Tag name} & \textbf{Created} & \textbf{Type} & \textbf{Modifications} & \textbf{Lines added} & \textbf{Lines removed} & \textbf{Total change} \\
+            \hline \hline
+            0 & Pandas v0.13.0 & v0.13.0 & 2013-12-30 17:02:51 & unknown & 20031 & 1.665357e+09 & 1.624343e+09 & 3.289700e+09 \\
+            1 & Pandas v0.13.1 & v0.13.1 & 2014-02-03 04:52:01 & patch & 836 & 2.231875e+06 & 2.349833e+06 & 4.581708e+06 \\
+            2 & Pandas v0.14rc1 & v0.14.0rc1 & 2014-05-16 22:28:09 & minor & 1861 & 2.251189e+07 & 2.050846e+07 & 4.302035e+07 \\
+            3 & v0.14.0 final & v0.14.0 & 2014-05-30 11:47:40 & unknown & 318 & 3.220804e+06 & 5.314470e+05 & 3.752251e+06 \\
+            4 & v0.14.1 final & v0.14.1 & 2014-07-10 23:46:19 & patch & 720 & 1.660133e+06 & 3.796690e+05 & 2.039802e+06 \\
+            5 & v0.15.0 Pre-release & v0.15pre & 2014-09-07 12:52:01 & unknown & 826 & 1.028779e+07 & 2.458664e+06 & 1.274645e+07 \\
+            \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots\\
+            66 & Pandas 1.1.5 & v1.1.5 & 2020-12-07 11:42:10 & patch & 2167 & 4.251057e+06 & 4.611365e+06 & 8.862422e+06 \\
+            67 & Pandas 1.2.0rc0 & v1.2.0rc0 & 2020-12-08 12:31:44 & minor & 41 & 1.060500e+04 & 8.850000e+02 & 1.149000e+04 \\
+            68 & Pandas 1.2.0 & v1.2.0 & 2020-12-26 13:47:00 & unknown & 683 & 5.782570e+05 & 2.989310e+05 & 8.771880e+05 \\
+            69 & Pandas 1.2.1 & v1.2.1 & 2021-01-20 11:21:02 & patch & 1306 & 1.864636e+07 & 9.228629e+07 & 1.109326e+08 \\
+            70 & Pandas 1.2.2 & v1.2.2 & 2021-02-09 10:55:19 & patch & 844 & 6.783283e+06 & 1.827142e+07 & 2.505470e+07 \\
+            71 & Pandas 1.2.3 & v1.2.3 & 2021-03-02 09:43:36 & patch & 959 & 1.002189e+07 & 5.783745e+06 & 1.580563e+07\\
+            72 & Pandas 1.2.4 & v1.2.4 & 2021-04-12 15:59:13 & patch & 289 & 3.402820e+05 & 1.704960e+05 & 5.107780e+05\\
+            \hline
+        \end{tabular}} \\
+    \caption{Releases collected information.}
+    \label{tab:releases}
+\end{table}
+
+In order to have a more fine-grained measure of how much effort a release required (besides the semantic versioning), we measure the number of lines added and lines removed in that release. This is calculated by adding up each commit's 'total lines added' and 'total lines removed', which was authored after the previous release but up to and including the current release tag's commit. The total change of lines for a release is simply the sum of lines added and lines removed, which are provided by the \texttt{git2net} miner. The miner also provides the number of modifications for each commit. A modification is a section of the source code modified, which can mean multiple lines added and deleted at the same part of the document. For example, if a new function is added to the project, which requires 20 new lines and removes 2 lines (e.g. empty space that was there before), then it will be considered as 1 modification, but 22 total line change. Changes to binary files are due to generated artifacts, which do not carry any collaboration effort, therefore they are excluded, and commits, that do not have a hash are also removed. \\
+
+The release type contains the semantic version of the release, which was gathered from the tag name with a Regular Expression matching the conventional versioning X.Y.Z. We also capture the version number in tags, that contain additional notations such as \texttt{beta} or \texttt{rc}, then we compare the current release to the previous to identify whether the release is a major, minor or patch release. When the found version numbers in the previous and in the current release are the same, we leave that as unknown, as this is mostly the case in pre-releases. The first release doesn't have a preceeding tag, therefore we consider every modification before the tag as part of the release. This leads to the first tag seeming to have significantly more edits than the rest of the releases, whereas in fact this is just the result of not tracking from the beginning (see example in Table \ref{tab:releases}). Therefore, in our analyses we remove the first release, as this would lead to falsely weighing the network results. \\
+
+
+
+\subsubsection{Project issues and measures}
+
 \begin{itemize}
-    \item Releases --> \cite{senApplicationSurvivalModel2015}
-    \begin{itemize}
-        \item Releases are gathered from tags --> cleaning (beta versions, etc\dots)
-        \item 
-    \end{itemize}
     \item Issues
     \begin{itemize}
         \item Basic metrics: issues opened, issues closed, avg issue time, etc\dots
