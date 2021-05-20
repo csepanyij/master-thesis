@@ -417,19 +417,86 @@ Statistics for issues like average close time also prove to be difficult, becaus
     \label{tab:keywords}
 \end{table}
 
-\subsection{Time window}
-% - Time window scanning over time
-% - parameters: delta, interval, from, to
-% - size of the project matters
-% - activity determines the scale (less activity = small interval (week), vice versa)
-% - helps: commits per day plot (insert)
-
-% - The efficiency of a project’s workflow (measured by the percentagesof issues assigned to specific developers). \cite{jarczykSurgicalTeamsGitHub2018}
-
-
-
 
 \section{Collaboration pattern analysis}
+The focus of our analysis is how the collaboration network of FLOSS projects changes during their lifecycle. Moreover, we are also interested in the cause of the changes, rather than just observing the changes. Therefore we determined two types of events, that we want to observe in order to see the effects on the collaboration. The events during a project's lifecycle can be one of two types: regular or irregular event. Regular events repeat over time with roughly the same time passing between events. This can be a holiday season (e.g. summer holidays or at the end of the year) or regular software releases. In our research, we will focus on only the software releases, and we suggest the analysis of collaboration and seasonality as a future research topic. In contrast to releases, which are usually well documented and easily discoverable when exactly they were released, irregular events are harder to discover, as these do not necessarily stem from within the developer community, but from external sources. Examples could be a supporting company's organizational restructuring, the sudden increase of work from home during the COVID pandemic, or mass layoffs within the support team. In our analysis, we will mainly focus on layoff events, because of our expectation that this will have the largest effect on collaboration. Usually when a company develops an open-source software, the company relies on the external community of the project, but the core developers are mainly from the company. Therefore, when a company officially pulls out from further development, this results in the removal of most core developers in a short amount of time. Our main goal is to identify how this affects the collaboration network, how the network restructures itself, or if any restructuring occurs at all. \\
+
+As a first step, we conduct a qualitative analysis on a number of hand-picked repositories to observe the network statistics in detail and to identify cause and effect relationships. In order to avoid bias when selecting repositories, we choose projects based on a variety of factors:
+
+\begin{itemize}
+    \item \textit{Project size:} We define the project's size as small, if it has less than 100 contributors, medium sized if the number of collaborators are between 100 and 500, and large if it has more than 500 collaborators.
+    \item \textit{Centralization:} Although it is hard ot measure how decentralized a project is, based on the literature review, very large projects tend to be decentralized. For now, we consider those projects centralized, which have been identified as centralized in the current state-of-the-art literature. 
+    \item \textit{Event occurrences:} Whether there is a regular release cycle within the project or not based on the release dates, or if there are known and confirmed cases of unexpected layoff events.
+\end{itemize}
+
+Based on these criteria, we try to select a wide variety of projects, so that each type (small, medium or large size, centralized or decentralized, regular or irregular or abandoned projects) has at least one example. We acknowledge the fact that this inclusion criteria leaves room for selection bias, as an observed correlation between events and the network in one project might not hold true for all projects. However, later we confirm our hypotheses with a quantitative analysis. \\
+
+\subsection{Project selection and descriptions}
+
+All together we choose 8 projects to analyse, these can be seen in Table \ref{tab:projects}. Due to the repository miner's limitation, we are only considering projects maintained on GitHub. The \texttt{pandas} and \texttt{numpy} repositories are well-known and popular data science tools for data manipulation in Python. They are very similar in size and popularity, both with a huge base of collaborators. Since also the number of issues are really high, our expectation is that these projects are highly decentralized, where the developers mainly work on their own parts of the project. They also have fairly regular release cycles, with a minor release in every 5-6 months. \\
+
+\texttt{Networkx} and \texttt{seaborn} are both middle-sized repositories based on the number of contributors, and they are both used for data visualization and statistical analysis in Python-based software, but \texttt{networkx} visualizes networks and their related statistics, while \texttt{seaborn} creates various plot images. Each release date follows the previous with 4 to 10 months, which means their releases are not as regular as the first two repositories. \\
+
+The project \texttt{curl} is an example for a highly centralized project, as its source code is famously maintained by a single developer \cite{crowstonHierarchyCentralizationFree2006}. Based on the number of contributors, it is a medium-sized project, although the number of commits are much higher than \texttt{networkx} or \texttt{seaborn}. Being the oldest project from the selection might contribute to the large number of commits. \\
+
+\begin{table}
+    \centering
+    \resizebox{0.85\textwidth}{!}{%
+        \begin{tabular}{| c | c | c | c | c | c | c |}
+            \hline
+            \textbf{Name} & \textbf{Contributors} & \textbf{Size} & \textbf{Commits} & \textbf{Stars} & \textbf{Issues} & \textbf{First release}\\
+            \hline \hline
+            pandas & 2333 & large & 26792 & 29700 & 3518 & Feb 20, 2011 \\
+            numpy & 1135 & large & 26392 & 17200 & 2030 & Jan 5, 2002 \\
+            networkx & 469 & medium & 6470 & 9100 & 166 & Jul 17, 2005 \\
+            seaborn & 140 & medium & 2780 & 8400 & 82 & Oct 28, 2013 \\
+            curl & 701 & medium & 27159 & 20600 & 27 & Mar 14, 2000 \\
+            servo & 1101 & large & 44084 & 19600 & 3305 & May 22, 2017 \\
+            wasmtime & 243 & medium & 8334 & 5200 & 341 & Oct 18, 2016\\
+            py-junos-eznc & 69 & small & 2486 & 583 & 76 & Nov 3, 2013\\
+            \hline
+        \end{tabular}}
+        \caption{Collaboration analysis projects and basic statistics.}
+        \label{tab:projects}
+\end{table}
+
+\texttt{Servo} and \texttt{wasmtime} are both based on the Rust programming language, and they are both used for web applications: \texttt{Servo} is a browser engine, whereas \texttt{wasmtime} is a runtime environment for WebAssembly. Both projects were led by Mozilla and maintained in an open-source environment. The Rust developer team was heavily affected by the Mozilla layoffs on January 15\textsuperscript{th}, 2020 and August 11\textsuperscript{th}, 2020 \cite{MozillaLays70,kastrenakesMozillaLaying2502020}, with the second round of layoffs affecting all Rust employees. The \texttt{py-junos-eznc} project is considered small, since it has less than 100 contributors, and it is a Python-based library for automatizing devbices running on Juno OS. On May 27\textsuperscript{th}, 2020, the sponsoring company Juniper Networks laid off its entire open source developers \cite{FarewellJuniperNetworks2020}. These three projects will be the main focus of analysing unexpected, one-time events and layoffs, where we will take a close look at the network statistics around the mentioned dates. \\ 
+
+To reliably compare the projects, we have to consider only a slice of each project, so all of them are compared within the same time period. We take a 3-year period from 2018 to the end of 2020. All projects had their first release before this period, which means this should filter out the initial irregular activities, such as creating directories and restructuring. \\
+
+\subsection{Commits analysis}
+
+For the selected period, we check the number of commits in each project as a first step. This can be seen on Figure \ref{fig:commits}. To smooth out the stacked area plot, we summed up the number of commits in every 28 days. Purposefully a multiple of 7 was chosen in order to even out the possible irregularities caused by the weekdays and weekends. We can see that all projects are active, with varying magnitude of commits generated each month. The number of commits are consistent with the size of the project, but we can also see that the number of contributors and the number of commits are not completely dependend on eachother, as \texttt{servo} consistently receives more commits than the other large repositories, despite the fact that it has the same number of contributors as \texttt{numpy} and half as many as \texttt{pandas}. Our assumption is, that this is highly dependent on the type of software being developed, the used programming language(s) and on other project-specific properties. \\
+
+There is a noticeable decrease in the number of commits to \texttt{servo} at the time of the layoffs (August 2020), which signals that the project could have been affected. This cannot be observed for \texttt{wasmtime}. We do not see any evidence of reoccurring trends within the number of commits, e.g. decreased activity during holiday season. There is a reduction in all repositories at the end of 2018, but this is contradicted by a spike in the number of commits at the end of 2019. However, we cannot rule out any periodicity, because this could be hidden due to the 28-day aggregation. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/commits.png}
+    \caption{Number of commits in each month.}
+    \label{fig:commits}
+\end{figure}
+
+\subsection{Releases}
+As a next step, we take a look at the regular lifecycle events, which are the releases in the open source projects. We generate the collaboration networks for the same time period (between 2018 and 2020) and contrast them with the time of releases. \\
+
+The issue with generating the collaboration network is the time aspect: we cannot observe any collaboration network if we take a single point in time and create the network for a given timestamp, as this will only contain a handful of connections, who authored an edit in the same file at the exact same time. Therefore, we need to aggregate the edits and commits over time, which requires us to use a time window to scan through the observed time period, and for each step, we generate a snapshot of the network. The first parameter is the time window length and the second is the step size. By choosing a large time window, we observe more connetion within the generated graph, but with a too large value, the network becomes too much grouped together, with almost every node connecting to almost all other nodes. By setting this value too low, the result is a disconnected network. The step size determines how often we take a screenshot of the network for the time window. By default, we use one-day steps, but sometimes this results in too radical changes. Therefore in some cases we use a 7-day or a 28-day step value to smooth out the curves. However, a too high step value can obscure the changes we want to observe.\\
+
+\subsubsection{Release regularity}
+
+\begin{itemize}
+    \item time window
+    % - Time window scanning over time
+    % - parameters: delta, interval, from, to
+    % - size of the project matters
+    % - activity determines the scale (less activity = small interval (week), vice versa)
+    
+    % - The efficiency of a project’s workflow (measured by the percentagesof issues assigned to specific developers). \cite{jarczykSurgicalTeamsGitHub2018}
+    
+    \item network stats plots (with major-minor-patch)
+    \item results (e.g. degree centrality, clustering coeff, hierarchy) for each project
+\end{itemize}
+\subsection{External events}
 \subsection{Observed projects and events}
 % - which projects (Servo, pandas, numpy, networkx, seaborn, wasmtime, ruptures (?))
 % - expected: Big releases
