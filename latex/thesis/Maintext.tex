@@ -482,15 +482,64 @@ As a next step, we take a look at the regular lifecycle events, which are the re
 
 The issue with generating the collaboration network is the time aspect: we cannot observe any collaboration network if we take a single point in time and create the network for a given timestamp, as this will only contain a handful of connections, who authored an edit in the same file at the exact same time. Therefore, we need to aggregate the edits and commits over time, which requires us to use a time window to scan through the observed time period, and for each step, we generate a snapshot of the network. The first parameter is the time window length and the second is the step size. By choosing a large time window, we observe more connetion within the generated graph, but with a too large value, the network becomes too much grouped together, with almost every node connecting to almost all other nodes. By setting this value too low, the result is a disconnected network. The step size determines how often we take a screenshot of the network for the time window. By default, we use one-day steps, but sometimes this results in too radical changes. Therefore in some cases we use a 7-day or a 28-day step value to smooth out the curves. However, a too high step value can obscure the changes we want to observe.\\
 
+\subsubsection{Node counts}
+
+First we take a look at the number of developers in the network over time. The number of nodes (i.e. developers) in the network indicates the level of activity within the project, where a relatively high number of nodes imply a peak in project activity, and a low number can imply a decreasing activity, or that the project has become more centralised. It is easy to see, that if the only source of activity is one single developer over the observed period, then the network will only have one node, whereas if the same activities are distributed, more developers will be shown in the network, and the number of nodes will rise. However, this does not describe the relationship between developers, they could be completely isolated, or they could be relying a lot on eachother regarding collaboration. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/qualitative/number_of_nodes/all.png}
+    \caption{Number of nodes over time.}
+    \label{fig:nnodes}
+\end{figure}
+
+In Figure \ref{fig:nnodes} the number of nodes are plotted with the time of releases marked with a vertical black line for each project. The type of release corresponds to the type of line: major releases are shown with a continuous line, minor releases are thick dashed lines, and patch releases are thin dotted lines. The red continuous lines mark an unexpected layoff event, which might had an effect on the project. Each node count data point at $t$ time represents the number of nodes within the collaboration network that is generated between $t$ and $t+28$ days, with a 7-day step size. The average node counts correlate with the size of the project, as the smaller repositories like \texttt{py-junos-eznc} and \texttt{seaborn} have the number of nodes consistently below 10, while the larger projects can reach 30, 50 or even 100 at certain time periods. \\
+
+Regarding the releases, we can see that each project can have completely different release planning and schedule, which makes it hard to compare them. Some projects, like \texttt{networkx}, \texttt{pandas} or \texttt{numpy} release a minor version in approximately every 6 months, while \texttt{curl} does the same in every 2 months. \texttt{wasmtime}'s release schedule regaring minor releases is even shorter, but we do not have any data available before 2020, which does not allow us to confirm whether this is a long-term trend. The release data for \texttt{servo} was available to us, however, the repository has a very high frequency of releases, with sometimes multiple minor releases in the same week, and displaying this information on the chart would have obscured the number of nodes plot, therefore we only display the unexpected events. Also, releases can be arbitrarily named by the developers, therefore a minor release in one project might be considered a patch or a major release in others. \\
+
+Comparing the events with the number of nodes, we can observe, that before or around a minor release, most projects experience an uptick in node count, which is then usually followed by a drop - although not in every case. This can be contributed to the increased activity from the community before the release. There could be a number of factors that cause this activity change: first, if the release date is fixed, the pressure on developers to include the planned features increases, which prompts more activity (pull model). Secondly, the rise in activity could be a newly implemented feature or a recently found bug, which needs immediate attention from developers. In this case it is possible, that the increased activity and larger volume of edits prompts a new release version (push model). Our assumption regarding whether a release follows a push or a pull model is that it can be highly dependent on the project, and within each project there could be a mixture of releases following both models. We cannot observe this trend for the patch releases, and we cannot draw a definitive conclusin regarding major releases, as there was only one major release among all the repositories subject to our analysis. \\
+
+Regarding the layoff events marked with red vertical lines, a significan drop in the number of nodes can be observed shortly before the event in all projects. After the companies stop supporting the project and lay off the development team or they are reassigned to other topics, the number of nodes within the projects drop and stay low, never reaching the same numbers as before. In case of \texttt{servo} and \texttt{wasmtime}, the first wave of layoffs do not seem to have a significant impact on the number of nodes, however, we do not have reliable information regarding how much the Rust development team was impacted by the first wave, on which both projects depend. \\
+
+\subsubsection{Network density and mean degree}
+As a next step, we plot the network density and mean degrees of the projects. The network density tells us how densely connected is the network in a scale of $[0,1]$, where 1 means every node is connected to all other nodes, and 0 means there are no edges in the graph. It refers to the ratio between all the possible connections and the actual connections. Although the generated networks are weighted, we do not consider the edge weight when counting each node's degree, meaning every connection is counted. We expect this value to rise if developers need to reach out to more members of the community and collaborate on more files with others. Similarly to the density, the mean degree value also only takes the number of nodes (N) and the degree number (k) of each node as inputs, so we expect similar results between the two measures.\\
+
+By plotting the two measures on the same figure in Figure \ref{fig:density_a}, we can confirm, that they are closely correlated. The values are also highly sensitive regarding the number of nudes within the graph, and a low node count makes the graph values change radically. This is why the smaller projects are not shown, as their graph did not convey any meaningful observations. We can identify some troughs at the release times of minor releases, however, these could also be the results of the changes in the number of nodes. \\
+
+In order to adjust the network statistics for their sizes, we compare the network with a randomly generated, same-sized network. If we see a significant difference between the two values, we can confidently state that the changes we observe in the network statistics are independent from the network size. To measure the significance, we calculate the \textit{Z-value} of the actual network statistic and a 'general' network of the same size. In our implementation, we randomly generate 10 networks with the same number of edges and nodes as the original network, and use them to calculate the Z-value. The Z-value's formula is:
+
+\[ Z=\frac{x-\mu}{\sigma} \]
+
+where $x$ is the actual value we are comparing (in this case the network density), $\mu$ is the average network density of the randomly generated networks, and $\sigma$ is the standard deviation of the random graphs. We consider a network significantly different than a random network if its Z-value is greater than $2$ in absolute terms. When the Z-value of network density is lower than $-2$, the network has a lower density than a same-sized general network, meaning the edges are more dispersed. Similarly, a Z-value greater than $2$ signals that the graph has more central hubs than the random network. \\
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.53\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/qualitative/mean_deg_density/mean_deg.png}
+        \caption{Density (dark) and mean degree (light).}
+        \label{fig:density_a}
+    \end{subfigure}
+    \begin{subfigure}{0.46\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/qualitative/mean_deg_density/mean_deg_z_values.png}
+        \caption{Z-values for density and releases.}
+        \label{fig:density_b}
+    \end{subfigure}
+    \caption{Network density, mean degree and Z-values over time with significance threshold highlighted.}
+    \label{fig:density}
+\end{figure}
+
+We plot the Z-values over time in Figure \ref{fig:density_b}, where the area between $-2$ and $2$ are colored to show at which times the network is significantly different than a randomly generated one: when the plot line is within this range, it is not significantly different, otherwise it is. In some cases, there is a break of continuity within the plot. This occurs, when the standard deviation of the randomly generated network is $0$, which would result in a zero-division error. The standard deviation can only be $0$ when all the values are the same, which means in these cases our randomly generated networks have exactly the same density. This usually happens in extreme cases, when there is a very low number of nodes or edges. \\
+
+Almost all projects have a significantly low network density, meaning that the edges are more distributed between the nodes. The notable exception is the \texttt{pandas} repository, which has an overall positive Z-value over time, with sometimes crossing the insignificant zone. These points are mostly troughs at the time of minor releases. We can also see on all projects, that around a release, the Z-value approaches (or crosses) the threshold, which signals that the networks behave more like random networks around releases. The same can be observed for the layoff events, as \texttt{servo} gets really close to $-2$ at the time of the announcement. \\
+
+
+
 \subsubsection{Release regularity}
 
 \begin{itemize}
     \item time window
-    % - Time window scanning over time
-    % - parameters: delta, interval, from, to
-    % - size of the project matters
-    % - activity determines the scale (less activity = small interval (week), vice versa)
-    
     % - The efficiency of a project’s workflow (measured by the percentagesof issues assigned to specific developers). \cite{jarczykSurgicalTeamsGitHub2018}
     
     \item network stats plots (with major-minor-patch)
