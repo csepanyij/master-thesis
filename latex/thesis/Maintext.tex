@@ -271,6 +271,7 @@ Within certain timeframes, when a project is inactive, it could happen, that the
 % - \cite{klugUnderstandingGroupDynamics}
 
 \subsubsection{Clustering coefficient}
+\label{section:clustering}
 
 While centralization helps us describe the centralness of the network and how much it is centered around a single, or a small number of developers, it does not help us describing the structure of the network in more detail. Our goal is to gain an understanding of also the modularity of our network, meaning how much developers tend to cluster together \cite{joblinEvolutionaryTrendsDeveloper2017}. We expect that authors form smaller clusters, which are more tightly connected together, and these clusters have somewhat weaker ties to other clusters. This builds on the assumption that the social network of the software follows the modules which build up the software itself, thus authors of a specific function should also cluster together within the network \cite{conwayHowCommitteesInvent1968, joblinEvolutionaryTrendsDeveloper2017}. To measure this "clusteredness", we calculate the \textit{local clustering coefficient} for each node. \\
 
@@ -506,12 +507,6 @@ As a next step, we plot the network density and mean degrees of the projects. Th
 
 By plotting the two measures on the same figure in Figure \ref{fig:density_a}, we can confirm, that they are closely correlated. The values are also highly sensitive regarding the number of nudes within the graph, and a low node count makes the graph values change radically. This is why the smaller projects are not shown, as their graph did not convey any meaningful observations. We can identify some troughs at the release times of minor releases, however, these could also be the results of the changes in the number of nodes. \\
 
-In order to adjust the network statistics for their sizes, we compare the network with a randomly generated, same-sized network. If we see a significant difference between the two values, we can confidently state that the changes we observe in the network statistics are independent from the network size. To measure the significance, we calculate the \textit{Z-value} of the actual network statistic and a 'general' network of the same size. In our implementation, we randomly generate 10 networks with the same number of edges and nodes as the original network, and use them to calculate the Z-value. The Z-value's formula is:
-
-\[ Z=\frac{x-\mu}{\sigma} \]
-
-where $x$ is the actual value we are comparing (in this case the network density), $\mu$ is the average network density of the randomly generated networks, and $\sigma$ is the standard deviation of the random graphs. We consider a network significantly different than a random network if its Z-value is greater than $2$ in absolute terms. When the Z-value of network density is lower than $-2$, the network has a lower density than a same-sized general network, meaning the edges are more dispersed. Similarly, a Z-value greater than $2$ signals that the graph has more central hubs than the random network. \\
-
 \begin{figure}
     \centering
     \begin{subfigure}{0.53\textwidth}
@@ -530,11 +525,39 @@ where $x$ is the actual value we are comparing (in this case the network density
     \label{fig:density}
 \end{figure}
 
-We plot the Z-values over time in Figure \ref{fig:density_b}, where the area between $-2$ and $2$ are colored to show at which times the network is significantly different than a randomly generated one: when the plot line is within this range, it is not significantly different, otherwise it is. In some cases, there is a break of continuity within the plot. This occurs, when the standard deviation of the randomly generated network is $0$, which would result in a zero-division error. The standard deviation can only be $0$ when all the values are the same, which means in these cases our randomly generated networks have exactly the same density. This usually happens in extreme cases, when there is a very low number of nodes or edges. \\
+In order to adjust the network statistics for their sizes, we compare the network with a randomly generated, same-sized network. If we see a significant difference between the two values, we can confidently state that the changes we observe in the network statistics are independent from the network size. To measure the significance, we calculate the \textit{Z-value} of the actual network statistic and a 'general' network of the same size. In our implementation, we randomly generate 10 networks with the same number of edges and nodes as the original network, and use them to calculate the Z-value. The Z-value's formula is:
 
+\[ Z=\frac{x-\mu}{\sigma} \]
+
+where $x$ is the actual value we are comparing (in this case the network density), $\mu$ is the average network density of the randomly generated networks, and $\sigma$ is the standard deviation of the random graphs. We consider a network significantly different than a random network if its Z-value is greater than $2$ in absolute terms. When the Z-value of network density is lower than $-2$, the network has a lower density than a same-sized general network, meaning the edges are more dispersed. Similarly, a Z-value greater than $2$ signals that the graph has more central hubs than the random network. \\
+
+We plot the Z-values over time in Figure \ref{fig:density_b}, where the area between $-2$ and $2$ are colored to show at which times the network is significantly different than a randomly generated one: when the plot line is within this range, it is not significantly different, otherwise it is. In some cases, there is a break of continuity within the plot. This occurs, when the standard deviation of the randomly generated network is $0$, which would result in a zero-division error. The standard deviation can only be $0$ when all the values are the same, which means in these cases our randomly generated networks have exactly the same density. This usually happens in extreme cases, when there is a very low number of nodes or edges. \\
+  
 Almost all projects have a significantly low network density, meaning that the edges are more distributed between the nodes. The notable exception is the \texttt{pandas} repository, which has an overall positive Z-value over time, with sometimes crossing the insignificant zone. These points are mostly troughs at the time of minor releases. We can also see on all projects, that around a release, the Z-value approaches (or crosses) the threshold, which signals that the networks behave more like random networks around releases. The same can be observed for the layoff events, as \texttt{servo} gets really close to $-2$ at the time of the announcement. \\
 
+\subsubsection{Clustering coefficient}
 
+The weighted global clustering coefficients explained in Section \ref{section:clustering} is plotted over time in Figure \ref{fig:clust}. Because it would be difficult to show both the Z-values and the the clustering coefficients on the same graph for each project, we change the color of the line to indicate the statistical significance. Where the clustering coefficient is significantly different from a random network to the negative side (meaning the Z-value at the corresponding date is less than $-2$) the line uses the project's dark shaded color. Likewise, when there is a significant difference and the Z-value is over $2$, the dark complementer color is used. Within the range of $[-2, 2]$ a light color is used to signal the statistical indifference from a random network of the same size. The color label also indicates the associated Z-value within each subgraph.\\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/qualitative/clustering_coeff/clustering.png}
+    \caption{Clustering coefficients over time.}
+    \label{fig:clust}
+\end{figure}
+
+We receive mixed results for the clustering coefficients. The smaller libraries (\texttt{networkx}, \texttt{seaborn} and \texttt{curl}) show a sudden spike before a release, which means that the network gets clustered before a release. However, the Z-value is always showing a negative sign being less than $-2$ in these cases (with the notable exception of \texttt{pandas}, which is mainly above $2$), signaling that the increase in clustering coefficient is significanly less than a same-sized random network. This shows, that the spike and then a drop in the clustering coefficient before a release is caused by a sudden increase and then decrease of activity within the project, but this activity is decentralized and affects all developers roughly the same. One of the reasons is the more decentralized workflow: as Crowston et. al. \cite{crowstonHierarchyCentralizationFree2006} have identified, smaller projects early in their lifecycles tend to be more centralized, as there is less specialization to only one area of the project. \\
+
+Interestingly, almost all of the larger projects have consistently lower clustering coefficient than of a random network, which indicates, that there is a significant overlap of the edited files within the projects, and there is less specialization. Another explanation could also be the use of shared files, which relates to the project structure. If an implementation of a new feature requires developers to edit almost all existing files by adding new functions, then the clustering coefficient will be low. On the other hand, if every new feature requires a new file to be added, developers will be mostly isoated in the collaboration network around the files, which will show up as a higher clustering coefficient than in a random network. This would explain why the \texttt{pandas} library has consistently a positive Z-value: the project structure does not require contributors to edit eachother's files. Additionally, we can observe a drop in the clustering around releases, but without statistical significance. This also confirms, that the network becomes more random-like around releases, but we can further extrapolate that a likely factor to this phenomenon is the feature integration: between releases, contributors center around their specialization editing only a limited number of isolated files, but before the release, the effort shifts towards integrating these features together, which requires editing files outside of the 'usual folder'. \\
+
+\subsubsection{Mean path length}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/qualitative/mean_path_length/path_length_all.png}
+    \caption{Mean path length over time with statistical significance.}
+    \label{fig:mean_path}
+\end{figure}
 
 \subsubsection{Release regularity}
 
