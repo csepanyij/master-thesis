@@ -330,7 +330,7 @@ To measure the network changes around releases, first we collect the list of rel
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{figures/semantic-versioning.png}
-    \caption{Semantic versioning. Figure source: \cite{SemanticVersioningUT2018}.}
+    \caption{Semantic versioning. Figure source: \cite{mariogripSemanticVersioningUT2018}.}
     \label{fig:semver}
 \end{figure}
 
@@ -462,7 +462,7 @@ The project \texttt{curl} is an example for a highly centralized project, as its
         \label{tab:projects}
 \end{table}
 
-\texttt{Servo} and \texttt{wasmtime} are both based on the Rust programming language, and they are both used for web applications: \texttt{Servo} is a browser engine, whereas \texttt{wasmtime} is a runtime environment for WebAssembly. Both projects were led by Mozilla and maintained in an open-source environment. The Rust developer team was heavily affected by the Mozilla layoffs on January 15\textsuperscript{th}, 2020 and August 11\textsuperscript{th}, 2020 \cite{MozillaLays70,kastrenakesMozillaLaying2502020}, with the second round of layoffs affecting all Rust employees. The \texttt{py-junos-eznc} project is considered small, since it has less than 100 contributors, and it is a Python-based library for automatizing devbices running on Juno OS. On May 27\textsuperscript{th}, 2020, the sponsoring company Juniper Networks laid off its entire open source developers \cite{FarewellJuniperNetworks2020}. These three projects will be the main focus of analysing unexpected, one-time events and layoffs, where we will take a close look at the network statistics around the mentioned dates. \\ 
+\texttt{Servo} and \texttt{wasmtime} are both based on the Rust programming language, and they are both used for web applications: \texttt{Servo} is a browser engine, whereas \texttt{wasmtime} is a runtime environment for WebAssembly. Both projects were led by Mozilla and maintained in an open-source environment. The Rust developer team was heavily affected by the Mozilla layoffs on January 15\textsuperscript{th}, 2020 and August 11\textsuperscript{th}, 2020 \cite{lardinoisMozillaLays70,kastrenakesMozillaLaying2502020}, with the second round of layoffs affecting all Rust employees. The \texttt{py-junos-eznc} project is considered small, since it has less than 100 contributors, and it is a Python-based library for automatizing devbices running on Juno OS. On May 27\textsuperscript{th}, 2020, the sponsoring company Juniper Networks laid off its entire open source developers \cite{brasseurFarewellJuniperNetworks2020}. These three projects will be the main focus of analysing unexpected, one-time events and layoffs, where we will take a close look at the network statistics around the mentioned dates. \\ 
 
 To reliably compare the projects, we have to consider only a slice of each project, so all of them are compared within the same time period. We take a 3-year period from 2018 to the end of 2020. All projects had their first release before this period, which means this should filter out the initial irregular activities, such as creating directories and restructuring. \\
 
@@ -572,7 +572,7 @@ where $w_{ij}$ is the edge weight between $a_i$ and $a_j$ in range $[0, 1]$. We 
 
 It is clearly visible in the smaller projects (\texttt{networkx}, \texttt{py-junos-eznc}, \texttt{seaborn}), that the path length increases before a release due to the increased activity, and otherwise it stays $0$. This indicates a 'push-type' release process, where the releases are sporadic, and a new release is created to incorporate and deploy the changes implemented. With the other projects, we do not see any correlation between releases and mean path length. \\
 
-\dots
+\dots TODO
 
 \subsubsection{Core and periphery analysis}
 
@@ -615,7 +615,7 @@ We can see the nodes identified as core highlighted with blue. In Figure \ref{fi
     \label{fig:core-periphery-numpy}
 \end{figure}
 
-The notable exception for the K-core values in Figure \ref{fig:core-periphery} is again \texttt{pandas}, where the Degree centrality core-periphery ratio determines each release nicely: we can consistently see a positive spike above the significance level 2 months before each release. This finidng is consistent with the degree centrality analysis, however, here it is more pronounced. The drop after the release in K-core ratio also seems to hold true.
+The notable exception for the K-core values in Figure \ref{fig:core-periphery} is again \texttt{pandas}, where the Degree centrality core-periphery ratio determines each release nicely: we can consistently see a positive spike above the significance level 2 months before each release. This finidng is consistent with the degree centrality analysis, however, here it is more pronounced. The drop after the release in K-core ratio also seems to hold true. \\
 
 \subsubsection{Hierarchy}
 
@@ -625,20 +625,10 @@ The notable exception for the K-core values in Figure \ref{fig:core-periphery} i
     \item time window
     % - The efficiency of a project’s workflow (measured by the percentagesof issues assigned to specific developers). \cite{jarczykSurgicalTeamsGitHub2018}
     
-    \item network stats plots (with major-minor-patch)
     \item results (e.g. degree centrality, clustering coeff, hierarchy) for each project
 \end{itemize}
 \subsection{External events}
-\subsection{Observed projects and events}
-% - which projects (Servo, pandas, numpy, networkx, seaborn, wasmtime, ruptures (?))
-% - expected: Big releases
-% - unexpected: layoffs
-\subsection{SNA metrics analysis}
-\subsubsection{K-cores}
 
-% - 20th percentile of k-core nodes
-% - alternative to identifying the core members
-%....
 \subsection{Results}
 %....
 

@@ -1,5 +1,5 @@
 % das Dokumentenformat
-\documentclass[a4paper, 12pt, twppages]{article}
+\documentclass[a4paper, 12pt]{article}
 
 %\usepackage[english, ngerman]{babel}  % <-- f�r deutsche arbeit
 
@@ -25,6 +25,10 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage[toc,page]{appendix}
+
+%\usepackage[hyphens]{url}
+%\hypersetup{breaklinks=true}
+\urlstyle{same}
 
 \newcommand\BackgroundPic{%
 \put(0,0){%
@@ -113,7 +117,7 @@ Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et 
 
 \input{Maintext.tex}
 
-
+\Urlmuskip=0mu plus 1mu\relax
 \bibliographystyle{plain}
 %\bibliographystyle{plainnat}
 \bibliography{References}
