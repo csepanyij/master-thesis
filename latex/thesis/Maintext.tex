@@ -232,6 +232,7 @@ For each file $f$ that $a_1$ and $a_2$ authors touch, we sum up the minimum and 
 A critical part of the OSS software projects is the existence of core and periphery developers. It has been observed, that in each FLOSS project there are a small number of developers, who provide the vast majority of development effort into the project. It has been also established, that the members of core developers do not change substantially during the project's lifecycle. However, there was no effort on whether there is a change in the collaboration pattern, especially before, during or after a major lifecycle event. Therefore, we make efforts identifying the core developer network to observe these changes. \\
 
 \subsubsection{Degree centrality}
+\label{sec:deg_centrality}
 
 We use the degree centrality of each node (i.e. developer) to identify the core members. Degree centrality of a node is the fraction of all possible nodes it is connected to. We can calculate it by dividing the degree with $n-1$, where $n = |G|$ the number of nodes within the network. Since the core developers contribute the majority of commits and edits of the project, they are expected to be connected with more nodes. Joblin et. al. \cite{joblinClassifyingDevelopersCore2016, joblinEvolutionaryTrendsDeveloper2017} have also identified degree centrality as the best predictor of core developers. In cases, where binary classification of core or periphery is needed, we assign developers to the core network if their degree centrality score is in the top 20th percentile, otherwise they are considered as periphery. We also take note, that this method does not consider the weighted edges, only the number of edges (degree) a node has. Although this method could be refined to consider the node degree weighted with the edges, we argue that this could lead to invalidity. In case of two developers, who only contributed to one file, they will be represented with a strong connection and would receive a high weighted degree value, whereas a core contributor, who edits many files, can have many weak connections but these might not add up to one strong connection of the two isolated developers when weighted with the edge weights. It is clear, that a developer with many connections, regardless of the strength of the collaboration, should be considered core. Figure \ref{fig:degree centrality} shows two examples for degree centrality within a collaboration network. In the figure, darker colors represent a higher degree centrality value. The  highlighted nodes are in the highest 20th percentile of degree centrality, classifying as members of the core developers. We can observe in both one-month periods, that \texttt{pandas} is much more decentralized, whereas \texttt{curl} is largely dependent on one developer.\\
 
@@ -567,7 +568,7 @@ We calculate the average longest path $P$ by first summing up all the longest pa
 
 \[ P = \frac{\sum{_{i=1}^{n}} \sum{_{j=1}^{n} -w_{ij}+1} }{n(n-1)} \]
 
-where $w_{ij}$ is the edge weight between $a_i$ and $a_j$ in range $[0, 1]$. We multiply the weights by $-1$ and add $1$ in order to calculate for the longest, and not the shortest path. \\
+where $w_{ij}$ is the edge weight between $a_i$ and $a_j$ in range $[0, 1]$. We multiply the weights by $-1$ and add $1$ in order to calculate for the longest, and not the shortest path. If there is no edge between $a_i$ and $a_j$, then $w_{ij}=0$. \\
 
 It is clearly visible in the smaller projects (\texttt{networkx}, \texttt{py-junos-eznc}, \texttt{seaborn}), that the path length increases before a release due to the increased activity, and otherwise it stays $0$. This indicates a 'push-type' release process, where the releases are sporadic, and a new release is created to incorporate and deploy the changes implemented. With the other projects, we do not see any correlation between releases and mean path length. \\
 
@@ -575,9 +576,50 @@ It is clearly visible in the smaller projects (\texttt{networkx}, \texttt{py-jun
 
 \subsubsection{Core and periphery analysis}
 
+Around releases it is reasonably expected that the ratio between core and periphery developers changes. It has already been established, that within a project, the core members tend to stay the same throughout the project's lifecycle, but the tasks regarding the new release preparation might change their relation with the periphery community members. The first method we use to identify core members is explained in Section \ref{sec:deg_centrality}. We call the number of core members identified this way as \textit{Degree centrality core} value. \\ 
 
+Besides taking the 20th percentile of the top clustering coefficients to identify the number of core developers in the network, we also use the degree number of each developer to identify their \textit{K-core value}. The K-core of a network is the subset of nodes, which have at least $k$ degrees, and we call the network's K-core value the number of nodes within the K-core \cite{batageljAlgorithmCoresDecomposition2003}. Then, we identify the vertices, which are in the top 20th percentile of K-cores, as core developers. For example, if the maximum number of degrees within the network is 10, then the K-core value is the number of nodes, which have at least a degree number of 8. \\
 
-\subsubsection{Release regularity}
+We observe the ratio between the number of core and periphery developers by dividing the number of core developers with the number of nodes within the network. This gives us a ratio between $0$ and $1$ for both the \textit{Degree centrality core} and the \textit{K-core value} methods, where $1$ means the network only contains core developers. It is important to note that the only case both methods can have $0$ as a core/periphery ratio is when there is no collaboration within the network and all nodes are isolated with a degree of $0$. We then plot the Z-values for both methods' core/developer ratio as before, which can be seen in Figure \ref{fig:core-periphery}. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/qualitative/core_periphery/core_periphery_all.png}
+    \caption{Core/periphery ratio's Z-value over time with K-core and Degree centrality methods.}
+    \label{fig:core-periphery}
+
+\end{figure}
+
+The lighter colored plot line shows the Z-vale over time for the core and periphery ratio based on the Degree centrality method, whereas the darker line shows the same ratio calculated with the K-core method. We can see again a sharp difference between the smaller and larger projects. For the smaller projects, the two measures roughly behave the same, as their plots overlap for most of the time. Most of the time these values stay within the statistically insignificant range and only in these cases are significantly different than a random network. \\
+
+In contrast, the large projects have their K-core ratios consistently below $-2$, indicating that the core ratio is consistently lower than a randomly generated network, which signals its centralized property. This cannot be said for the Degree centrality core ratios, which are consistently within the insignificant range. Just as with the smaller projects like \texttt{networkx}, \texttt{seaborn} and \texttt{py-junos-eznc}, we can observe a significant drop in K-core ratio Z-values within 2 to 3 months after the release. The difference between the two networks are demonstrated for \texttt{numpy}'s minor release on 22.12.2019, where the networks for 1-month after, and 1-month before are contrasted in Figure \ref{fig:core-periphery-numpy}. \\
+
+We can see the nodes identified as core highlighted with blue. In Figure \ref{fig:numpy-before}, we can see that the maximum number of degree is paired with a couple of similarly connected nodes, and this is combined with a relatively small number of nodes in the graph, which results in a relatively high number of core members with a low number of periphery, therefore the ratio gets higher, which is more similar to an almost completely dispersed random network. Whereas in Figure \ref{fig:numpy-after}, we can observe the opposite: the small number of core member (only one) is combined with a large number of nodes, which creates a low core-periphery ratio, that is significanly lower than in a randomly generated same-sized network. The fact that the second graph has more nodes and they are more connected lets us draw the conclusion that the increase in activity is the effect of the release, where after the new version release to the public led to an increase in bug reports, which caused a surge in activity as they are being fixed. \\
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/qualitative/core_periphery/numpy_before.png}
+        \caption{Between 2019-12-09 and 2020-01-06}
+        \label{fig:numpy-before}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/qualitative/core_periphery/numpy_after.png}
+        \caption{Between 2020-01-06 and 2020-02-03}
+        \label{fig:numpy-after}
+    \end{subfigure}
+    \caption{\texttt{Numpy} collaboration network before and after the 2020-12-22 minor release.}
+    \label{fig:core-periphery-numpy}
+\end{figure}
+
+The notable exception for the K-core values in Figure \ref{fig:core-periphery} is again \texttt{pandas}, where the Degree centrality core-periphery ratio determines each release nicely: we can consistently see a positive spike above the significance level 2 months before each release. This finidng is consistent with the degree centrality analysis, however, here it is more pronounced. The drop after the release in K-core ratio also seems to hold true.
+
+\subsubsection{Hierarchy}
+
+\subsection{Release regularity}
 
 \begin{itemize}
     \item time window
@@ -593,7 +635,7 @@ It is clearly visible in the smaller projects (\texttt{networkx}, \texttt{py-jun
 % - unexpected: layoffs
 \subsection{SNA metrics analysis}
 \subsubsection{K-cores}
-Besides taking the 20th percentile of the top clustering coefficients to identify the number of core developers in the network, we .... \cite{batageljAlgorithmCoresDecomposition2003}
+
 % - 20th percentile of k-core nodes
 % - alternative to identifying the core members
 %....
