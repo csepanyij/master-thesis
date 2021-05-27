@@ -552,12 +552,30 @@ Interestingly, almost all of the larger projects have consistently lower cluster
 
 \subsubsection{Mean path length}
 
+Another measure that could be affected by a releaase is the length between nodes in the network. From an organizational perspective, a path between two contributors represent the information flow regarding a specific part of the project. If in a network every vertex tends to be close to the other nodes, meaning less jumps are required, then they are able to gather information about a specific part of the project quicker. Smaller projects with less contributors naturally have relativel short connections to all other developers, and as the software gets larger with more contributors, the average shortest path between nodes is expected to get longer. However, if the project structure maintains central connecting 'hubs' (in this case: developers), the growth in length can remain lower. \\
+
+In an undirected unweighted graph, the shortest path between two nodes is the least amount of edges needed to be touched in order to get from one node to the other. However, our collaboration network is a weighted undirected graph, where the edge weights represent the collaboration effort between two developers. A strong collaboration is represented as a higher edge weight, whereas a lower edge weight means there is less collaboration between the two contributors. The shortest path between two nodes in a weighted graph is the path, which has the least summed weight of the edges touched. In our case, we want to measure how far away each developer are from all the others in order to quantify the effort for reaching out to eachother in case they want to involve a specific community member. To select the closest connection, we need to look for the strongest connection, meaning we have to consider the longest path between nodes. \\
+
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/qualitative/mean_path_length/path_length_all.png}
-    \caption{Mean path length over time with statistical significance.}
+    \includegraphics[width=\textwidth]{figures/qualitative/mean_path_length/longest_path_length_all.png}
+    \caption{Mean longest path length over time with statistical significance.}
     \label{fig:mean_path}
 \end{figure}
+
+We calculate the average longest path $P$ by first summing up all the longest paths from a given node to all other nodes, then dividing by the number of connections, which is $n-1$ in a connected graph. Then we sum up all of these averages for all nodes, and divide by the number of nodes $n$:
+
+\[ P = \frac{\sum{_{i=1}^{n}} \sum{_{j=1}^{n} -w_{ij}+1} }{n(n-1)} \]
+
+where $w_{ij}$ is the edge weight between $a_i$ and $a_j$ in range $[0, 1]$. We multiply the weights by $-1$ and add $1$ in order to calculate for the longest, and not the shortest path. \\
+
+It is clearly visible in the smaller projects (\texttt{networkx}, \texttt{py-junos-eznc}, \texttt{seaborn}), that the path length increases before a release due to the increased activity, and otherwise it stays $0$. This indicates a 'push-type' release process, where the releases are sporadic, and a new release is created to incorporate and deploy the changes implemented. With the other projects, we do not see any correlation between releases and mean path length. \\
+
+\dots
+
+\subsubsection{Core and periphery analysis}
+
+
 
 \subsubsection{Release regularity}
 

@@ -24,6 +24,7 @@
 \usepackage{enumitem}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage[toc,page]{appendix}
 
 \newcommand\BackgroundPic{%
 \put(0,0){%
@@ -116,5 +117,17 @@ Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et 
 \bibliographystyle{plain}
 %\bibliographystyle{plainnat}
 \bibliography{References}
+
+\newpage
+
+\begin{appendices}
+    \section{Connected components}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=\textwidth]{figures/qualitative/connected components/components.png}
+        \caption{Connected components}
+        \label{fig:components}
+    \end{figure}
+\end{appendices}
 
 \end{document}
