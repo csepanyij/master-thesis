@@ -482,6 +482,7 @@ There is a noticeable decrease in the number of commits to \texttt{servo} at the
 \end{figure}
 
 \subsection{Releases}
+\label{sec:releases}
 As a next step, we take a look at the regular lifecycle events, which are the releases in the open source projects. We generate the collaboration networks for the same time period (between 2018 and 2020) and contrast them with the time of releases.
 
 The issue with generating the collaboration network is the time aspect: we cannot observe any collaboration network if we take a single point in time and create the network for a given timestamp, as this will only contain a handful of connections, who authored an edit in the same file at the exact same time. Therefore, we need to aggregate the edits and commits over time, which requires us to use a time window to scan through the observed time period, and for each step, we generate a snapshot of the network. The first parameter is the time window length and the second is the step size. By choosing a large time window, we observe more connetion within the generated graph, but with a too large value, the network becomes too much grouped together, with almost every node connecting to almost all other nodes. By setting this value too low, the result is a disconnected network. The step size determines how often we take a screenshot of the network for the time window. By default, we use one-day steps, but sometimes this results in too radical changes. Therefore in some cases we use a 7-day or a 28-day step value to smooth out the curves. However, a too high step value can obscure the changes we want to observe.
@@ -640,21 +641,74 @@ In case of \texttt{servo}, \texttt{py-junos-eznc} and \texttt{wasmtime} the hier
 
 \subsection{Release regularity}
 
-\begin{itemize}
-    \item time window
-    % - The efficiency of a project’s workflow (measured by the percentagesof issues assigned to specific developers). \cite{jarczykSurgicalTeamsGitHub2018}
-    
-    \item results (e.g. degree centrality, clustering coeff, hierarchy) for each project
-\end{itemize}
-\subsection{External events}
+During the network measure analysis we recognized that the regularity of the releases can have a great effect on how it changes the network. In smaller projects a push-model can be recognised, where the new features are added, and then a new release is created, which incorporates this feature. This ensures that the new feature gets deployed as fast as possible. In these cases we can see that the releases do not happen regularly, but when there is a release, there is a significant change before or after it.
+
+Projects that follow a pull-model tend to have more regular release periods, and they are also the large projects in our analysis. Within these projects the flow of new features and bug fixes are constant, and they are deployed within a fixed period of time. Therefore, the new release does not necessarily have a visible impact on the network, because if the feature is not complete yet, it will be released in the next one. A great example for this is the \textit{1.0} release of \texttt{pandas}, which does not show any more network change in any metrics compared to a minor release despite being the only major release within all eight projects - contrary to the expectations.
+
+In order to quantify the regularity of the releases within the project, we calculate the \textit{coefficient of variation} (CV) within each project for the days between each release. The $CV_i$ is the ratio of the standard deviation $\sigma$ to the mean $\mu$ of number of days passed between two releases for project $i$, which can also be interpreted as a percentage \cite{everittCambridgeDictionaryStatistics1998a}:
+
+\[ CV_i = \frac{\sigma_i}{\mu_i} \]
+
+It must be determined for each type of release, because we have seen, that the type can have an effect of regularity. For example, in some projects patches follow up on a minor or major release, which can make the overall releases irregular, even though major and minor releases could still follow a regular pattern. We measure the release regularity CV in Table \ref{tab:regularity}. In order to calculate the value, the project must have at least two releases per type to have at least one value for days passed between releases. In cases when this condition is not met, we leave the values empty.
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{| l | c | c | c | c | c | c | c | c |}
+            \hline
+            \multirow{2}{7.5em}{\textbf{Project name}} & \multicolumn{4}{|c|}{\textbf{Minor+Major releases}} & \multicolumn{4}{|c|}{\textbf{Patch releases}} \\
+            \cline{2-9}
+            & \textbf{$N$} & \textbf{$\sigma$} & \textbf{$\mu$} & \textbf{$CV$} & \textbf{$N$} & \textbf{$\sigma$} & \textbf{$\mu$} & \textbf{$CV$} \\
+            \hline
+            \texttt{pandas} & 6 & 34.93 & 191.2 &\textbf{0.1827} & 21 & 47.72 & 48.15 & \textbf{0.9911} \\
+            \texttt{numpy} & 7 & 22.91 & 186.67 & \textbf{0.1227} & 29 & 22.44 & 40.39 & \textbf{0.5554} \\
+            \texttt{networkx} & 5 & 46.70 & 235.75 & \textbf{0.1981} & 1 & - & - & \textbf{-} \\
+            \texttt{seaborn} & 3 & 164.5 & 392.5 & \textbf{0.4191} & 3 & 71.5 & 166.5 & \textbf{0.4294} \\
+            \texttt{curl} & 18 & 24.19 & 69.53 & \textbf{0.3479} & 8 & 99.29 & 136.0 & \textbf{0.7301} \\
+            \texttt{servo} & 116 & 8.31 & 8.67 & \textbf{0.9585} & 189 & 4.99 & 5.05 & \textbf{0.9876} \\
+            \texttt{wasmtime} & 13 & 24.49 & 41.91 & \textbf{0.5843} & 1 & - & - & \textbf{-} \\
+            \texttt{py-junos-eznc} & 4 & 127.68 & 224.33 & \textbf{0.5692} & 10 & 84.51 & 117.44 & \textbf{0.7196} \\
+            \hline
+        \end{tabular}
+    }
+    \caption{Release regularities for major, minor and patch releases.}
+    \label{tab:regularity}
+\end{table}
+
+The coefficient of variation has a lower bound of $0$ in our case, because the number of days passed between two release can never be a negative number - the smallest possible is $0$ when the release dates are exactly the same days apart from eachother. However, the CV has no upper bound, as the standard deviation can be arbitrarily large, and larger than the mean release days. Also, there is no unit associated with it, so we can only give meaning to the CV value in the context of other projects as comparison: a project with a smaller CV value has a more regular deployment schedule than another one with a higher CV. Since its scale is a ratio scale, we can also interpret a two times larger value as "two times more regular interval".
+
+We also note that although the coefficient compensates for the difference between mean values, it does not take into consideration the number of intervals observed. This means that a one-day delay of a release from an established schedule does not have a large impact when there are 100 other releases, which are on time, but if there are only 4 releases, this changes the mean significantly and therefore the CV too. This is why we also display the number of releases as $N$. \\
+
+It can be observed in all projects, that the minor and major releases are more regular than the patch releases. This confirms the theory that patch releases are mainly added as bug fixes for minor and major releases after they are made public, and they do not folow a regular pattern. The difference between patches and major-minors are not consistent within the repositories: the greatest difference is in \texttt{pandas}, where the patch CV is five times larger than the minor-major CV. Close second is \texttt{numpy} with a similar 4.6 times larger irregularity of patches. Both projects have roughly a 180-day release cycle, and it is clearly visible that patches directly follow the minor releases in Figure \ref{fig:nnodes}, and they get sparser as we get further away from the minor releases in time.
+
+The repositories \texttt{networkx} and \texttt{wasmtime} do not have enough patches within the observed period to calculate the patch values, therefore we cannot compare them to the major-minor releases. The \texttt{networkx} repo has a much more regular minor release cycle than \texttt{py-juno-eznc}, which has a similarly large release cycle of about 230 days. This indicates that small-sized projects, which usually have longer release cycles, can also vary a lot depending on the project, and they can be just as regular as a larger repository. \texttt{Seaborn} is somewhere in between the previous two in terms of regularity, however, with only 3 minor and 3 patch releases, we cannot say any definite about comparing it to other projects, because we cannot say for sure that the middle release of the 3 is an outlier of the many regular releases, or it is completely random even if we go back further in time to check a larger number of releases.
+
+\texttt{Curl} has one of the shortest minor release cycles with an average of 70 days, and it is regular with a CV of $0.35$, which confirms what we have observed visually on Figure \ref{fig:nnodes}. A short but regular release cycle will result in more added releases over a fixed time period, which leaves room for more errors. Furthermore, with a short release cycle only a small delay is required to have a great impact on the CV value. Therefore we believe that this method could be biased towards small release cycles, and they are shown as less regular than a larger, 180-day cycle shows. Nevertheless, it is still clear from the coefficient, that \texttt{curl} is one of the regular projects.
+
+\texttt{Servo} has an extremely short release plan with only an average of 8-9 days between minor releases. We can also see the bias against shorter cycles, as it has by far the largest coefficient of variation with $0.96$. Due to the short time between releases, it is enough to delay a release by just a couple of days to significantly worsen the CV score. However, with a standard deviation also being around 8, we can see that the regularity cannot be as precise as in \texttt{pandas} or \texttt{numpy}, despite the bias. \\
+
+Considering the plotted graphs with the releases, and also the CV values, we want to determine a CV value, that can classify a project into 'regular' or 'irregular' release cycles. We have seen that there is a slight bias against shorter cycles, but finding a way to compensate for it would greatly increase complexity, which could lead to other issues. Therefore, we will use a coefficient of variation of $0.4$ \textbf{for the minor and major releases} to draw the line: every value below that indicates a regular release plan, and everything above that signals an irregular cycle. As stated before, patches tend to folow up on majors and minors, therefore we should not consider them overall.  By this classification, \texttt{pandas}, \texttt{numpy}, \texttt{networkx} and \texttt{curl} are \textit{regular}, whereas \texttt{seaborn}, \texttt{servo}, \texttt{wasmtime} and \texttt{py-junos-eznc} are \textit{irregular} when it comes to release cycles. We can also see visually on the plotted graphs in Section \ref{sec:releases}, that this separation seems to be right.
+
+\subsection{Release efficiency, issues}
+% - The efficiency of a project’s workflow (measured by the percentagesof issues assigned to specific developers). \cite{jarczykSurgicalTeamsGitHub2018}
+% Plot number of issues with releases --> major, minor or patch has more issues just before the release?
 
 \subsection{Results}
-%....
+% Metrics:
+% - Hierarchy: effective for layoff events
+% - Other metics: inconclusive, some are better than others (list them)
+% --> these metrics are correlated --> we need to determine which ones depend on which
 
+% Release regularity:
+% - major and minor are determinant, patches should be excluded
+% - 0.4 CV as identified cutoff value
+% - Further examine: we cannot tell whether the release metrics and release regularity are correlated
 
-% (\item Automatic event recognition)
-%     (\item Event detection implementation (ruptures))
-%     (\item Collaboration network change detection)
+% Release efficiency, issues:
+% TODO ....
+
+% CONCLUSION: qualitative research needed to observe correlations.
+
 \section{Quantitative analysis of projects during crunch time}
 \subsection{Collaboration network changes}
 \subsection{Prediction of outcome based on collaboration changes}
