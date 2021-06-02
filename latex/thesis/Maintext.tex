@@ -376,6 +376,7 @@ The release type contains the semantic version of the release, which was gathere
 
 
 \subsubsection{Project issues and measures}
+\label{sec:project_issues}
 
 To measure the productivity within the project, we collect some basic information regarding the GitHub issues. Issues keep track of bugs, beatures and tasks, contributors can comment and discuss the task at hand within an issue, and it can be assigned to users and milestones can be set. We collect the following information of issues:
 
@@ -700,6 +701,10 @@ A fixed time-based release cycle, on the other hand, is predictable, which allow
 
 As a new version is released, the users of the software are notified through the distribution channels, which triggers a spike in downloads due to users wanting to be up-to-date to the latest software version \cite{khomhFasterReleasesImprove2012}. Due to the quick adoption period within FLOSS projects, the majority of bugs are also expected to be reported shortly after a release, with a rushed version possibly having a larger amount of bugs after its release. Therefore, a great measure of release quality can be the number of bugs reported after a release. GitHub's standard bug and feature tracking API is the Issues page, so the number of issues created will be used for this purpose. 
 
+\subsubsection{Issue opening and closing frequencies}
+
+The number of issues opened and closed can be seen on Figure \ref{fig:issues_created_closed}. The issues are sampled in every 14 days, where the 7 days before and after are aggregated, separately for issues closed and issues created. For example, the month January will have two data points: January 8th, which aggregates the period January 1-14, and January 22nd, which will sum up all the number of issues created and closed between January 15-28.
+
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/qualitative/issues_closed_created/issues.png}
@@ -707,12 +712,71 @@ As a new version is released, the users of the software are notified through the
     \label{fig:issues_created_closed}
 \end{figure}
 
-The number of issues opened and closed can be seen on Figure \ref{fig:issues_created_closed}. The issues are sampled in every 14 days, where the 7 days before and after are aggregated, separately for issues closed and issues created. For example, the month January will have two data points: January 8th, which aggregates the period January 1-14, and January 22nd, which will sum up all the number of issues created and closed between January 15-28. \\
+Based on the plots, we can confirm the increased number of issues at a release, as all projects' most release dates coincide with a peak in issues created. Interestingly, the peaks do not necessarily come after or exactly at the release, and sometimes they preceed the actual release date. Some examples are the \texttt{pandas} version \texttt{v0.24.0} on \textit{January 25, 2019} or version \texttt{v0.25.0} on \textit{July 18, 2019}, or \texttt{py-junos-eznc}'s \texttt{2.3.2} on \textit{April 1, 2020}. Most likely this is an effect of successful testing: before the release, the software is thoroughly tested, and all identified bugs are registered as issues. Since most issues are fixed before the release, users do not find more issues than usual, therefore the issues created drops. Similarly, a peak in opened issues after the release might mean a less robust testing system. We can observe this in \texttt{networkx}, where the number of issues created gets higher at the release, or shortly after.
 
-Based on the plots, we can confirm the increased number of issues at a release, as all projects' most release dates coincide with a peak in issues created. Interestingly, the peaks do not necessarily come after or exactly at the release, and sometimes they preceed the actual release date. Some examples are the \texttt{pandas} version \texttt{v0.24.0} on \textit{January 25, 2019} or version \texttt{v0.25.0} on \textit{July 18, 2019}, or \texttt{py-junos-eznc}'s \texttt{2.3.2} on \textit{April 1, 2020}. Most likely this is an effect of successful testing: before the release, the software is thoroughly tested, and all identified bugs are registered as issues. Since most issues are fixed before the release, users do not find more issues than usual, therefore the issues created drops. 
+The number of issues closed follows a similar trend. The expectation was, that the issues closed peak before a release, since the planned tasks to be added to the new version are being closed, and after the new release, the issues closed would fall, as most features and bugs have already been implemented in the new version. Although this holds true in some cases, especially in \texttt{networkx} and \texttt{pandas}, this is not the case all the time, as sometimes large spikes occur right after a release, such as \texttt{numpy}'s version \texttt{v1.19.0} on \textit{Jun 20, 2020} or \texttt{pandas}' new release on \textit{May 15, 2018}. Our assumption is, that unusually large spikes like these occur as a 'clean-up' after the release, so the new release cycle can be planned.
+
+\subsubsection{Open issues over time}
+
+Now that we have seen some regularities regarding issue creation and close, we also examine how the number of open issues change with the releases. As we discussed in Section \ref{sec:project_issues}, since there are continuously open issues in an active project, some of which are not closed at the time of taking the project snapshots, we cannot take any averages or aggregation due to the survival bias.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/qualitative/issues_closed_created/open_issues.png}
+    \caption{Open issues over time}
+    \label{fig:open_issues}
+\end{figure}
+
+Figure \ref{fig:open_issues} shows the number of open issues for each project in the observed 3 years. We can see that in almost all projects, the number of open issues steadily rises, with smaller dips occurring around some, but not all releases. This shows, that maintaining and organizing the issues becomes a larger challenge as the project grows, and confirms the large spikes in the number of issues closed on Figure \ref{fig:issues_created_closed}, that these are 'clean-up' events, where the backlog is decluttered by closing the obsolete issues.
+
+The only exception from the ever-growing number of open issues is the \texttt{curl} library, which manages to keep the number of open issues below 60, despite being the oldest project of all 8 subject to our analysis. This could also be related to the short release cycle. As Khomh et. al. \cite{khomhFasterReleasesImprove2012} have found, bugs are fixed significantly faster with rapid release plans. Furthermore, as \texttt{curl} is the most centralized project, with one single main developer, issue management is much more efficient, as there is no need for group discussions and prioritization between developers. Interestingly, \texttt{servo} has the shortest release timing strategy, with sometimes multiple minor releases in a week, yet it is still struggling with the increasing number of issues, indicating that a strongly centralized organizational structure can have a much heavier weight in the increase of open issues over time. \\
+
+\subsubsection{Bugs and features}
+
+Issues can describe many tasks within a project, including ideas, features, discussions, bugs, warnings, depreciation plans, and so on. Each repository organizes the issues with labels, which can be created and color-coded freely within each project. Therefore, the labels cannot be used across projects, as each repository has its own personalised system. For example, \texttt{pandas} uses the tag 'Bug' for bugs, \texttt{numpy} uses '00 - Bug', since they order the labels by giving a number in front of it, and \texttt{servo} doesn't have a bug category, because they divided this category into 'I-crash' and 'I-wrong' among other labels. Also, they categorize the labels by their starting letter, which is not a practice in the other projects.
+
+Seeing which types of issues are affected the most by a release could also provide insight into how the project, and by extension the collaboration network changes. Instead of using the labels, we categorize them with pattern matching in the title as described in Section \ref{sec:project_issues} with the same keywords and method. Even though the matching rate is not expected to be high, we can still apply the method for the projects, because the issues matching a category have a high chance of actually belonging to that category due to the low number of keywords being used, meaning our false positive rate for the classification is presumably low. However, we cannot confirm this, as the manual effort to classify the issues would be too large. The results can be seen in Figure \ref{fig:open_bugs_features}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/qualitative/issues_closed_created/features_and_bugs.png}
+    \caption{Open bugs and features over time.}
+    \label{fig:open_bugs_features}
+\end{figure}
+
+The bugs and features are presented on two different scales, because their magnitude is different (there are a lot more bugs identified than features), but we want to compare the relative changes to eachother. Sadly we cannot see any significant difference between the number of bugs and features open, apart from a few exceptions, such as the December 2020 release of \texttt{pandas}, after which the number of open features decline while the number of bugs rise; or the July 2019 version of \texttt{numpy}, where the opposite is true and the features keep rising while the bugs decline.
+
+Since both the features and the bugs curves follow the same shape, which is also the same as the overall shape of the issues, we cannot draw any definitive conclusions regarding the difference between bug and feature issues. The reason for this, is that we are only able to classify a small portion of the issues. When the overall number of issues rise, it makes it more likely to find a feature or bug just by sheer luck, and that is why both curves follow the overall curve. Therefore, we cannot confirm the statement that there is no difference either.
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{| l | c | c | c | c | c | c | c |}
+            \hline
+            \multirow{2}{7.5em}{\textbf{Project name}} & \multirow{2}{6.3em}{\textbf{Issue count}} & \multicolumn{2}{|c|}{\textbf{Bugs}} & \multicolumn{2}{|c|}{\textbf{Features}} & \multicolumn{2}{|c|}{\textbf{Unclassified}} \\
+            \cline{3-8}
+            & & N & \textit{\%} & N & \textit{\%} & N & \textit{\%} \\
+            \hline
+            \texttt{pandas} & 20501 & 6245 & \textit{30.46\%} & 294 & \textit{1.43\%} & 13962 & \textit{68.10\%} \\
+            \texttt{numpy} & 9536 & 2421 & \textit{25.39\%} & 134 & \textit{1.41\%} & 6981 & \textit{73.21\%} \\
+            \texttt{networkx} & 2524 & 384 & \textit{15.21\%} & 54 & \textit{2.14\%} & 2086 & \textit{82.65\%} \\
+            \texttt{seaborn} & 1885 & 341 & \textit{18.09\%} & 99 & \textit{5.25\%} & 1445 & \textit{76.66\%} \\
+            \texttt{curl} & 2866 & 489 & \textit{17.06\%} & 35 & \textit{1.22\%} & 2342 & \textit{81.72\%} \\
+            \texttt{servo} & 11485 & 1016 & \textit{8.85\%} & 57 & \textit{0.50\%} & 10412 & \textit{90.66\%} \\
+            \texttt{wasmtime} & 917 & 72 & \textit{7.85\%} & 6 & \textit{0.65\%} & 839 & \textit{91.49\%} \\
+            \texttt{py-junos-eznc} & 475 & 106 & \textit{22.32\%} & 5 & \textit{1.05\%} & 364 & \textit{76.63\%} \\
+            \hline
+            \textbf{Overall} & \textbf{50189} & \textbf{11074} & \textit{\textbf{22.06\%}} & \textbf{684} & \textit{\textbf{1.36\%}} & \textbf{38431} & \textit{\textbf{76.57\%}} \\
+            \hline
+        \end{tabular}
+    }
+    \caption{Issue classification results.}
+    \label{tab:issues_class}
+\end{table}
+
+We summarize the classification results in Table \ref{tab:issues_class}. The vast majority of issues could not be classified, and on average only 23\% can be identified as either bug or feature. Especially the feature recognition has the worst performance with a mere 1.36\% of all issues on average. Although we believe that bugs should be more numerous within all repositories compared to features, our expectation is higher than the results we are seeing. We suggest for future research applying text mining techniques on not just the issue title, but also on the description. Additionally, duplicates could be filtered and sentiment analysis could be conducted on the issue title, description and received comments. However, these tasks are out of scope for the extent of our analysis.
 
 % - The efficiency of a project’s workflow (measured by the percentagesof issues assigned to specific developers). \cite{jarczykSurgicalTeamsGitHub2018}
-% Plot number of issues with releases --> major, minor or patch has more issues just before the release?
 
 \subsection{Results}
 % Metrics:
@@ -726,7 +790,8 @@ Based on the plots, we can confirm the increased number of issues at a release, 
 % - Further examine: we cannot tell whether the release metrics and release regularity are correlated
 
 % Release efficiency, issues:
-% TODO ....
+% number of open issues grow --> because there are issues that stay open 'indefinitely'
+% --> clean-up times: independent from releases, they show a huge spike
 
 % CONCLUSION: qualitative research needed to observe correlations.
 
