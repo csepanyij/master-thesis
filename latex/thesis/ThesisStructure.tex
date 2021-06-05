@@ -28,6 +28,7 @@
 \usepackage{subcaption}
 \usepackage[toc,page]{appendix}
 \usepackage{multirow}
+\usepackage{longtable}
 
 \urlstyle{same}
 
@@ -127,14 +128,6 @@ Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et 
 
 \newpage
 
-\begin{appendices}
-    \section{Connected components}
-    \begin{figure}[h!]
-        \centering
-        \includegraphics[width=\textwidth]{figures/qualitative/connected components/components.png}
-        \caption{Connected components}
-        \label{fig:components}
-    \end{figure}
-\end{appendices}
+\input{Appendices.tex}
 
 \end{document}

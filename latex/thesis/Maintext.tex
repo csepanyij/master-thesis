@@ -424,6 +424,7 @@ Statistics for issues like average close time also prove to be difficult, becaus
 
 
 \section{Collaboration pattern analysis}
+\label{sec:patterns}
 The focus of our analysis is how the collaboration network of FLOSS projects changes during their lifecycle. Moreover, we are also interested in the cause of the changes, rather than just observing the changes. Therefore we determined two types of events, that we want to observe in order to see the effects on the collaboration. The events during a project's lifecycle can be one of two types: regular or irregular event. Regular events repeat over time with roughly the same time passing between events. This can be a holiday season (e.g. summer holidays or at the end of the year) or regular software releases. In our research, we will focus on only the software releases, and we suggest the analysis of collaboration and seasonality as a future research topic. In contrast to releases, which are usually well documented and easily discoverable when exactly they were released, irregular events are harder to discover, as these do not necessarily stem from within the developer community, but from external sources. Examples could be a supporting company's organizational restructuring, the sudden increase of work from home during the COVID pandemic, or mass layoffs within the support team. In our analysis, we will mainly focus on layoff events, because of our expectation that this will have the largest effect on collaboration. Usually when a company develops an open-source software, the company relies on the external community of the project, but the core developers are mainly from the company. Therefore, when a company officially pulls out from further development, this results in the removal of most core developers in a short amount of time. Our main goal is to identify how this affects the collaboration network, how the network restructures itself, or if any restructuring occurs at all.
 
 As a first step, we conduct a qualitative analysis on a number of hand-picked repositories to observe the network statistics in detail and to identify cause and effect relationships. In order to avoid bias when selecting repositories, we choose projects based on a variety of factors:
@@ -575,8 +576,6 @@ We calculate the average longest path $P$ by first summing up all the longest pa
 where $w_{ij}$ is the edge weight between $a_i$ and $a_j$ in range $[0, 1]$. We multiply the weights by $-1$ and add $1$ in order to calculate for the longest, and not the shortest path. If there is no edge between $a_i$ and $a_j$, then $w_{ij}=0$.
 
 It is clearly visible in the smaller projects (\texttt{networkx}, \texttt{py-junos-eznc}, \texttt{seaborn}), that the path length increases before a release due to the increased activity, and otherwise it stays $0$. This indicates a 'push-type' release process, where the releases are sporadic, and a new release is created to incorporate and deploy the changes implemented. With the other projects, we do not see any correlation between releases and mean path length.
-
-\dots TODO
 
 \subsubsection{Core and periphery analysis}
 
@@ -798,25 +797,97 @@ Issue clean-ups usually happen around releases, but this is not necessarily the 
 
 In order to confirm the theory, that the number of bugs increase after a release, we classified the issues into bugs and features based on keywords and pattern-matching. However, due to the heterogenous nature of issue categorization and labeling, we were only able to classify a small percentage of issues. This caused the number of bugs and features to be tied to the overall number of issues: when the number of open issues are increasing, we are more likely to find and classify a bug and a feature, so their numbers will also rise. This effect ties the number of both bugs and features to the overall number of issues, so their shapes look approximately the same over time, and we are not able to draw any conclusions from them. As further analysis is out of scope for our work, we suggest a more robust classification method for bugs and features with text mining tools, such as natural language processing (NLP) for not just the titles, but also the description and comments of the issues. Furthermore, a sentiment analysis on the comment responses could provide more insight into how issues are resolved.
 
-% Metrics:
-% - Hierarchy: effective for layoff events
-% - Other metics: inconclusive, some are better than others (list them)
-% --> these metrics are correlated --> we need to determine which ones depend on which
-
-% Release regularity:
-% - major and minor are determinant, patches should be excluded
-% - 0.4 CV as identified cutoff value
-% - Further examine: we cannot tell whether the release metrics and release regularity are correlated
-
-% Release efficiency, issues:
-% number of open issues grow --> because there are issues that stay open 'indefinitely'
-% --> clean-up times: independent from releases, they show a huge spike
-
 % CONCLUSION: qualitative research needed to observe correlations.
 
-\section{Quantitative analysis of projects during crunch time}
-\subsection{Collaboration network changes}
-\subsection{Prediction of outcome based on collaboration changes}
+\section{Quantitative OSS project analysis}
+
+In Section \ref{sec:patterns} we have seen how the heterogenity of open source projects makes it hard to draw conclusions from the network statistics over time. We have seen some correlations between the releases and the metrics, but they weren't applicable to all repositories. Furthermore, the relatively small nubmer of repositories also prevented generalizing the findings, for example the metrics, which proved to be effective in \texttt{pandas} like clustering coefficient or degree centrality, might also apply to the majority of open-source repositories, but our project choices did not include any, that falls into this group. Therefore, in this section we will conduct a quantitative research on a large number of randomly selected repositories to rule out any bias we might have applied during the pattern analysis, where the main focus was to understand the collaboration network changes over time.
+
+First, we query a large number of GitHub repositories. As we have seen in the previous chapter, the analysis works best on really large repositories, otherwise the activity tends to be zero between releases. Therefore, we filter for only the largest projects available on GitHub with specifying inclusion and exclusion criteria. As a next step, we randomly choose a number of projects from the result set, which we mine using git2net and repo\_tools. Then we run a linear regression on the number of issues, the releases and the network statistics before and after a release to discover the correlations between these variables. Lastly, we discuss our findings and point to future research topics.
+
+\subsection{Inclusion and exclusion criteria}
+
+We use the \textit{GitHub Search}\footnote{\url{https://seart-ghs.si.usi.ch/}} tool maintained by SEART to query the Github repositories. The tool allows us to set a detailed search criteria to find repositories. We use the following settings for querying:
+
+\begin{itemize}
+    \item \textit{Commits}: minimum 5000
+    \item \textit{Contributors}: minimum 5
+    \item \textit{Issues}: minimum 10
+    \item \textit{Pull requests}: minimum 10
+    \item \textit{Releases}: minimum 2
+    \item \textit{Stars}: minimum 10
+    \item \textit{Watchers}: minimum 10
+    \item \textit{Forks}: minimum 2
+    \item \textit{Exclude forks}: True
+    \item \textit{Has open issues}: True
+    \item \textit{Has open pull requests}: True
+\end{itemize}
+
+The main selection criteria is the number of commits, as this measures the best how much work has been put into the project. All other variables might change in any direction over time, for example repos can be unwatched, unstarred, forks can be deleted or merged and contributors might decline over time. However, the number of commits always rises as time passes.
+
+In our qualitative analysis and during its mining process we have seen, that the larger projects, which showed activity in a 28-day window regardless whether a release was coming up or not, had at least 5000 commits, this is why we used this number as a filter. The other criteria (contributors, issues, pull requests, etc\dots) are filtered, so that we are making sure that all of the GitHub functionalities are being used, e.g. issues are managed in GitHub, it has at least a minimum number of contributors so the networks will not be empty, and it has at least a small community due to having stars, watchers and being forked. We exclude forked results, as we are only interested in the main source code, and we mark the 'Has open issues' and 'Has open pull requests' to filter for active projects.
+
+Applying the above inclusion and exclusion criteria, the search resulted in 2211 repositories in total. We further narrow this result set down to 110 by randomized selection. Our goal is to analyse about 100 repositories, but due to various mining and release problems, this number is expected to be further reduced, therefore we choose an extra 10 repositories to compensate the expected reduction.
+
+Since following the semantic versioning standards is a crucial part of the analysis, we also exclude the projects, which do not follow the major-minor-patch versioning convention, or if they have multiple parallel editions, which are versioned separately. We have to exclude the latter category, as the version is determined based on the version number change compared to the previous version, and if the previous is denoting a different edition of the software, the version type can be misidentified. For example, the \texttt{chakra-ui/chakra-ui} repository contains releases named '\textbf{select@X.Y.Z}', '\textbf{props-docs@X.Y.Z}' and also '\textbf{progress@X.Y.Z}', where X, Y and Z are integers. If the 'select@1.0.1' release is followed by the 'props-docs@1.1.6', then based on our version denoting algorithm, this would be categorized as a major release, even though the latter release is just a patch to 'props-docs@1.1.5', just chronologically it is not the preceeding release. Since exceptions and personalizations are common between repositories regaring versioning, we decided not to investigate further how these projects could be incorporated, as this would make the classifying algorithm significantly more complex. Instead, we propose an improved algorithm for future research.
+
+\subsection{Repository mining}
+
+The above exclusion criteria results in 84 repositories, which we start mining with both \texttt{git2net} and \texttt{repo\_tools}. Just like in the qualitative analysis, the data regarding the commits and edits, which are used to generate the collaboration networks, are gathered by \texttt{git2net}, and the releases and issues details are collected with \texttt{repo\_tools}. During the two-week long mining process, 6 repositories were skipped due to the commits and edits mining running into an error or getting stuck. Presumably this is due to certain files (possibly large binary files), which require too many resources to compare the changes line by line. Part of the mining process is the disambiguation of commit authors, as renamed users can show up multiple times within the collaboration network. The original author names are kept in \texttt{.csv} files for each mined repo.
+
+The summary of the remaining 78 projects is shown in Table \ref{tab:repo_stats}, the main programming languages and their distribution in Table \ref{tab:repo_lang}, and the full list of the 110 randomized repositories can be found in Appendix \ref{app:repos}.
+
+
+\begin{table}
+    \centering
+    %\begin{subtable}{0.55\textwidth}
+        %\resizebox{1.02\textwidth}{!}{%
+        \begin{tabular}{| l | c | c | c | c |}
+            \hline
+            \textbf{Attribute} & \textbf{Min} & \textbf{Avg} & \textbf{Max} & \textbf{St.dev.} \\
+            \hline
+            \textbf{Commits} & 5049 & 11768 & 54396 & 9168 \\
+            \textbf{Branches} & 1 & 47 & 408 & 67 \\
+            \textbf{Releases} & 2 & 95 & 889 & 150 \\
+            \textbf{Contributors} & 6 & 137 & 1181 & 179 \\
+            \textbf{Watchers} & 10 & 234 & 7120 & 816 \\
+            \textbf{Stargazers} & 11 & 5059 & 149037 & 17790 \\
+            \textbf{Forks} & 8 & 1637 & 72735 & 8259 \\
+            \textbf{Issues} & 11 & 2293 & 20235 & 3490 \\
+            \textbf{Pull requests} & 27 & 2205 & 22271 & 3319\\
+            \hline
+        \end{tabular}
+        %}
+    %\end{subtable}
+    \caption{Basic statistics of mined repositories.}
+    \label{tab:repo_stats}
+    %\resizebox{\textwidth}{!}{%
+    %}
+\end{table}
+
+\begin{table}
+    \centering
+        %    \resizebox{0.82\textwidth}{!}{%
+    \begin{tabular}{| l | c | c |}
+        \hline
+        \textbf{Main lang} & \textbf{Count} & \textbf{\%} \\
+        \hline
+        \textbf{C++} & 21 & 26,9\% \\
+        \textbf{JavaScript} & 16 & 20,5\% \\
+        \textbf{Python} & 13 & 16.7\% \\
+        \textbf{Java} & 13 & 16,7\% \\
+        \textbf{C} & 7 & 9,0\% \\
+        \textbf{TypeScript} & 4 & 5,1\% \\
+        \textbf{C\#} & 3 & 3,8\% \\
+        \textbf{Kotlin} & 1 & 1,3\% \\        
+        \hline
+    \end{tabular}
+    \caption{Main programming languages distribution amongst mined repositories.}
+    \label{tab:repo_lang}
+        %    }
+\end{table}
+
+
 
 \section{Discussion and results}
 \section{Conclusion and future work}
