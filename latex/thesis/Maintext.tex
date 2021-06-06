@@ -835,7 +835,7 @@ Since following the semantic versioning standards is a crucial part of the analy
 
 The above exclusion criteria results in 84 repositories, which we start mining with both \texttt{git2net} and \texttt{repo\_tools}. Just like in the qualitative analysis, the data regarding the commits and edits, which are used to generate the collaboration networks, are gathered by \texttt{git2net}, and the releases and issues details are collected with \texttt{repo\_tools}. During the two-week long mining process, 6 repositories were skipped due to the commits and edits mining running into an error or getting stuck. Presumably this is due to certain files (possibly large binary files), which require too many resources to compare the changes line by line. Part of the mining process is the disambiguation of commit authors, as renamed users can show up multiple times within the collaboration network. The original author names are kept in \texttt{.csv} files for each mined repo.
 
-The summary of the remaining 78 projects is shown in Table \ref{tab:repo_stats}, the main programming languages and their distribution in Table \ref{tab:repo_lang}, and the full list of the 110 randomized repositories can be found in Appendix \ref{app:repos}.
+As a last step in the mining process, we mine the repositories with the \texttt{repo\_tools} miner. Of the remaining 78 projects, 10 could not be mined for various reasons, including the miner getting stuck with some of them during the commits mining or the repository being renamed and therefore does not match the provided URL anymore. We show the summary of the 78 projects in Table \ref{tab:repo_stats} and the main programming languages and their distribution in Table \ref{tab:repo_lang}. We also included the 10 repositories skipped, because they finished for the \texttt{git2net} mining process, but we will exclude them during the analysis going forward, and we will only work with the fully successful 68 repos. The full list of the 110 randomized repositories can be found in Appendix \ref{app:repos}.
 
 
 \begin{table}
@@ -887,6 +887,51 @@ The summary of the remaining 78 projects is shown in Table \ref{tab:repo_stats},
         %    }
 \end{table}
 
+\subsection{Metrics and release stats correlation}
+
+We investigate the correlation between the network metrics and the releases with linear regression. First, we compose a list of all the mined repositories and all of their releases with the release date. Then the release regularity is calculated for each repository using the coefficient of variance value descibed in Section \ref{sec:release_reg}. Since this value requires more than one release, the CV is measured per repository and not per each release. Lastly, we calculate all of the collaboration network metrics for the network containing the past 28-day activity before the release, and the network covering the 28 days right after the release.
+
+\subsubsection{Release classification}
+
+To calculate the CV value, the patch releases must be excluded as we mentioned in Section \ref{sec:release_reg}. First, we classify each release into major, minor or patch releases. Because the semantic version can only be determined by comparing a release with its preceeding version, the first release in each repository is dropped because its version will always be unknown as it lacks a previous release. Furthermore, this type of classification also has issues categorizing parallel version maintenance. For example, if a project parallelly supports a version v2 and a version v3, it issues new minor and patch releases for each version, so we will see \texttt{v2.1.4}, \texttt{v3.0.2}, \texttt{v2.1.5} and \texttt{v3.0.3} in chronological order. In this theoretical example, the releases \texttt{v3.0.2} and \texttt{v3.0.3} will be categorized as major releases, because their preceeding release has a lower major number. However, it is clear, that these should be patch releases, since they follow up on the previous patch for the respective version. In order to circumvent this issue, we would need to update the classifying algorithm to consider all the preceeding versions. However, this would significantly inclrease the complexity of the program, and therefore it is out of scope for our work. We mark a robust classification algorithm as a possible future topic to be researched.
+
+Another problem with the version classification are the irregular release names, such as beta releases or release candidates. These versions usually have the same semantic version number, and they are only different in the optional tags at the end. As an example, during major releases it is common to see multiple release candidate versions following eachother, like \texttt{v3.9.12} followed by \texttt{v4.0.0rc1} and \texttt{v4.0.0rc2}. The issue rises from the fact that by looking at only the release number, the latter two releases are the same to the classifying algorithm (4.0.0), which leads to \texttt{v4.0.0rc1} being classified as a major release, and \texttt{v4.0.0rc2} will be unknown. We could mark these versions as rc versions, and skip them during the analysis, but the heterogenity of conventions is a great issue, as some projects mark release candidate, beta and alpha versions as \texttt{v4.0.0-rc1}, \texttt{v4.0.0beta5} or even subversioning them such as \texttt{v4.0.0-rc1.2}. Some projects also have different editions marked with an \@ symbol, for example \texttt{v3.1.5@latest} and \texttt{v3.1.5@browser-only}, which also results in the same issue. To resolve all the releases, which are uncategorizable, we could only make it 100\% accurate without any unknowns if we manually modified or deleted the release data. Provided, that the 68 mined repositories contain over 5200 distinct releases, this task would be too cumbersome, and therefore we marked all releases affected by this as 'unknown'. Because we would like to perform a linear regression on our dataset, we must convert all nominal categorical labels to numbers, thus we add 3 columns to the current dataset named 'major', 'minor' and 'patch', where these values will have 1 in their respective release type column, and the other two will be 0. All three columns are zero if the release type is unknown.
+
+Because the semantic version can be highly unreliable in certain repositories, we tak e a look at how much was changed between two releases to identify the significance of the release. We do this by taking all commits between two relositories, and adding up the number of lines added and number of lines deleted. Since this method only requires the preceedign version's release date, it provides a measure of significance without the classification errors mentioned above. However, it is also important to note that the version type (major, minor, patch) is not necessarily related to the number of lines changed. 
+
+\subsubsection{Linear regression model}
+
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \footnotesize
+        \begin{tabularx}{1.5\textwidth}{|X|c|c|c|c|c|c|X|X|Xc}
+            
+            \hline
+            \textbf{Repo} & \textbf{Release} & \textbf{Release date} & \textbf{CV} & \textbf{Major} & \textbf{Minor} & \textbf{Patch} & \textbf{Change size} & \textbf{Number of nodes (before)} & \textbf{Number of nodes (after)} & \textbf{\dots} \\
+            \hline
+            nccgroup/\newline ScoutSuite & 4.0.4 & 11/12/2018 & 0.503154 & 0 & 0 & 1 & 780726.0 & 3 & 6 & \dots\\
+            nccgroup/\newline ScoutSuite & 4.0.5 & 12/12/2018 & 0.503154 & 0 & 0 & 1 & 46.0 & 3 & 4 & \dots\\
+            nccgroup/\newline ScoutSuite & 4.0.6 & 22/12/2018 & 0.503154 & 0 & 0 & 1 & 70470.0 & 3 & 6 & \dots\\
+            nccgroup/\newline ScoutSuite & 4.1.0 & 5/2/2019 & 0.503154 & 0 & 1 & 0 & 2708046.0 & 8 & 6 & \dots\\
+            nccgroup/\newline ScoutSuite & 4.2.0 & 19/2/2019 & 0.503154 & 0 & 1 & 0 & 85243130.0 & 8 & 1 & \dots\\
+            \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots\\
+            Unidata/\newline netcdf-c & v4.7.1 & 29/8/2019 & 0.692333 & 0 & 0 & 1 & 636254.0 & 3 & 9 & \dots \\
+            Unidata/\newline netcdf-c & v4.7.2 & 22/10/2019 & 0.692333 & 0 & 0 & 1 & 411017.0 & 3 & 4 & \dots \\
+            Unidata/\newline netcdf-c & v4.7.3 & 21/11/2019 & 0.692333 & 0 & 0 & 1 & 702122.0 & 8 & 7 & \dots \\
+            Unidata/\newline netcdf-c & v4.7.4 & 27/3/2020 & 0.692333 & 0 & 0 & 1 & 60941386.0 & 5 & 3 & \dots \\
+            Unidata/\newline netcdf-c & v4.8.0 & 30/3/2021 & 0.692333 & 0 & 1 & 0 & 129245816.0 & 6 & 6 & \dots \\
+            \hline
+        \end{tabularx}
+        \normalsize
+    }
+    \caption{Linear regression input data.}
+    \label{tab:linreg}
+\end{table}
+
+
+The resulting dataframe is depicted in Table \ref{tab:linreg}. First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the intecrpt (y value). 
 
 
 \section{Discussion and results}
