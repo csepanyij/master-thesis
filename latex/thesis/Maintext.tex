@@ -870,7 +870,7 @@ As a last step in the mining process, we mine the repositories with the \texttt{
         %    \resizebox{0.82\textwidth}{!}{%
     \begin{tabular}{| l | c | c |}
         \hline
-        \textbf{Main lang} & \textbf{Count} & \textbf{\%} \\
+        \textbf{Main language} & \textbf{Count} & \textbf{\%} \\
         \hline
         \textbf{C++} & 21 & 26,9\% \\
         \textbf{JavaScript} & 16 & 20,5\% \\
@@ -899,40 +899,87 @@ Another problem with the version classification are the irregular release names,
 
 Because the semantic version can be highly unreliable in certain repositories, we tak e a look at how much was changed between two releases to identify the significance of the release. We do this by taking all commits between two relositories, and adding up the number of lines added and number of lines deleted. Since this method only requires the preceedign version's release date, it provides a measure of significance without the classification errors mentioned above. However, it is also important to note that the version type (major, minor, patch) is not necessarily related to the number of lines changed. 
 
-\subsubsection{Linear regression model}
-
+\subsubsection{Semantic version number and number of changed lines}
 
 \begin{table}
     \centering
     \resizebox{\textwidth}{!}{%
     \footnotesize
-        \begin{tabularx}{1.5\textwidth}{|X|c|c|c|c|c|c|X|X|Xc}
+        \begin{tabularx}{1.5\textwidth}{|X|c|c|c|c|c|c|X|XcX|}
             
             \hline
-            \textbf{Repo} & \textbf{Release} & \textbf{Release date} & \textbf{CV} & \textbf{Major} & \textbf{Minor} & \textbf{Patch} & \textbf{Change size} & \textbf{Number of nodes (before)} & \textbf{Number of nodes (after)} & \textbf{\dots} \\
+            \textbf{Repo} & \textbf{Release} & \textbf{Release date} & \textbf{CV} & \textbf{Major} & \textbf{Minor} & \textbf{Patch} & \textbf{Change size} & \textbf{N \newline (before)} & \textbf{\dots} & \textbf{Hierarchy \newline (after)} \\
             \hline
-            nccgroup/\newline ScoutSuite & 4.0.4 & 11/12/2018 & 0.503154 & 0 & 0 & 1 & 780726.0 & 3 & 6 & \dots\\
-            nccgroup/\newline ScoutSuite & 4.0.5 & 12/12/2018 & 0.503154 & 0 & 0 & 1 & 46.0 & 3 & 4 & \dots\\
-            nccgroup/\newline ScoutSuite & 4.0.6 & 22/12/2018 & 0.503154 & 0 & 0 & 1 & 70470.0 & 3 & 6 & \dots\\
-            nccgroup/\newline ScoutSuite & 4.1.0 & 5/2/2019 & 0.503154 & 0 & 1 & 0 & 2708046.0 & 8 & 6 & \dots\\
-            nccgroup/\newline ScoutSuite & 4.2.0 & 19/2/2019 & 0.503154 & 0 & 1 & 0 & 85243130.0 & 8 & 1 & \dots\\
+            nccgroup/\newline ScoutSuite & 4.0.4 & 11/12/2018 & 0.503154 & 0 & 0 & 1 & 780726.0 & 3 & \dots & 0.000000 \\
+            nccgroup/\newline ScoutSuite & 4.0.5 & 12/12/2018 & 0.503154 & 0 & 0 & 1 & 46.0 & 3 & \dots & 0.000000 \\
+            nccgroup/\newline ScoutSuite & 4.0.6 & 22/12/2018 & 0.503154 & 0 & 0 & 1 & 70470.0 & 3 & \dots & 0.081062\\
+            nccgroup/\newline ScoutSuite & 4.1.0 & 5/2/2019 & 0.503154 & 0 & 1 & 0 & 2708046.0 & 8 & \dots & -0.076297\\
+            nccgroup/\newline ScoutSuite & 4.2.0 & 19/2/2019 & 0.503154 & 0 & 1 & 0 & 85243130.0 & 8 & \dots & -0.071537\\
             \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots\\
-            Unidata/\newline netcdf-c & v4.7.1 & 29/8/2019 & 0.692333 & 0 & 0 & 1 & 636254.0 & 3 & 9 & \dots \\
-            Unidata/\newline netcdf-c & v4.7.2 & 22/10/2019 & 0.692333 & 0 & 0 & 1 & 411017.0 & 3 & 4 & \dots \\
-            Unidata/\newline netcdf-c & v4.7.3 & 21/11/2019 & 0.692333 & 0 & 0 & 1 & 702122.0 & 8 & 7 & \dots \\
-            Unidata/\newline netcdf-c & v4.7.4 & 27/3/2020 & 0.692333 & 0 & 0 & 1 & 60941386.0 & 5 & 3 & \dots \\
-            Unidata/\newline netcdf-c & v4.8.0 & 30/3/2021 & 0.692333 & 0 & 1 & 0 & 129245816.0 & 6 & 6 & \dots \\
+            Unidata/\newline netcdf-c & v4.7.1 & 29/8/2019 & 0.692333 & 0 & 0 & 1 & 636254.0 & 3 & \dots & 0.000000 \\
+            Unidata/\newline netcdf-c & v4.7.2 & 22/10/2019 & 0.692333 & 0 & 0 & 1 & 411017.0 & 3 & \dots & 0.095393 \\
+            Unidata/\newline netcdf-c & v4.7.3 & 21/11/2019 & 0.692333 & 0 & 0 & 1 & 702122.0 & 8 & \dots & 0.000000 \\
+            Unidata/\newline netcdf-c & v4.7.4 & 27/3/2020 & 0.692333 & 0 & 0 & 1 & 60941386.0 & 5 & \dots & 0.104993 \\
+            Unidata/\newline netcdf-c & v4.8.0 & 30/3/2021 & 0.692333 & 0 & 1 & 0 & 129245816.0 & 6 & \dots & 0.000000 \\
             \hline
         \end{tabularx}
         \normalsize
     }
-    \caption{Linear regression input data.}
-    \label{tab:linreg}
+    \caption{OLS regression input data.}
+    \label{tab:linreg_input}
 \end{table}
 
+The resulting dataframe is depicted in Table \ref{tab:linreg_input}. First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the intecept (y value). Our null hypothesis is that the semantic version number and type does not have an effect on the number of lines changed in a new release compared to the previous version.
 
-The resulting dataframe is depicted in Table \ref{tab:linreg}. First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the intecrpt (y value). 
+The OLS regression results can be seen in Table \ref{tab:linreg_lines}. The resulting linear regression equation $F(3,5199) = 12.43, p < .000$ with $R^2 = .007$ is found to be significant, based on which we reject the null hypothesis. By taking a look at the individual variables, we can see that the 'major' variable is the only not significant with a $P$ value of $.487 > \alpha = .005$. We contribute the insignificance of major releases to the misclassification due to parallel versioning, since most projects support only major versions parallelly - if they do. Because of this, the most falsely labelled versions are major versions, which causes inconsistency when determining the number of lines changed.
 
+The minor and patch versions, however, are significant within the model, and based on the coefficients, the minor releases have about double the amount of lines changed than a patch release ($\frac{3.748}{1.825}=2.054$). This is consistent with our expectations, because a larger version is bound to have more lines changed within the source code, as it contains new features and not just fixes as per definition of 'minor' version according to the semantic versioning concept.
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            \textbf{Variable} & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P>|t|} & \multicolumn{2}{|c|}{\textbf{[0.025  0.975]}} \\
+            \hline
+            major & 7.974e+10 & 1.15e+08 & 0.695 & 0.487 & -1.45e+08 & 3.05e+08 \\
+            minor & 3.748e+11 & 7.58e+07 & 4944 & 0.000 & 2.26e+08 & 5.23e+08 \\
+            patch & 1.825e+11 & 5.19e+07 & 3515 & 0.000 & 8.07e+07 & 2.84e+08 \\
+            \hline
+        \end{tabular}
+    }
+    \caption{OLS regression results for number of line changes with semantic version type as predictor.}
+    \label{tab:linreg_lines}
+\end{table}
+
+\subsubsection{Pre- and post-release network metrics and lines changed}
+
+\subsubsection{Pre- and post-release network metrics and regularity}
+
+\subsubsection{Correlation between network metrics}
+In Section \ref{sec:patterns} we observed, that the collaboration network metrics can be dependent on eachother. In this section, we analyse their correlation by creating a matrix of correlations. Besides the metrics, we also include the release regularity and release size change (number of lines changed) in the matrix, which is depicted in Figure \ref{fig:corr_matrix}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/quantitative/corr_matrix/corr_before.png}
+    \caption{Correlation matrix of release regularity, lines changed and the other collaboration metrics before the release.}
+    \label{fig:corr_matrix}
+\end{figure}
+
+Correlation coefficients, whose value is between 0.9 and 1.0 are classified as very highly correlated. Values between magnitudes 0.7 and 0.9 are considered as highly correlated, between 0.5 and 0.7 the two variables are moderately correlated, and datasets with a correlation coefficient between 0.3 and 0.5 are categorized as having low correlation. Variables, whose correlation coefficient is between 0 and 0.3 do not have any significant correlation, as the two datasets are so different, that the occasional similarities are most likely caused by chance and no underlying correlation. These ranges are also applicable to values below 0 with a reversed sign, and the negative sign signaling an inverse relationship.
+
+Based on these categories, the following correlation types can be seen:
+
+\begin{itemize}
+    \item \textbf{Moderate positive linear correlation:} \newline Clustering coefficient $\sim$ Network density \newline Clustering coefficient $\sim$ Mean degree \newline Core/periphery (k-core) $\sim$ Network density
+    \item \textbf{Low positive linear correlation:} \newline Mean degree $\sim$ Number of nodes \newline Mean degree $\sim$ Network density \newline Mean path length $\sim$ Network density \newline Mean path length $\sim$ Degree centrality \newline Core/periphery (degree) $\sim$ Network Density
+    \item \textbf{Low negative linear correlation:} \newline Core/periphery (k-core) $\sim$ Number of nodes \newline Core/periphery (degree) $\sim$ Number of nodes
+    \item \textbf{Moderate negative linear correlation:} \newline Core/periphery (degree) $\sim$ Degree centrality
+\end{itemize}
+
+\dots
+
+\subsection{Project success}
 
 \section{Discussion and results}
 \section{Conclusion and future work}
