@@ -543,12 +543,12 @@ Almost all projects have a significantly low network density, meaning that the e
 
 \subsubsection{Clustering coefficient}
 
-The weighted global clustering coefficients explained in Section \ref{sec:clustering} is plotted over time in Figure \ref{fig:clust}. Because it would be difficult to show both the Z-values and the the clustering coefficients on the same graph for each project, we change the color of the line to indicate the statistical significance. Where the clustering coefficient is significantly different from a random network to the negative side (meaning the Z-value at the corresponding date is less than $-2$) the line uses the project's dark shaded color. Likewise, when there is a significant difference and the Z-value is over $2$, the dark complementer color is used. Within the range of $[-2, 2]$ a light color is used to signal the statistical indifference from a random network of the same size. The color label also indicates the associated Z-value within each subgraph.
+The weighted global clustering coefficients explained in Section \ref{sec:clustering} is plotted over time in Figure \ref{fig:clust}. Because it would be difficult to show both the Z-values and the the clustering coefficients on the same graph for each project, we only show the Z-values, as they both indicate the direction and the significance of the change. Where the clustering coefficient is significantly different from a random network to the negative side (meaning the Z-value at the corresponding date is less than $-2$) it drops below the highlighted $[-2, 2]$ area within each subgraph. Likewise, when there is a significant difference to the positive direction, the plot is above the highlighted area.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/qualitative/clustering_coeff/clustering.png}
-    \caption{Clustering coefficients over time.}
+    \includegraphics[width=\textwidth]{figures/qualitative/clustering_coeff/clustering_z.png}
+    \caption{Clustering coefficient Z-values over time.}
     \label{fig:clust}
 \end{figure}
 
@@ -564,8 +564,8 @@ In an undirected unweighted graph, the shortest path between two nodes is the le
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/qualitative/mean_path_length/longest_path_length_all.png}
-    \caption{Mean longest path length over time with statistical significance.}
+    \includegraphics[width=\textwidth]{figures/qualitative/mean_path_length/path_length_all_normalized.png}
+    \caption{Normalized mean longest path length over time.}
     \label{fig:mean_path}
 \end{figure}
 
@@ -574,6 +574,10 @@ We calculate the average longest path $P$ by first summing up all the longest pa
 \[ P = \frac{\sum{_{i=1}^{n}} \sum{_{j=1}^{n} -w_{ij}+1} }{n(n-1)} \]
 
 where $w_{ij}$ is the edge weight between $a_i$ and $a_j$ in range $[0, 1]$. We multiply the weights by $-1$ and add $1$ in order to calculate for the longest, and not the shortest path. If there is no edge between $a_i$ and $a_j$, then $w_{ij}=0$.
+
+To depict the changes over time in mean path length, we want to calculate the Z-value, just like with the other metrics. However, this proves to be difficult for the mean path length. When calculating the Z-value, we generate multiple graphs randomly, which have as many nodes and edges as the original, real network. Then we substract the original value from the average value of the random graphs, and divide with the standard deviation of the random network values. The issue rises with the standard deviation and division part: if all the randomly generated values happen to be exactly the same, their standard deviation will be $0$, which leads to a division by $0$ error. With the mean path, different random values can only happen if there are about the same edges as nodes in the network. In this case, random chains occur within the network, which are sometimes shorter, sometimes longer. Otherwise either everyone is connected to everyone and the mean path lenght is always $1$ when there are more edges than vertices, or nobody is connected to anyone and there are never any changes in the reversed situation. In either case, Z-values cannot be calculated, as all values at all points in time are the same.
+
+This occurs for all 8 projects when calculating the Z-value, and the graphs did not show any value. To circumvent this issue, we take an analytical approach to normalize our mean path length values. Instead of randomly generating the networks, we take the absolute possible largest mean path length in any network, and divide each value with it. The maximum path length in any given graph is $(N-1)/2$, where $N$ is the number of developers in the network. We normalize the mean path length by dividing with this value, and the results are depicted in Figure \ref{fig:mean_path}.
 
 It is clearly visible in the smaller projects (\texttt{networkx}, \texttt{py-junos-eznc}, \texttt{seaborn}), that the path length increases before a release due to the increased activity, and otherwise it stays $0$. This indicates a 'push-type' release process, where the releases are sporadic, and a new release is created to incorporate and deploy the changes implemented. With the other projects, we do not see any correlation between releases and mean path length.
 
@@ -587,13 +591,24 @@ We observe the ratio between the number of core and periphery developers by divi
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/qualitative/core_periphery/core_periphery_all.png}
+    \begin{subfigure}{0.99\textwidth}
+        \centering
+        \includegraphics[width=0.99\textwidth]{figures/qualitative/core_periphery/core_periphery_k_core.png}
+        \caption{Core/periphery K-core method}
+        \label{fig:cp-k-core}
+    \end{subfigure}
+    \begin{subfigure}{0.99\textwidth}
+        \centering
+        \includegraphics[width=0.99\textwidth]{figures/qualitative/core_periphery/core_periphery_k_core.png}
+        \caption{Core/periphery degree centrality method}
+        \label{fig:cp-degree-centrality}
+    \end{subfigure}
     \caption{Core/periphery ratio's Z-value over time with K-core and Degree centrality methods.}
     \label{fig:core-periphery}
 
 \end{figure}
 
-The lighter colored plot line shows the Z-vale over time for the core and periphery ratio based on the Degree centrality method, whereas the darker line shows the same ratio calculated with the K-core method. We can see again a sharp difference between the smaller and larger projects. For the smaller projects, the two measures roughly behave the same, as their plots overlap for most of the time. Most of the time these values stay within the statistically insignificant range and only in these cases are significantly different than a random network.
+Figure \ref{fig:cp-k-core} depicts the core/periphery ratio calculated with the K-core method, and Figure \ref{fig:cp-degree-centrality} shows the degree centrality method. We can see again a sharp difference between the smaller and larger projects. For the smaller projects, the two measures roughly behave the same, as their plots overlap for most of the time. Most of the time these values stay within the statistically insignificant range and only in these cases are significantly different than a random network.
 
 In contrast, the large projects have their K-core ratios consistently below $-2$, indicating that the core ratio is consistently lower than a randomly generated network, which signals its centralized property. This cannot be said for the Degree centrality core ratios, which are consistently within the insignificant range. Just as with the smaller projects like \texttt{networkx}, \texttt{seaborn} and \texttt{py-junos-eznc}, we can observe a significant drop in K-core ratio Z-values within 2 to 3 months after the release. The difference between the two networks are demonstrated for \texttt{numpy}'s minor release on 22.12.2019, where the networks for 1-month after, and 1-month before are contrasted in Figure \ref{fig:core-periphery-numpy}.
 
@@ -624,20 +639,20 @@ In general we can say that especially in larger projects the core can be clearly
 
 \subsubsection{Hierarchy}
 
-As a last step, we take a look at the hierarchy of the networks over time. We use the method described in Section \ref{sec:hierarchy} and we plot the linear regression's $\beta_1$ value (the slope of the trendline). Figure \ref{fig:hierarchy_all} shows these values over time per observed project, where the darker line color indicates a significant Z-value in either direction (less than $-2$ or larger than $2$).
+As a last step, we take a look at the hierarchy of the networks over time. We use the method described in Section \ref{sec:hierarchy} and we plot the linear regression's $\beta_1$ value (the slope of the trendline). Figure \ref{fig:hierarchy_all} shows these values over time per observed project, where the highlighted area indicates the zone where the Z-value is not significant.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/qualitative/hierarchy/hierarchy_all.png}
+    \includegraphics[width=\textwidth]{figures/qualitative/hierarchy/hierarchy_all_z.png}
     \caption{Hierarchy over time}
     \label{fig:hierarchy_all}
 \end{figure}
 
 In \texttt{networkx} and \texttt{seaborn} we can see activity only around releases, which is due to the fact that there aren't enough commits and developer activity to properly form a collaboration network, so it defaults to zero. Therefore, we can contribute the hiererchy change in their cases to the change in network size.
 
-Just as with the other statistics, \texttt{curl} has a frequent and regular release plan, which makes it hard to observe any regularities around releases. We can see some spikes and some troughs coincidentally at the same time as the releases, but there isn't any consistency between them, and therefore we cannot conclude a definitive cause and effect between hierarchy and releases. Unlike the other projects, \texttt{curl} has a lower hierarchy score as it frops below $0$ many times, indicating a somewhat more hierarchial structure. This is expected, as it is known that it is mainly developed by a single developer, which results in high hierarchy.
+Just as with the other statistics, \texttt{curl} has a frequent and regular release plan, which makes it hard to observe any regularities around releases. We can see some spikes and some troughs coincidentally at the same time as the releases, but there isn't any consistency between them, and therefore we cannot conclude a definitive cause and effect between hierarchy and releases. Unlike the other projects, \texttt{curl} has a lower hierarchy score as it drops below $0$ many times, indicating a somewhat more hierarchial structure. This is expected, as it is known that it is mainly developed by a single developer, which results in high hierarchy.
 
-In case of \texttt{servo}, \texttt{py-junos-eznc} and \texttt{wasmtime} the hierarchy seems to correlate with the unexpected events closely. In \texttt{servo} there is a definitive spike exactly at the second layoff event, which clearly indicates a huge change in the network. It has a large nubmer of contributors, which results in a comparatively smooth curve within the other projects, as it rarely goes above $0.1$ and it is always above $0$. Similarly, \texttt{py-junos-eznc} also shows the only significant Z-value at the time of the layoff event with a positive spike. \texttt{wasmtime} also shows the largest positive spike within a 2-year period at the exact time of the layoff, which leads us to conclude that the sudden decline of hierarchy (it is more hierarchial if the value is negative) is a good indicator of the layoff events. This can be explained by the removal of core contributors, as the teams are disrupted and developers have to collaborate directly with more of their peers, as opposed to going through the established channels.
+In case of \texttt{servo}, \texttt{py-junos-eznc} and \texttt{wasmtime} the hierarchy seems to correlate with the unexpected events closely. In \texttt{servo} there is a definitive spike exactly at both after the first layoff event and exactly at the second layoff event, which clearly indicates a huge change in the network. Similarly, \texttt{py-junos-eznc} also shows the only significant Z-value at the time of the layoff event with a positive spike. \texttt{wasmtime} also shows a positive spike at the exact time of the layoff, which leads us to conclude that the sudden decline of hierarchy (it is more hierarchial if the value is negative) is a good indicator of the layoff events. This can be explained by the removal of core contributors, as the teams are disrupted and developers have to collaborate directly with more of their peers, as opposed to going through the established channels.
 
 \subsection{Release regularity}
 \label{sec:release_reg}
@@ -931,33 +946,28 @@ Because the semantic version can be highly unreliable in certain repositories, w
 
 The resulting dataframe is depicted in Table \ref{tab:linreg_input}. First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the intecept (y value). Our null hypothesis is that the semantic version number and type does not have an effect on the number of lines changed in a new release compared to the previous version.
 
-The OLS regression results can be seen in Table \ref{tab:linreg_lines}. The resulting linear regression equation $F(3,5199) = 12.43, p < .000$ with $R^2 = .007$ is found to be significant, based on which we reject the null hypothesis. By taking a look at the individual variables, we can see that the 'major' variable is the only not significant with a $P$ value of $.487 > \alpha = .005$. We contribute the insignificance of major releases to the misclassification due to parallel versioning, since most projects support only major versions parallelly - if they do. Because of this, the most falsely labelled versions are major versions, which causes inconsistency when determining the number of lines changed.
-
-The minor and patch versions, however, are significant within the model, and based on the coefficients, the minor releases have about double the amount of lines changed than a patch release ($\frac{3.748}{1.825}=2.054$). This is consistent with our expectations, because a larger version is bound to have more lines changed within the source code, as it contains new features and not just fixes as per definition of 'minor' version according to the semantic versioning concept.
+The OLS regression results can be seen in Table \ref{tab:linreg_lines}. The resulting linear regression equation, when taking \textit{patch} as the reference level, $F(61,3417) = 30.87, p < .000$ with $R^2 = .355$ is found to be significant, based on which we reject the null hypothesis. Surprisingly, the major version's coefficient is twice as lower than the minor version's, which is contrary to our expectations. The number of lines changed were expected to be higher in a major release than in a minor, but this was found to be not true. We partially contribute this to the misclassification due to parallel versioning, since most projects support only major versions parallelly - if they do. Because of this, the most falsely labelled versions are major versions, which causes inconsistency when determining the number of lines changed.
 
 \begin{table}
     \centering
-    \resizebox{\textwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
         \begin{tabular}{|c|c|c|c|c|c|c|}
             \hline
             \textbf{Variable} & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P>|t|} & \multicolumn{2}{|c|}{\textbf{[0.025  0.975]}} \\
             \hline
-            major & 7.974e+10 & 1.15e+08 & 0.695 & 0.487 & -1.45e+08 & 3.05e+08 \\
-            minor & 3.748e+11 & 7.58e+07 & 4944 & 0.000 & 2.26e+08 & 5.23e+08 \\
-            patch & 1.825e+11 & 5.19e+07 & 3515 & 0.000 & 8.07e+07 & 2.84e+08 \\
+            major & 0.87 & 0.2 & 4.0 & 0.0 & 0.43 & 1.3 \\
+            minor & 1.61 & 0.2 & 10.3 & 0.0 & 1.3 & 1.9 \\
             \hline
         \end{tabular}
-    }
+    %}
     \caption{OLS regression results for number of line changes with semantic version type as predictor.}
     \label{tab:linreg_lines}
 \end{table}
 
-\subsubsection{Pre- and post-release network metrics and lines changed}
-
-\subsubsection{Pre- and post-release network metrics and regularity}
-
 \subsubsection{Correlation between network metrics}
-In Section \ref{sec:patterns} we observed, that the collaboration network metrics can be dependent on eachother. In this section, we analyse their correlation by creating a matrix of correlations. Besides the metrics, we also include the release regularity and release size change (number of lines changed) in the matrix, which is depicted in Figure \ref{fig:corr_matrix}.
+In Section \ref{sec:patterns} we observed, that the collaboration network metrics can be dependent on eachother. In this section, we analyse their correlation by creating a matrix of correlations, which is depicted in Figure \ref{fig:corr_matrix}.
+
+Correlation coefficients, whose value is between 0.9 and 1.0 are classified as very highly correlated. Values between magnitudes 0.7 and 0.9 are considered as highly correlated, between 0.5 and 0.7 the two variables are moderately correlated, and datasets with a correlation coefficient between 0.3 and 0.5 are categorized as having low correlation. Variables, whose correlation coefficient is between 0 and 0.3 do not have any significant correlation, as the two datasets are so different, that the occasional similarities are most likely caused by chance and no underlying correlation. These ranges are also applicable to values below 0 with a reversed sign, and the negative sign signaling an inverse relationship.
 
 \begin{figure}
     \centering
@@ -966,18 +976,61 @@ In Section \ref{sec:patterns} we observed, that the collaboration network metric
     \label{fig:corr_matrix}
 \end{figure}
 
-Correlation coefficients, whose value is between 0.9 and 1.0 are classified as very highly correlated. Values between magnitudes 0.7 and 0.9 are considered as highly correlated, between 0.5 and 0.7 the two variables are moderately correlated, and datasets with a correlation coefficient between 0.3 and 0.5 are categorized as having low correlation. Variables, whose correlation coefficient is between 0 and 0.3 do not have any significant correlation, as the two datasets are so different, that the occasional similarities are most likely caused by chance and no underlying correlation. These ranges are also applicable to values below 0 with a reversed sign, and the negative sign signaling an inverse relationship.
-
 Based on these categories, the following correlation types can be seen:
 
 \begin{itemize}
-    \item \textbf{Moderate positive linear correlation:} \newline Clustering coefficient $\sim$ Network density \newline Clustering coefficient $\sim$ Mean degree \newline Core/periphery (k-core) $\sim$ Network density
-    \item \textbf{Low positive linear correlation:} \newline Mean degree $\sim$ Number of nodes \newline Mean degree $\sim$ Network density \newline Mean path length $\sim$ Network density \newline Mean path length $\sim$ Degree centrality \newline Core/periphery (degree) $\sim$ Network Density
-    \item \textbf{Low negative linear correlation:} \newline Core/periphery (k-core) $\sim$ Number of nodes \newline Core/periphery (degree) $\sim$ Number of nodes
-    \item \textbf{Moderate negative linear correlation:} \newline Core/periphery (degree) $\sim$ Degree centrality
+    \item \textbf{High positive linear correlation:} 
+    \newline Number of nodes $\sim$ Connected components (0.88)
+    \newline Number of nodes $\sim$ K-core count (0.76)
+    \newline Core/periphery (k-core) $\sim$ Core/periphery (degree) (0.74)
+    \newline Mean degree $\sim$ K-core count (0.73) 
+    \item \textbf{Moderate positive linear correlation:}
+    \newline Mean degree $\sim$ Clustering coefficient (0.61)
+    \newline Network density $\sim$ Core/periphery (k-core) (0.59)
+    \newline Connected components $\sim$ K-core count (0.54)
+    \newline Degree centrality core $\sim$ Core/periphery (degree) (0.53)
+    \newline Network density $\sim$ Clustering coefficient (0.52)
+    \item \textbf{Low positive linear correlation:}
+    \newline Degree centrality $\sim$ Mean path length (0.43)
+    \newline Number of nodes $\sim$ Mean degree (0.41)
+    \newline Network density $\sim$ Mean degree (0.39)
+    \newline Network density $\sim$ Core/periphery (degree) (0.39)
+    \newline Mean degree $\sim$ Degree centrality core (0.39)
+    \newline K-core count $\sim$ Degree centrality core (0.33)
+    \newline Clustering coefficient $\sim$ K-core count (0.31)
+    \newline Network density $\sim$ Mean path length (0.30)
+    \item \textbf{Low negative linear correlation:}
+    \newline Number of nodes $\sim$ Core/periphery (k-core) (-0.46)
+    \newline Network density $\sim$ Connected components (-0.44)
+    \newline Number of nodes $\sim$ Core/periphery (degree) (-0.37)
+    \newline Degree centrality $\sim$ Degree centrality core (-0.36)
+    \newline Connected components $\sim$ Core/periphery (degree) (-0.32)
+    \item \textbf{Moderate negative linear correlation:}
+    \newline Degree centrality $\sim$ Core/periphery (degree) (-0.57)
+    \newline Connected components $\sim$ Core/periphery (k-core) (-0.51)
 \end{itemize}
 
+From these significant correlations and based on Figure \ref{fig:corr_matrix} we can see that the number of nodes has one of the largest correlation with all the other variables. This rpoves, that one of the greatest influence on the network metrics is the number of developers, and in extension, the activity within the repository. The k-core count, which measures the number of nodes having a degree number within the top 20th percentile, is highly positively correlated with the number of nodes, which indicates, that the number of core developers in the network increases in proportion to the network size. However, the number of core developers classified by the degree centrality method does not indicate any relationship, which leads to the conclusion that these two methods do not identify the same collaborators as core members all the time, and there are significant differences. The low positive linear correlation between the two variables also confirms this observation.
+
+The two derived core and periphery measures, however, are both negatively correlated with the number of nodes, indicating that as the network grows, the core becomes relatively smaller within the graph, meaning that most of the network growth can be contributed to the increased number of periphery developers. This observation is in line with the findings of McClean et. al. \cite{mccleanSocialNetworkAnalysis2021}, who found that the number of core members tend not to change. The two core-periphery ratio metrics are also show a high positive correlation, which shows that they both cover the same concept and measure the same property of the network.
+
+
+
 \dots
+
+\subsubsection{Pre- and post-release network metrics and lines changed}
+
+Since the number of lines changed could be only partially explained by the semantic version number, as a next step we take a look at how precisely the network statistics before the release determine the number of lines changed.
+
+Again, we use the Ordinary Least Squares (OLS) linear regression model to predict the intercept with the 12 network metrics mentioned in the paper so far. Because of the relatively large number of variables, and because we are  
+
+TODO\dots
+
+\subsubsection{Pre- and post-release network metrics and regularity}
+
+TODO\dots
+
+
 
 \subsection{Project success}
 
