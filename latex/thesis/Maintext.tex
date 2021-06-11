@@ -495,7 +495,7 @@ First we take a look at the number of developers in the network over time. The n
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/qualitative/number_of_nodes/all.png}
+    \includegraphics[width=\textwidth]{figures/qualitative/number_of_nodes/all_v2.png}
     \caption{Number of nodes over time.}
     \label{fig:nnodes}
 \end{figure}
@@ -599,7 +599,7 @@ We observe the ratio between the number of core and periphery developers by divi
     \end{subfigure}
     \begin{subfigure}{0.99\textwidth}
         \centering
-        \includegraphics[width=0.99\textwidth]{figures/qualitative/core_periphery/core_periphery_k_core.png}
+        \includegraphics[width=0.99\textwidth]{figures/qualitative/core_periphery/core_periphery_degree.png}
         \caption{Core/periphery degree centrality method}
         \label{fig:cp-degree-centrality}
     \end{subfigure}
@@ -910,43 +910,47 @@ We investigate the correlation between the network metrics and the releases with
 
 To calculate the CV value, the patch releases must be excluded as we mentioned in Section \ref{sec:release_reg}. First, we classify each release into major, minor or patch releases. Because the semantic version can only be determined by comparing a release with its preceeding version, the first release in each repository is dropped because its version will always be unknown as it lacks a previous release. Furthermore, this type of classification also has issues categorizing parallel version maintenance. For example, if a project parallelly supports a version v2 and a version v3, it issues new minor and patch releases for each version, so we will see \texttt{v2.1.4}, \texttt{v3.0.2}, \texttt{v2.1.5} and \texttt{v3.0.3} in chronological order. In this theoretical example, the releases \texttt{v3.0.2} and \texttt{v3.0.3} will be categorized as major releases, because their preceeding release has a lower major number. However, it is clear, that these should be patch releases, since they follow up on the previous patch for the respective version. In order to circumvent this issue, we would need to update the classifying algorithm to consider all the preceeding versions. However, this would significantly inclrease the complexity of the program, and therefore it is out of scope for our work. We mark a robust classification algorithm as a possible future topic to be researched.
 
-Another problem with the version classification are the irregular release names, such as beta releases or release candidates. These versions usually have the same semantic version number, and they are only different in the optional tags at the end. As an example, during major releases it is common to see multiple release candidate versions following eachother, like \texttt{v3.9.12} followed by \texttt{v4.0.0rc1} and \texttt{v4.0.0rc2}. The issue rises from the fact that by looking at only the release number, the latter two releases are the same to the classifying algorithm (4.0.0), which leads to \texttt{v4.0.0rc1} being classified as a major release, and \texttt{v4.0.0rc2} will be unknown. We could mark these versions as rc versions, and skip them during the analysis, but the heterogenity of conventions is a great issue, as some projects mark release candidate, beta and alpha versions as \texttt{v4.0.0-rc1}, \texttt{v4.0.0beta5} or even subversioning them such as \texttt{v4.0.0-rc1.2}. Some projects also have different editions marked with an \@ symbol, for example \texttt{v3.1.5@latest} and \texttt{v3.1.5@browser-only}, which also results in the same issue. To resolve all the releases, which are uncategorizable, we could only make it 100\% accurate without any unknowns if we manually modified or deleted the release data. Provided, that the 68 mined repositories contain over 5200 distinct releases, this task would be too cumbersome, and therefore we marked all releases affected by this as 'unknown'. Because we would like to perform a linear regression on our dataset, we must convert all nominal categorical labels to numbers, thus we add 3 columns to the current dataset named 'major', 'minor' and 'patch', where these values will have 1 in their respective release type column, and the other two will be 0. All three columns are zero if the release type is unknown.
-
-Because the semantic version can be highly unreliable in certain repositories, we tak e a look at how much was changed between two releases to identify the significance of the release. We do this by taking all commits between two relositories, and adding up the number of lines added and number of lines deleted. Since this method only requires the preceedign version's release date, it provides a measure of significance without the classification errors mentioned above. However, it is also important to note that the version type (major, minor, patch) is not necessarily related to the number of lines changed. 
-
-\subsubsection{Semantic version number and number of changed lines}
+Another problem with the version classification are the irregular release names, such as beta releases or release candidates. These versions usually have the same semantic version number, and they are only different in the optional tags at the end. As an example, during major releases it is common to see multiple release candidate versions following eachother, like \texttt{v3.9.12} followed by \texttt{v4.0.0rc1} and \texttt{v4.0.0rc2}. The issue rises from the fact that by looking at only the release number, the latter two releases are the same to the classifying algorithm (4.0.0), which leads to \texttt{v4.0.0rc1} being classified as a major release, and \texttt{v4.0.0rc2} will be unknown. We could mark these versions as rc versions, and skip them during the analysis, but the heterogenity of conventions is a great issue, as some projects mark release candidate, beta and alpha versions as \texttt{v4.0.0-rc1}, \texttt{v4.0.0beta5} or even subversioning them such as \texttt{v4.0.0-rc1.2}. Some projects also have different editions marked with an \@ symbol, for example \texttt{v3.1.5@latest} and \texttt{v3.1.5@browser-only}, which also results in the same issue. To resolve all the releases, which are uncategorizable, we could only make it 100\% accurate without any unknowns if we manually modified or deleted the release data. Provided, that the 68 mined repositories contain over 5200 distinct releases, this task would be too cumbersome, and therefore we marked all releases affected by this as 'unknown'. Because we would like to perform a linear regression on our dataset, we must convert all nominal categorical labels to numbers, thus we add 3 columns to the current dataset named 'major', 'minor' and 'patch', where these values will have 1 in their respective release type column, and the other two will be 0. All three columns are zero if the release type is unknown. We also keep the nominal category in case of models, which can handle categorical values.
 
 \begin{table}
     \centering
-    \resizebox{\textwidth}{!}{%
+    \resizebox{0.99\textwidth}{!}{%
     \footnotesize
-        \begin{tabularx}{1.5\textwidth}{|X|c|c|c|c|c|c|X|XcX|}
+        \begin{tabular}{|c|c|c|c|c|ccc|}
             
             \hline
-            \textbf{Repo} & \textbf{Release} & \textbf{Release date} & \textbf{CV} & \textbf{Major} & \textbf{Minor} & \textbf{Patch} & \textbf{Change size} & \textbf{N \newline (before)} & \textbf{\dots} & \textbf{Hierarchy \newline (after)} \\
+            \textbf{Repo} & \textbf{Release} & \textbf{CV} & \textbf{Type} & \textbf{Change size} & \textbf{N  (b)} & \textbf{\dots} & \textbf{Hierarchy  (a)} \\
             \hline
-            nccgroup/\newline ScoutSuite & 4.0.4 & 11/12/2018 & 0.503154 & 0 & 0 & 1 & 780726.0 & 3 & \dots & 0.000000 \\
-            nccgroup/\newline ScoutSuite & 4.0.5 & 12/12/2018 & 0.503154 & 0 & 0 & 1 & 46.0 & 3 & \dots & 0.000000 \\
-            nccgroup/\newline ScoutSuite & 4.0.6 & 22/12/2018 & 0.503154 & 0 & 0 & 1 & 70470.0 & 3 & \dots & 0.081062\\
-            nccgroup/\newline ScoutSuite & 4.1.0 & 5/2/2019 & 0.503154 & 0 & 1 & 0 & 2708046.0 & 8 & \dots & -0.076297\\
-            nccgroup/\newline ScoutSuite & 4.2.0 & 19/2/2019 & 0.503154 & 0 & 1 & 0 & 85243130.0 & 8 & \dots & -0.071537\\
-            \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots\\
-            Unidata/\newline netcdf-c & v4.7.1 & 29/8/2019 & 0.692333 & 0 & 0 & 1 & 636254.0 & 3 & \dots & 0.000000 \\
-            Unidata/\newline netcdf-c & v4.7.2 & 22/10/2019 & 0.692333 & 0 & 0 & 1 & 411017.0 & 3 & \dots & 0.095393 \\
-            Unidata/\newline netcdf-c & v4.7.3 & 21/11/2019 & 0.692333 & 0 & 0 & 1 & 702122.0 & 8 & \dots & 0.000000 \\
-            Unidata/\newline netcdf-c & v4.7.4 & 27/3/2020 & 0.692333 & 0 & 0 & 1 & 60941386.0 & 5 & \dots & 0.104993 \\
-            Unidata/\newline netcdf-c & v4.8.0 & 30/3/2021 & 0.692333 & 0 & 1 & 0 & 129245816.0 & 6 & \dots & 0.000000 \\
+            nccgroup/ScoutSuite & 4.0.4 & 0.5 & patch & 780726 & 3 & \dots & 0.00 \\
+            nccgroup/ScoutSuite & 4.0.5 & 0.5 & patch & 46 & 3 & \dots & 0.00 \\
+            nccgroup/ScoutSuite & 4.0.6 & 0.5 & patch & 70470 & 3 & \dots & 0.08\\
+            nccgroup/ScoutSuite & 4.1.0 & 0.5 & minor & 2708046 & 8 & \dots & -0.08\\
+            nccgroup/ScoutSuite & 4.2.0 & 0.5 & minor & 85243130 & 8 & \dots & -0.07\\
+            \dots & \dots & \dots & \dots & \dots & \dots & \dots & \dots \\
+            Unidata/netcdf-c & v4.7.1 & 0.7 & patch & 636254 & 3 & \dots & 0.00 \\
+            Unidata/netcdf-c & v4.7.2 & 0.7 & patch & 411017 & 3 & \dots & 0.10 \\
+            Unidata/netcdf-c & v4.7.3 & 0.7 & patch & 702122 & 8 & \dots & 0.00 \\
+            Unidata/netcdf-c & v4.7.4 & 0.7 & patch & 60941386 & 5 & \dots & 0.10 \\
+            Unidata/netcdf-c & v4.8.0 & 0.7 & minor & 129245816 & 6 & \dots & 0.00 \\
             \hline
-        \end{tabularx}
+        \end{tabular}
         \normalsize
     }
-    \caption{OLS regression input data.}
+    \caption{OLS regression input data. (b=before, a=after)}
     \label{tab:linreg_input}
 \end{table}
 
-The resulting dataframe is depicted in Table \ref{tab:linreg_input}. First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the intecept (y value). Our null hypothesis is that the semantic version number and type does not have an effect on the number of lines changed in a new release compared to the previous version.
+Because the semantic version can be highly unreliable in certain repositories, we take a look at how much was changed between two releases to identify the significance of the release. We do this by taking all commits between two relositories, and adding up the number of lines added and number of lines deleted. Since this method only requires the preceeding version's release date, it provides a measure of significance without the classification errors mentioned above. However, it is also important to note that the version type (major, minor, patch) is not necessarily related to the number of lines changed. The resulting dataframe is depicted in Table \ref{tab:linreg_input}.
 
-The OLS regression results can be seen in Table \ref{tab:linreg_lines}. The resulting linear regression equation, when taking \textit{patch} as the reference level, $F(61,3417) = 30.87, p < .000$ with $R^2 = .355$ is found to be significant, based on which we reject the null hypothesis. Surprisingly, the major version's coefficient is twice as lower than the minor version's, which is contrary to our expectations. The number of lines changed were expected to be higher in a major release than in a minor, but this was found to be not true. We partially contribute this to the misclassification due to parallel versioning, since most projects support only major versions parallelly - if they do. Because of this, the most falsely labelled versions are major versions, which causes inconsistency when determining the number of lines changed.
+\subsubsection{Semantic version number and number of changed lines}
+
+First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the intecept (y value). Our null hypothesis is that the semantic version number and type does not have an effect on the number of lines changed in a new release compared to the previous version.
+
+The OLS regression results with \textit{patch} being the reference level can be seen in Table \ref{tab:linreg_lines}. We used the formula $ log(change) \sim C(repo) + C(type) $, where the $change$ is the number of lines changed, $repo$ is the repository's name and $type$ is the semantic version type as string (major, minor or patch). The $log()$ is used for the number of lines changed because a larger release is expected to have exponentially more lines changed, and the $C()$ signals the \texttt{statsmodels} package that the variable is a nominal variable. The resulting linear regression equation 
+
+\[ F(61,3417) = 30.87, p < .000 \]
+
+with $R^2 = .355$ is found to be significant, based on which we reject the null hypothesis. Surprisingly, the major version's coefficient is twice lower than the minor version's, which is contrary to our expectations. The number of lines changed were expected to be higher in a major release than in a minor, but this was found not to be true. We partially contribute this to the misclassification due to parallel versioning, since most projects support only major versions parallelly - if they do. Because of this, the most falsely labelled versions are major versions, which causes inconsistency when determining the number of lines changed.
 
 \begin{table}
     \centering
@@ -1014,15 +1018,11 @@ From these significant correlations and based on Figure \ref{fig:corr_matrix} we
 
 The two derived core and periphery measures, however, are both negatively correlated with the number of nodes, indicating that as the network grows, the core becomes relatively smaller within the graph, meaning that most of the network growth can be contributed to the increased number of periphery developers. This observation is in line with the findings of McClean et. al. \cite{mccleanSocialNetworkAnalysis2021}, who found that the number of core members tend not to change. The two core-periphery ratio metrics are also show a high positive correlation, which shows that they both cover the same concept and measure the same property of the network.
 
-
-
-\dots
+TODO\dots
 
 \subsubsection{Pre- and post-release network metrics and lines changed}
 
-Since the number of lines changed could be only partially explained by the semantic version number, as a next step we take a look at how precisely the network statistics before the release determine the number of lines changed.
 
-Again, we use the Ordinary Least Squares (OLS) linear regression model to predict the intercept with the 12 network metrics mentioned in the paper so far. Because of the relatively large number of variables, and because we are  
 
 TODO\dots
 
