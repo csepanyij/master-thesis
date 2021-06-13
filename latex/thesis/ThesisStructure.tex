@@ -1,5 +1,5 @@
-% das Dokumentenformat
-\documentclass[a4paper, 12pt]{article}
+% das Dokumentenformat asdf
+\documentclass[a4paper, 12pt, twppages]{article}
 
 %\usepackage[english, ngerman]{babel}  % <-- f�r deutsche arbeit
 
@@ -21,7 +21,7 @@
 \usepackage{pdfpages}
 
 %% OTHER PACKAGES
-\usepackage[numbers]{natbib}
+%\usepackage[numbers]{natbib}
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{caption}
@@ -29,7 +29,9 @@
 \usepackage[toc,page]{appendix}
 \usepackage{multirow}
 \usepackage{longtable}
-\usepackage{tabularx}
+%\usepackage{tabularx}
+\usepackage[flushleft]{threeparttable}
+\usepackage{siunitx}
 
 \urlstyle{same}
 
@@ -49,8 +51,8 @@
 
 \begin{document}
 
-%\includepdf[pages={1}]{template/scan-of-declaration-of-authorship.pdf}
-%\pagebreak
+\includepdf[pages={1}]{template/scan-of-declaration-of-authorship.pdf}
+\pagebreak
 
 \AddToShipoutPicture*{\BackgroundPic}
 \thispagestyle{fancy}

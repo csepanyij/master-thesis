@@ -39,7 +39,7 @@ El Asir et al. \cite{elasriPeripheryCoreTemporal2017} used a K-means classificat
 A literature review conducted by McClean et al. \cite{mccleanSocialNetworkAnalysis2021} systematically analysed the state-of-the-art research of 46 scientific papers in the field of FLOSS social networks, and categorised them into three groups based on topic: structure, lifecycle and communication. They conclude, that the existence of core-periphery structure in OSS projects is well established in the field, which is also an indicator of a healthy FLOSS software. Regarding the lifecycle, generally the core development team does not change significantly over time, however, the project becomes more decentralised and distributed as it matures. A lack of research regarding temporal analyses were identified in the most current knowledge, which was suggested as a future research area in this field.
 
 \subsection{Social network of Open-source projects}
-In a larger FLOSS project, developers usually cannot understand every part of the project, therefore collaboration is required with eachother. The network created by the collaborators can be considered as a social network, because collaboration requires some kind of social interaction with eachother. Social network theory describes how social interaction patterns affect the individual behaviour \cite{martinez-torresGeneticSearchPatterns2012}. We can model an OSS project's social network as a graph, where nodes represent collaborators (developers, bug reporters, etc\dots) and edges represent the social interaction between them. In mathematical terms\dots TODO
+In a larger FLOSS project, developers usually cannot understand every part of the project, therefore collaboration is required with eachother. The network created by the collaborators can be considered as a social network, because collaboration requires some kind of social interaction with eachother. Social network theory describes how social interaction patterns affect the individual behaviour \cite{martinez-torresGeneticSearchPatterns2012}. We can model an OSS project's social network as a graph $G(N, E)$, where nodes $N$ represent collaborators (developers, bug reporters, etc\dots) and edges $E$ represent the social interaction between them. 
 
 The type of the social interaction determines the created network, therefore choosing the basis of collaboration can have a significant impact on the network structure. The common types of developer social networks (DSNs) are Version Control System-based (VCS-DSN), Bug Tracking System-based (BTS-DSN) networks and DNSs, that are purely based on social elements \cite{aljemabiEmpiricalStudyEvolution2018}. The VCS-DSN take the version control application as a source for network generation by recording collaboration based on co-edits of the same module, file or code section. Choosing the granularity can impact the precision of true collaborations represented in the network. Co-edits by multiple developers to a single module or file does not necessarily mean actual collaboration was required from the authors, as the parts edited could work functionally independent from eachother. By increasing the granularity to file sections (classes or functions within a single file) or even lines, we can be more certain, that coordination was required, but we risk leaving out semantically connected parts of the project \cite{joblinEvolutionaryTrendsDeveloper2017}. In contrast to VCS-DSNs' purely technical approach, the BTS-DSNs use semi-technical bases for connecting participants, such as comments on issues, bugs or reviews \cite{elasriPeripheryCoreTemporal2017}. These artifacts, although being tightly related to specific sections of the source code, allow for taking into account conversational elements as contribution. For example, participants, who do not contribute directly to the software source code, but actively review and comment, are also considered. Lastly, social networks of developers can be constructed on project participation, following, starring or through communication means like mailing lists. The technical aspect of collaboration is minimized in such DNSs, and they are more fit for project organization and communication analyses in FLOSS projects (mailing list vs file file edits vs line edits) \dots TODO
 
@@ -509,6 +509,7 @@ Comparing the events with the number of nodes, we can observe, that before or ar
 Regarding the layoff events marked with red vertical lines, a significan drop in the number of nodes can be observed shortly before the event in all projects. After the companies stop supporting the project and lay off the development team or they are reassigned to other topics, the number of nodes within the projects drop and stay low, never reaching the same numbers as before. In case of \texttt{servo} and \texttt{wasmtime}, the first wave of layoffs do not seem to have a significant impact on the number of nodes, however, we do not have reliable information regarding how much the Rust development team was impacted by the first wave, on which both projects depend.
 
 \subsubsection{Network density and mean degree}
+\label{sec:density_degree}
 As a next step, we plot the network density and mean degrees of the projects. The network density tells us how densely connected is the network in a scale of $[0,1]$, where 1 means every node is connected to all other nodes, and 0 means there are no edges in the graph. It refers to the ratio between all the possible connections and the actual connections. Although the generated networks are weighted, we do not consider the edge weight when counting each node's degree, meaning every connection is counted. We expect this value to rise if developers need to reach out to more members of the community and collaborate on more files with others. Similarly to the density, the mean degree value also only takes the number of nodes (N) and the degree number (k) of each node as inputs, so we expect similar results between the two measures.
 
 By plotting the two measures on the same figure in Figure \ref{fig:density_a}, we can confirm, that they are closely correlated. The values are also highly sensitive regarding the number of nudes within the graph, and a low node count makes the graph values change radically. This is why the smaller projects are not shown, as their graph did not convey any meaningful observations. We can identify some troughs at the release times of minor releases, however, these could also be the results of the changes in the number of nodes.
@@ -901,7 +902,7 @@ As a last step in the mining process, we mine the repositories with the \texttt{
         %    }
 \end{table}
 
-\subsection{Metrics and release stats correlation}
+\subsection{Metrics and release stats}
 
 We investigate the correlation between the network metrics and the releases with linear regression. First, we compose a list of all the mined repositories and all of their releases with the release date. Then the release regularity is calculated for each repository using the coefficient of variance value descibed in Section \ref{sec:release_reg}. Since this value requires more than one release, the CV is measured per repository and not per each release. Lastly, we calculate all of the collaboration network metrics for the network containing the past 28-day activity before the release, and the network covering the 28 days right after the release.
 
@@ -1025,21 +1026,152 @@ We theoretize based on our observations so far, that the larger the change is wi
 
 The \textbf{mean path length} shows what is the average of the shortest distances between all pairs of developers in the network. From an organizational point of perspective, this translates to how fast information can reach a developer from another developer in the best-case scenario (meaning always taking the shortest route) on average. Our theory is that during normal, 'business as usual' times, there is a core developer team, which is collaborating with all the periphery users, who are reporting bugs, suggesting new features and helping in the development. This causes the mean path length to be relatively high between periphery members, as they are all connected to the core, but not necessarily to eachother. However, during the preparation of a (larger) release, the tasks shift from development to testing, reviewing and integration. This could prompt the periphery members to interact with other periphery members, and not directly just with the core, which ultimately lowers the mean path length before a release as less interdependence is required. After a release, we theoretize, that the focus shifts from development to planning, which again emphasizes the core developers and their activities, thus creating a more centralized structure and raising the mean path length.
 
-Although mean path length indicates the shortest path for information to travel, which somewhat describes the level of collaboration as well, we use the \textbf{clustering coefficient} to measure the clusteredness of the network. The clustering coefficient is calculated by finding triangles within the graph: 'Is the neighbour of my neighbour also my neighbour?'. A high clustering coefficient indicates that a relatively large nubmer of these triangles are present compared to all the triangles possible. From a project management perspective, a high clustering coefficient means strong groupwork and coordination, as the developers are clustered together, where most of them are connected to eachother. We expect the clustering coefficients to rise before a release, because the tasks shift from individual development to integration and regression testing, plus the coordination effort from the core members also increases, which promotes cross-checking tasks and reviewing eachother's code. The clustering coefficient is expected to drop after a release, as activity becomes normal again, when everyone is working on their own sections and functions.
+Although mean path length indicates the shortest path for information to travel, which somewhat describes the level of collaboration as well, we use the \textbf{clustering coefficient} to measure the clusteredness of the network. The clustering coefficient is calculated by finding triangles within the graph: 'Is the neighbour of my neighbour also my neighbour?'. A high clustering coefficient indicates that a relatively large number of these triangles are present compared to all the triangles possible. From a project management perspective, a high clustering coefficient means strong groupwork and coordination, as the developers are clustered together, where most of them are connected to eachother. We expect the clustering coefficients to rise before a release, because the tasks shift from individual development to integration and regression testing, plus the coordination effort from the core members also increases, which promotes cross-checking tasks and reviewing eachother's code. The clustering coefficient is expected to drop after a release, as activity becomes normal again, when everyone is working on their own sections and functions.
 
-\textbf{Hierarchy}, as the third choice of metrics, considers both the clustering coefficient and the degree number by setting a trendline on a clustering coefficient-degree number plot, and takes the slope of this trend. Hierarchy describes how strict the management roles are in the network. A node with a low clustering coefficient, but a high degree number is likely to play an organizer or management role in the development process, as they are not collaborating on the source code as much as the other developers, but rather they enable said developers by connecting them to other groups. In networks, where there is a high rate of hierarchy, the clustering coefficient decreases much faster by the increase of degree number, which results in a steeper declining trendline. Therefore the lower the slope is, the mire hierarchical the network is. Regarding the releases, due to the increase in organizational efforts before a release, our expectation is that the network gets more hierarchical due to the decrease in slope. We also expect the hierarchy to stay high immediately after the release, because the next development cycle needs to be planned. Then later it gets back to normal levels between two releases.
+\textbf{Hierarchy}, as the third choice of metrics, considers both the clustering coefficient and the degree number by setting a trendline on a clustering coefficient-degree number plot, and takes the slope of this trend. Hierarchy describes how strict the management roles are in the network. A node with a low clustering coefficient, but a high degree number is likely to play an organizer or management role in the development process, as they are not collaborating on the source code as much as the other developers, but rather they enable said developers by connecting them to other groups. In networks, where there is a high rate of hierarchy, the clustering coefficient decreases much faster by the increase of degree number, which results in a steeper declining trendline. Therefore the lower the slope is, the mire hierarchical the network is. Regarding the releases, due to the increase in activity before a release from all parties, our expectation is that the network gets less hierarchical due to the more cross-group collaboration, which causes the slope to rise. We expect the hierarchy to rise immediately after the release, because the next development cycle needs to be planned, which requires organization and a highly structured breakdown of the backlog. Then later it gets back to normal levels between two releases.
 
 Lastly, we take the \textbf{core-periphery ratio} measure. This metric is a percentage of how many developers in the network are classified as core members compared to the overall number of nodes within it. We have two methods to classify a developer as core. The first is the K-core method, which is the number of nodes having at least $k$ degrees, and the second is the degree centrality core method, with which we simply calculate the degree centrality for each node. For both methods, we consider a developer core, if they are in the top 20th percentile of nodes. For both K-core and degree centrality core, the percentile is calculated starting from 0 and not from the lowest value within the network. This ensures, that in time periods, when only the core are active, all of the core members can be still identified as core, since their absolute values are still high. Before a release, the core-periphery ratio is expected to fall, because more periphery developers are being involved in the testing and intergartion tasks, but the number of core members stays the same during the project's lifecycle. This causes the ratio to fall as the overall number of nodes increase, but not the number of cores. After a release, this is expected to rise again due to the project focus shifting to planning and organizing, which involves more the core development team. \\
 
-TODO\dots
+In order to confirm or reject the above hypotheses, we perform an Ordinary Least Squares (OLS) linear regression on the mentioned network statistics before and after a new release. Our assumption is, that the larger the network change is before and after the new version, the larger the release is. We use the following formula for this:
 
-\subsubsection{Pre- and post-release network metrics and regularity}
+ \[ change \sim (m_2 - m_1) + N_1 + C(repo) \]
 
-TODO\dots
+ where $m_1$ is the network metric value for one of the four chosen measures before the release, $m_2$ is directly after the release, $N_1$ is the number of nodes in the network before the release, and $C(repo)$ is the categorical value of the repository name as a dummy variable. The 'before' metric is calculated for the network generated from the period starting 28 days before and ending on the release day, and the 'after' value is calculated from the release day until 28 days past the release. We use the difference between the 'before' and 'after' values to represent the change. The number of nodes is also added in the regression to normalize for the inherent differences that stem from the project's size.
 
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{threeparttable}
+            \begin{tabular}{|c|r|r|r|r|r|r|}
+                \hline
+                \textbf{Variable (m)} & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P>|t|} & \multicolumn{2}{|c|}{\textbf{[0.025  0.975]}} \\
+                \hline
+                \hline
+                \multicolumn{7}{|c|}{$log(change) \sim (m_2 - m_1) + N_1 + C(repo)$*} \\
+                \hline
+                Clustering coeff & $-0.18$ & $0.29$ & $-0.63$ & $0.53$ & $-0.74$ & $0.38$ \\
+                Mean path length & $0.41$ & $0.25$ & $1.67$ & $0.10$ & $-0.07$ & $0.90$ \\
+                Hierarchy & $-0.29$ & $0.49$ & $-0.60$ & $0.55$ & $-1.26$ & $0.67$ \\
+                C/P (degree) & $-0.06$ & $0.19$ & $-0.29$ & $0.77$ & $-0.43$ & $0.32$ \\
+                C/P (k-core) & $0.08$ & $0.26$ & $0.32$ & $0.75$ & $-0.42$ & $0.58$ \\
+                \hline
+                \multicolumn{7}{|c|}{$change \sim (m_2 - m_1) + N_1 + C(repo)$**} \\
+                \hline
+                Clustering coeff & \num{4.2e+8} & \num{2.0e+8} &$2.05$ & $0.04$ & \num{0.2e+8} & \num{8.2e+8} \\
+                Mean path length & \num{0.7e+8} & \num{1.8e+8} & $0.39$ & $0.70$ & \num{-2.8e+8} & \num{4.2e+8} \\
+                Hierarchy & \num{1.0e+8} & \num{3.5e+8} & $0.29$ & $0.77$ & \num{-5.9e+8} & \num{7.9e+8} \\
+                C/P (degree) & \num{0.8e+8} & \num{1.4e+8} & $0.59$ & $0.55$ & \num{-1.9e+8} & \num{3.5e+8} \\
+                C/P (k-core) & \num{-0.5e+8} & \num{1.8e+8} & $-0.28$ & $0.78$ & \num{-4.1e+8} & \num{3.1e+8} \\
+                \hline
+            \end{tabular}
+            \begin{tablenotes}
+                \small
+                \item  *$F(61,4016) = 30.2, p < .000, R^2 = 0.31$
+                \item **$F(61, 4016) = 5.1, p< .000, R^2 = 0.07$
+            \end{tablenotes}
+        \end{threeparttable}
+    }
+    \caption{Change size and network measures regression results.}
+    \label{tab:size-metrics}
+\end{table}
 
+The regression results are depicted in Table \ref{tab:size-metrics}. We run the regressions for both the logarithm of the change size, and the change size itself for all the metrics one by one, a total of 10 runs. With a the alpha $\alpha = 0.05$ significance level, the only variable where $p < \alpha$ is the clustering coefficient in the normal, non-logarithmic change size regression with a value of $p = 0.04$. Based on this result, we can only reject the null hypothesis for the clustering coefficient, and we cannot reject it for the other metrics. Surprisingly the coefficient of the clustering coefficient is positive, which is contrary to our expectations. Our theory expected the clustering coefficient (CC) rise before a release, and drop afterwards, which would result in a negative value when subtracting the 'before' value from the 'after' value. Therefore, in the regression model the coefficient of CC would be negative, indicating an inverse relationship between the number of lines changed in the release and the CC change. Our findings, however, provide evidence for a positive linear relationship, which indicates that a unit of increase in the CC after the release corresponds to \num{4.2e+8} more lines changed in the release. Since the CC can only be between $0$ and $1$, we use $0.1$ as a base unit, which means that a $0.1$ increase in CC from before to after a new version causes the release to have \num{4.2e+7} more lines changed on average.
 
-\subsection{Project success}
+\subsubsection{Release size and issues opened and closed}
+
+One explanation could be for the increase in clustering coefficient, that a larger release with more lines changed leaves more room for errors and bugs within the code. The increase in issues leads to a higher bug fixing activity within the project, which requires cross-checking and integration tests, and ultimately causes more developer triangles to form, which raises the clustering coefficient value. To test this theory, we perform a similar OLS linear regression, but with two new metrics: number of issues opened and number of issues closed. If our assumptions are correct, there should be also a positive linear relationship between the release size measured in number of lines changed and the difference between number of issues opened after and before the release. We also perform the regression for the number of issues closed, however, since the observed period after a new version is 28 days, but an issue might take longer than that on average to fix, we might not see the surge of new issues closed within this period, therefore we do not expect a significant result for the number of issues closed.
+
+Since the number of issues are not related to the collaboration network adn they are unrelated variables, we leave it out of the regression. Also, we use the values from before and after the release separately, and without subtracting them from eachother. The network metrics needed to consider the change between the 'before' and 'after' values because the change is measured from 0 on a scalar scale, but that is not necessarily the normal value in a network. The number of issues, on the other hand, are 0 by default, when there is no activity or no issues being created.
+
+Table \ref{tab:size-issues} shows the OLS regression results for the number of issues opened and closed, both for 28 days before the release date and 28 days after it, respectively. We run the model for both the logarithm of the n umber of lines changed and the normal values separately. Two of our variables do not exceeed the $\alpha = 0.05$ significance level, these are the number of issues closed before, and number of issues closed after a release, both with the logarithmic scale of number of lines changed.
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{threeparttable}
+            \begin{tabular}{|c|r|r|r|r|r|r|}
+                \hline
+                \textbf{Variable (m)} & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P>|t|} & \multicolumn{2}{|c|}{\textbf{[0.025  0.975]}} \\
+                \hline
+                \hline
+                \multicolumn{7}{|c|}{$log(change) \sim m_i + C(repo)$*} \\
+                \hline
+                Issues opened (before) & $-0.0056$ & $0.003$ & $-1.933$ & $0.053$ & $-0.011$ & $0.000$ \\
+                Issues closed (before) & $-0.0132$ & $0.004$ & $-3.275$ & $0.001$ & $-0.021$ & $-0.005$ \\
+                Issues opened (after) & $-0.0031$ & $0.003$ & $-1.004$ & $0.315$ & $-0.009$ & $0.003$ \\
+                Issues closed (after) & $-0.0064$ & $0.003$ & $-2.033$ & $0.042$ & $-0.013$ & $0.000$ \\
+                \hline
+                \multicolumn{7}{|c|}{$change \sim m_i + C(repo)$**} \\
+                \hline
+                Issues opened (before) & \num{-2.2e+06} & \num{1.9e+06} &$-1.176$ & $0.240$ & \num{-6e+06} & \num{1.5e+06} \\
+                Issues closed (before) & \num{-3.6e+06} & \num{2.7e+06} & $-1.362$ & $0.173$ & \num{-8.83e+06} & \num{1.59e+06} \\
+                Issues opened (after) & \num{-3.3e+06} & \num{2e+06} &$-1.665$ & $0.096$ & \num{-7.2e+06} & \num{5.9e+05} \\
+                Issues closed (after) & \num{-2.8e+06} & \num{2.1e+06} & $-1.355$ & $0.176$ & \num{-6.86e+06} & \num{1.25e+06} \\
+                \hline
+            \end{tabular}
+            \begin{tablenotes}
+                \small
+                \item  *$F(62,5153) = 30.3, p < .000, R^2 = 0.31$
+                \item **$F(62,5153) = 6.7, p < .000, R^2 = 0.08$
+            \end{tablenotes}
+        \end{threeparttable}
+    }
+    \caption{Change size and number of issues opened and closed.}
+    \label{tab:size-issues}
+\end{table}
+
+TODO: how to interpret the result, does it make sense?\dots
+
+\dots
+
+\subsubsection{Normalizing the network metrics}
+
+The linear regression models helped us understand how much the developer network changes at a new release compared to the release's size by contrasting the immediate period before and after the release. In this section, we investigate how the network metrics can be normalized.\\
+
+Due to the inherent correlations between network size and the other metrics, such as clustering coefficient or average degree, we always need to make sure, that the values being used are normalized or the size difference between networks is controlled for. This is why we used the Z-value in the qualitative analysis section (Section \ref{sec:patterns}) and this is also the reason why the network size was included in the regression models when the network metrics were used. The Z-value metrics provide a convenient and reliable way of eliminating the role of network size, as the actual network is being compared to many same-sized random networks. However, the Z-value generation only works, when the network size is sufficiently large. As descibed in Section \ref{sec:density_degree}, the Z-value divides by the standard deviation of the random network's metric being calculated. In cases, when the standard deviation is $0$, the Z-value cannot be interpreted, as this leads to a division by zero error. The standard deviation can only be $0$, if all values within the sample are exactly the same, and this scenario often plays out when the size of the network is small. As the size of the network becomes smaller and smaller, there are fewer variations to organize the $N$ nodes and $E$ edges, which raises the possibility of the random networks to be repeated by generating the same network just by pure chance. Furthermore, when calculating the network metrics, the nodes and edges are not differentiated in any way: the metric will be the same, whether developer 'A' collaborates with developer 'B' or developer 'C'. This variability also increases the random networks having the same values for the measured metrics.
+
+In our collection of repositories, this phenomenon occurs often, because there are a relatively low number of nodes within the networks generated immediately before or after a release (usually around 8-9), and therefore most of the calculated Z-values cannot be interpreted. In order to correct for the disproportionality the network size can cause, so that the graphs can be compared across all projects and sizes, we use an analytical approach to normalize the values. By dividing the theoretical maximum value of a metric in terms of its size, this is achievable.
+
+The \textbf{mean path length} is calculated by averaging all the shortest path lenghts between all pairs of developers. The theoretical maximum value of mean path length $l_G^*$ in terms of graph size is $l_G^* = (n-1)/2$ of network $G(N,E)$, where $|N| = n$ the number of nodes. Therefore, we calculate the normalized mean path length as follows:
+
+\[ \hat{l}_G = \frac{2l_G}{n-1} \]
+
+When it comes to the \textbf{clustering coefficient}, however, it is impacted differently by the size of the network, because the CC is more or less independent from the number of nodes, and it is more related to the number of edges and the degree number. The clustering coefficient takes on its maximum value of $1$ only in complete graphs, as the number of triangles within the graph is at maximum when every node is connected to all other nodes. Therefore, we normalize the CC values with the formula used by Gentner et. al. \cite{gentnerLargeValuesClustering2016} for the maximum clustering coefficient of a $k$-regular connected graph:
+
+\[ \hat{C}(G) = \frac{C(G)}{(1-\frac{6}{k(k+1)})}\]
+
+where $k$ is the degree number of nodes ina $k$-regular graph. \\
+
+The \textbf{core-periphery ratio} already takes into account the number of nodes, which is a proxy for the network size, as the CP-ratio is calculated by dividing the number of nodes in the top 20th percentile of either degree centrality or k-cores, and then dividing by the overall number of nodes, meaning there is no need for normalization.
+
+\textbf{Hierarchy} is more complex than the rest of the metrics, as it uses the combination of clustering coefficient and degree number to plot a scatter plot, and the slope of the linear trendline is used as the hierarchy value. By having more nodes in the graph, the trendline does not necessarily change, and it stays the same if the level of hierarchy does not change. For example, if a new team of developers appears in the network, who have a team leader just as all other teams, then the overall hierarchy of the network did not change, as managers still have the same number of developers under them in the organizational hierarchy. In contrast, if more people join the already available developer teams, a team leader will have more developers to manage, which causes the network to become less hierarchical. As we demonstrated, a network can grow in a manner that changes the hierarchy, or independent from it, and therefore we conclude that there is no need for normalizing the hierarchy metric.
+
+\subsubsection{Network measure trends}
+
+After applying the normalization described above on our dataset, box plots are created to show the overall trend in measures at a release. However, this requires to gather and calculate metrics for more than two time periods (before and after a release) in order to well represent the changes over time. In order to make the plots clearer, we shift the time window, so that the chosen day is not at the beginning, but in the middle of the observation period. This is depicted on Figure \ref{fig:time-window}, where the numbers on the timeline represent the number of weeks passed relative to the release day.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/quantitative/time_window.png}
+    \caption{Time windows in weeks and their respective variable names.}
+    \label{fig:time-window}
+\end{figure}
+
+Each metric's normalized value is calcualted for each release's corresponding five timespans (from $t_{-2}$ to $t_2$). With this approach another issue arises: releases, which were within 2 months of the data collection, will only have partial data available for the last 3 timespans. This can skew the results, since for these values the results will be 0, and it would falsely show a decline in activities. Therefore, we filter out those releases, which were created after \textit{1 January, 2021}.
+
+The results for \textbf{mean path lenght} can be seen on Figure \ref{fig:box-mean-path}. Contrary to our expectations, we see an increase in mean path length up until the release, and a slight decrease afterwards. A decrease in mean path length means less interdependency amongst developers, as fewer people are fulfilling the 'middle man' role within the network, which was expected at a release since closer collaboration is required and different tasks, therefore developers have to move out of their usual role and collaborate with those, who they do not collaborate often with. The oppasite in the results suggests that the level of activity is not as high as expected at a release. The likely reason is that around the releases not many changes are approved, and the focus is on finishing up the current tasks. Before the shorter mean path length can be explained with the rush to finish the tasks, and after it can be explained with the bug reports and new issues, and consequently their activity from the developers' side.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/mean_path.png}
+    \caption{Normalized mean path length values before, during and after releases.}
+    \label{fig:box-mean-path}
+\end{figure}
+
+%\subsubsection{Pre- and post-release network metrics and regularity}
+
+%TODO\dots
+
 
 \section{Discussion and results}
 \section{Conclusion and future work}
