@@ -744,7 +744,7 @@ Now that we have seen some regularities regarding issue creation and close, we a
 
 Figure \ref{fig:open_issues} shows the number of open issues for each project in the observed 3 years. We can see that in almost all projects, the number of open issues steadily rises, with smaller dips occurring around some, but not all releases. This shows, that maintaining and organizing the issues becomes a larger challenge as the project grows, and confirms the large spikes in the number of issues closed on Figure \ref{fig:issues_created_closed}, that these are 'clean-up' events, where the backlog is decluttered by closing the obsolete issues.
 
-The only exception from the ever-growing number of open issues is the \texttt{curl} library, which manages to keep the number of open issues below 60, despite being the oldest project of all 8 subject to our analysis. This could also be related to the short release cycle. As Khomh et. al. \cite{khomhFasterReleasesImprove2012} have found, bugs are fixed significantly faster with rapid release plans. Furthermore, as \texttt{curl} is the most centralized project, with one single main developer, issue management is much more efficient, as there is no need for group discussions and prioritization between developers. Interestingly, \texttt{servo} has the shortest release timing strategy, with sometimes multiple minor releases in a week, yet it is still struggling with the increasing number of issues, indicating that a strongly centralized organizational structure can have a much heavier weight in the increase of open issues over time. \\
+The only exception from the ever-growing number of open issues is the \texttt{curl} library, which manages to keep the number of open issues below 60, despite being the oldest project of all 8 subject to our analysis. This could also be related to the short release cycle. As Khomh et. al. \cite{khomhFasterReleasesImprove2012} have found, bugs are fixed significantly faster with rapid release plans. Furthermore, as \texttt{curl} is the most centralized project, with one single main developer, issue management is much more efficient, as there is no need for group discussions and prioritization between developers. Interestingly, \texttt{servo} has the shortest release timing strategy, with sometimes multiple minor releases in a week, yet it is still struggling with the increasing number of issues, indicating that a strongly centralized organizational structure can have a much heavier weight in the increase of open issues over time.
 
 \subsubsection{Bugs and features}
 
@@ -1167,6 +1167,73 @@ The results for \textbf{mean path lenght} can be seen on Figure \ref{fig:box-mea
     \caption{Normalized mean path length values before, during and after releases.}
     \label{fig:box-mean-path}
 \end{figure}
+
+Due to the heterogenity of each project, there could be large differences and patterns different than the one descibed above. Therefore, we plot each repository's mean path length boxplot separately. We exclude repositories, that have less than 10 observed releases before \texttt{1 January, 2021}, because that would reduce the number of releases aggregated on the plot, and the unique traits of the single particular releases would show.
+
+After observing the total $53$ plots, we identify four main reoccurring patterns, that can be observed within the projects. We name these patterns based on the two half-curve's steepness, that would connect the five boxes depicted. These are:
+
+\begin{itemize}
+    \item \textit{Flat (11)}: Repositories followin this pattern barely change at all, and their mean path length stays the same in all five timespans regardless of the release.
+    \item \textit{Rise-decline (11)}: Projects falling into this category mainly follow the overall pattern depicted in Figure \ref{fig:box-mean-path}, which shows a rise until the release, then a decline afterwards.
+    \item \textit{Flat-decline (6)}: These projects stay flat until the release, but after the release, their mean path length drops.
+    \item \textit{Decline-rise (6)}: Repositories following this pattern show the opposite observation than the aggregated view, that is, their metric declines until the release date, then it rises again.
+\end{itemize}
+
+Examples for all four categories are shown in Figure \ref{fig:box-mean-path-patterns}.\\
+
+TODO: explanation, reasons and causes for these patterns\\
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/quantitative/boxplots/vuetifyjs_vuetify_flat.png}
+        \caption{Flat (\textit{vuetifyjs/vuetify})}
+        \label{fig:mean-path-pattern1}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/quantitative/boxplots/fioprotocol_fio_rise-decline.png}
+        \caption{Rise-decline (\textit{fioprotocol/fio})}
+        \label{fig:mean-path-pattern2}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/quantitative/boxplots/Flowminder_FlowKit_flat-decline.png}
+        \caption{Flat-decline (\textit{Flowminder/FlowKit})}
+        \label{fig:mean-path-pattern3}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/quantitative/boxplots/swaywm_sway_decline-rise.png}
+        \caption{Decline-rise (\textit{swaywm/sway})}
+        \label{fig:mean-path-pattern4}
+    \end{subfigure}
+    \caption{Four observed patterns for mean path length.}
+    \label{fig:box-mean-path-patterns}
+\end{figure}
+
+We also performed the same analysis on the \textbf{normalized clustering coefficient}, however, the results are inconclusive, as the majority of all release's normalized clustering coefficient is $0$. Therefore, we removed the releases from the plot data, which had at least one CC value equal to $0$. The resulting box plot (shown in Figure \ref{fig:clustering-box}) follows a \textit{flat-rise} pattern, which is especially visible at timespan $t2$, where the box is significantly higher than the other periods. However, the removal of 0-values reduced below 10\% the number of releases included in the observation, therefore we cannot conclude anything definitive regarding the clustering coefficient. \\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/clustering.png}
+    \caption{Clustering coefficient release trend after the removal of 0 values.}
+    \label{fig:clustering-box}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/issues.png}
+    \caption{Number of issues opened and closed in different timespans relative to a release.}
+    \label{fig:issues-box}
+\end{figure}
+
+The same method is used to visualize the \textbf{number of issues opened and closed} for the releases. This is depicted on Figure \ref{fig:issues-box}. We can see a clear increase in both issues opened and issues closed. The number of issues opened shows a steady and constant increase  for all five timespans, which can mean that the rate at which new issues are opened tends to increase in general within a project over time. If the issues opened slowly increases over time regardless of other events, such as a new release, then naturally the $t_2$ timespan will show a slight increase in opened issues compared to the $t_{-2}$, since it always takes into account a time period 5 months later, and by that time the issue rate could have changed. In order to attribute the increase in number of issues opened, we would need to see a sharp change at $t_0$ to rule out the option of the steady increase.
+
+The number of issues closed, on the other hand, shows a much more sudden change. Up until, and including the timespan containing the release day, the average stays zero, but after the release, in $t_1$ and $t_2$ we see a sharp rise. This indicates, that a new version and number of issues closed are related. The issues being closed are likely to be those features and bugs, that were implemented and distributed with the new release. Therefore we can say, that most porjects manage the issues by first implementing and deploying it, and only then closing it. Otherwise, we would see the sharp increase before the release timespan.
+
+TODO: Box plots for cp-ratio, hierarchy
 
 %\subsubsection{Pre- and post-release network metrics and regularity}
 
