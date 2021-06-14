@@ -1213,7 +1213,7 @@ TODO: explanation, reasons and causes for these patterns\\
     \label{fig:box-mean-path-patterns}
 \end{figure}
 
-We also performed the same analysis on the \textbf{normalized clustering coefficient}, however, the results are inconclusive, as the majority of all release's normalized clustering coefficient is $0$. Therefore, we removed the releases from the plot data, which had at least one CC value equal to $0$. The resulting box plot (shown in Figure \ref{fig:clustering-box}) follows a \textit{flat-rise} pattern, which is especially visible at timespan $t2$, where the box is significantly higher than the other periods. However, the removal of 0-values reduced below 10\% the number of releases included in the observation, therefore we cannot conclude anything definitive regarding the clustering coefficient. \\
+We also performed the same analysis on the \textbf{normalized clustering coefficient}, however, the results are inconclusive, as the majority of all release's normalized clustering coefficient is $0$. Therefore, we removed the releases from the plot data, which had at least one CC value equal to $0$. The resulting box plot (shown in Figure \ref{fig:clustering-box}) follows a \textit{flat-rise} pattern, which is especially visible at timespan $t2$, where the box is significantly higher than the other periods. However, the removal of 0-values reduced below 10\% the number of releases included in the observation, therefore we cannot conclude anything definitive regarding the clustering coefficient. For all repositories separately, the clustering coefficient boxplots can be seen in Appendix \ref{app:boxplots}. \\
 
 \begin{figure}
     \centering
@@ -1231,9 +1231,49 @@ We also performed the same analysis on the \textbf{normalized clustering coeffic
 
 The same method is used to visualize the \textbf{number of issues opened and closed} for the releases. This is depicted on Figure \ref{fig:issues-box}. We can see a clear increase in both issues opened and issues closed. The number of issues opened shows a steady and constant increase  for all five timespans, which can mean that the rate at which new issues are opened tends to increase in general within a project over time. If the issues opened slowly increases over time regardless of other events, such as a new release, then naturally the $t_2$ timespan will show a slight increase in opened issues compared to the $t_{-2}$, since it always takes into account a time period 5 months later, and by that time the issue rate could have changed. In order to attribute the increase in number of issues opened, we would need to see a sharp change at $t_0$ to rule out the option of the steady increase.
 
-The number of issues closed, on the other hand, shows a much more sudden change. Up until, and including the timespan containing the release day, the average stays zero, but after the release, in $t_1$ and $t_2$ we see a sharp rise. This indicates, that a new version and number of issues closed are related. The issues being closed are likely to be those features and bugs, that were implemented and distributed with the new release. Therefore we can say, that most porjects manage the issues by first implementing and deploying it, and only then closing it. Otherwise, we would see the sharp increase before the release timespan.
+The number of issues closed, on the other hand, shows a much more sudden change. Up until, and including the timespan containing the release day, the average stays zero, but after the release, in $t_1$ and $t_2$ we see a sharp rise. This indicates, that a new version and number of issues closed are related. The issues being closed are likely to be those features and bugs, that were implemented and distributed with the new release. Therefore we can say, that most porjects manage the issues by first implementing and deploying it, and only then closing it. Otherwise, we would see the sharp increase before the release timespan, and not after it. \\
 
-TODO: Box plots for cp-ratio, hierarchy
+Just with the other metrics, the \textbf{core-periphery ratio} is also heavily dependent on the unique properties of the observed repositories, which is also the cause why the box plot of all projects aggregated does not show any change, regardless of the timespans. On further investigation, we found that a significant number (16) of repositories have the box plots 'stuck' to the maximum value $1$. This is attributed to the very low number of nodes in the generated networks: when there are only 2 or 3 developers in the network, their degree centralities are more likely to be in the top 20th percentile starting from zero. We remove these projects from the aggregation not to obscure the trends of the other repositories with a more extended developer network, and depict their box plot for the degree centralization core-periphery ratio on Figure \ref{fig:cp-box}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/cp-ratio.png}
+    \caption{Core/periphery ratio within relative timespans to a release.}
+    \label{fig:cp-box}
+\end{figure}
+
+With the remaining 45 repositories in aggregation a slight V-shaped trend can be observed. This behaviour is according to our theory and expectations, as they were expected to fall at the time of release due to the increased involvement of the periphery developers, which lowers the ratio of the core members within the network. However, when we look at the individual projects, just with the meain path length, we can also observe a number of trends within the repositories, which are followed by a subset of them. These trends are shown on Figure \ref{fig:cp-box-grid}, where one line of plots represents an observed trend, and the selected repository box plots shown in that line belong into that category. Not all repositories are depicted on the plot. The four trends in order from top to bottom are:
+
+\begin{itemize}
+    \item \textit{Rising}: A continuous rise from $t_{-2}$ to $t_2$ without any significant change at the release $t_0$.
+    \item \textit{Falling}: The opposite of rising, as teh core/periphery ration continuously decreases over the fice periods.
+    \item \textit{Parabola}: The box plots draw a parabola or V-shape during the five timespans, where at the release $t_0$ it reaches its minimum, and then increases again to the 'normal' level. This is the most dominant pattern within the dataset, as this pattern is also observed in the aggregate boxplot, and also because this shape is seen in more of the plots than other trends.
+    \item \textit{Wave}: These repositories show a wave form with the boxplots, as they start on a normal level, then there is a significant increase in $t_{-1}$, a continued decrease until $t_1$ and then a slight increase to reach the normal level again at $t_2$.
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/grid.png}
+    \caption{Core/periphery ratio trends.}
+    \label{fig:cp-box-grid}
+\end{figure}
+
+
+There could be several organizational reasons why these patterns exist. For the rising trend in the core-periphery ratio, the obvious reason could be the rush before the release to include as much change as possible before it is released. This increase in activity involves more non-core developers, which keeps the ratio low before the release. After the new version is available, however, the focus shifts from development to planning, which generates more core involvement than from the periphery developers, which raisese the ratio value. The opposite, falling pattern could indicate the opposite effect: before the release, the development team might announce a 'code-freeze', which prohibits the change of code before the release (or rather merging it into the release candidate). Since only authorised developers chan change the release candidate, who are most likely core members, the cp ratio gets high. After the release, the sidelined changes are included and the bugfixing period starts, which requires collaboration effort from not just the core developers, therefore the ratio decreases. The wave pattern could be the same effect as in the falling case, just happening in a much shorter period of time, which causes the outtermost timespans to already show the normal ratio level. \\
+
+Lastly, we take a look at the \textbf{hierarchy} boxplots in Figure \ref{fig:hierarchy-box}.\dots
+
+
+TODO: describe, interpret\dots
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/hierarchy.png}
+    \caption{Hierarchy boxplot.}
+    \label{fig:hierarchy-box}
+\end{figure}
+
+
 
 %\subsubsection{Pre- and post-release network metrics and regularity}
 

@@ -32,6 +32,7 @@
 %\usepackage{tabularx}
 \usepackage[flushleft]{threeparttable}
 \usepackage{siunitx}
+\usepackage{ifthen}
 
 \urlstyle{same}
 
@@ -131,6 +132,10 @@ Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et 
 
 \newpage
 
+\let\svaddcontentsline\addcontentsline
+\renewcommand\addcontentsline[3]{%
+  \ifthenelse{\equal{#1}{lof}}{}%
+  {\ifthenelse{\equal{#1}{lot}}{}{\svaddcontentsline{#1}{#2}{#3}}}}
 \input{Appendices.tex}
 
 \end{document}
