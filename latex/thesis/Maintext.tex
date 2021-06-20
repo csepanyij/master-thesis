@@ -802,6 +802,7 @@ In order to confirm the theory, that the number of bugs increase after a release
 % CONCLUSION: qualitative research needed to observe correlations.
 
 \section{Quantitative OSS project analysis}
+\label{sec:quantitative}
 
 In Section \ref{sec:patterns} we have seen how the heterogenity of open source projects makes it hard to draw conclusions from the network statistics over time. We have seen some correlations between the releases and the metrics, but they weren't applicable to all repositories. Furthermore, the relatively small nubmer of repositories also prevented generalizing the findings, for example the metrics, which proved to be effective in \texttt{pandas} like clustering coefficient or degree centrality, might also apply to the majority of open-source repositories, but our project choices did not include any, that falls into this group. Therefore, in this section we will conduct a quantitative research on a large number of randomly selected repositories to rule out any bias we might have applied during the pattern analysis, where the main focus was to understand the collaboration network changes over time.
 
@@ -930,7 +931,16 @@ Because the semantic version can be highly unreliable in certain repositories, w
 
 \subsubsection{Semantic version number and number of changed lines}
 
-First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the intecept (y value). Our null hypothesis is that the semantic version number and type does not have an effect on the number of lines changed in a new release compared to the previous version.
+First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the y value. We expect the number of lines changed to be larger in a minor release than in a patch release, and even larger in a major release.
+
+\begin{quote}
+    \textit{H1a: A minor release has more lines changed than a patch release on average.}
+\end{quote}
+\begin{quote}
+    \textit{H1b: A major release has more lines changed than a minor release on average.}
+\end{quote}
+
+Our null hypothesis is that the semantic version number and type does not have an effect on the number of lines changed in a new release compared to the previous version.
 
 The OLS regression results with \textit{patch} being the reference level can be seen in Table \ref{tab:linreg_lines}. We used the formula $ log(change) \sim C(repo) + C(type) $, where the $change$ is the number of lines changed, $repo$ is the repository's name and $type$ is the semantic version type as string (major, minor or patch). The $log()$ is used for the number of lines changed because a larger release is expected to have exponentially more lines changed, and the $C()$ signals the \texttt{statsmodels} package that the variable is a nominal variable. The resulting linear regression equation 
 
@@ -1004,17 +1014,39 @@ From these significant correlations and based on Figure \ref{fig:corr_matrix} we
 
 The two derived core and periphery measures, however, are both negatively correlated with the number of nodes, indicating that as the network grows, the core becomes relatively smaller within the graph, meaning that most of the network growth can be contributed to the increased number of periphery developers. This observation is in line with the findings of McClean et al. \cite{mccleanSocialNetworkAnalysis2021}, who found that the number of core members tend not to change. The two core-periphery ratio metrics are also show a high positive correlation, which shows that they both cover the same concept and measure the same property of the network.
 
-\subsubsection{Pre- and post-release network metrics and lines changed}
+\subsubsection{Network metrics hypotheses}
 
 We theoretize based on our observations so far, that the larger the change is within the network, the larger the release is, and consequently more lines are changed. We test this theory with an OLS linear regression for four chosen network metrics, which proved to be closely related to the collaboration network in any relation.
 
-The \textbf{mean path length} shows what is the average of the shortest distances between all pairs of developers in the network. From an organizational point of perspective, this translates to how fast information can reach a developer from another developer in the best-case scenario (meaning always taking the shortest route) on average. Our theory is that during normal, 'business as usual' times, there is a core developer team, which is collaborating with all the periphery users, who are reporting bugs, suggesting new features and helping in the development. This causes the mean path length to be relatively high between periphery members, as they are all connected to the core, but not necessarily to each other. However, during the preparation of a (larger) release, the tasks shift from development to testing, reviewing and integration. This could prompt the periphery members to interact with other periphery members, and not directly just with the core, which ultimately lowers the mean path length before a release as less interdependence is required. After a release, we theoretize, that the focus shifts from development to planning, which again emphasizes the core developers and their activities, thus creating a more centralized structure and raising the mean path length.
+The \textbf{mean path length} shows what is the average of the shortest distances between all pairs of developers in the network. From an organizational point of perspective, this translates to how fast information can reach a developer from another developer in the best-case scenario (meaning always taking the shortest route) on average. Our theory is that during normal, 'business as usual' times, there is a core developer team, which is collaborating with all the periphery users, who are reporting bugs, suggesting new features and helping in the development. This causes the mean path length to be relatively high between periphery members, as they are all connected to the core, but not necessarily to each other. However, during the preparation of a (larger) release, the tasks shift from development to testing, reviewing and integration, which makes developers more dependent on each other. 
+
+\begin{quote}
+    \textit{H2: There is less independence between developers at releases.}
+\end{quote}
+
+This could prompt the periphery members to interact with other periphery members, and not directly just with the core, which ultimately lowers the mean path length before a release as less interdependence is required. After a release, we theoretize, that the focus shifts from development to planning, which again emphasizes the core developers and their activities, thus creating a more centralized structure and raising the mean path length.
 
 Although mean path length indicates the shortest path for information to travel, which somewhat describes the level of collaboration as well, we use the \textbf{clustering coefficient} to measure the clusteredness of the network. The clustering coefficient is calculated by finding triangles within the graph: 'Is the neighbour of my neighbour also my neighbour?'. A high clustering coefficient indicates that a relatively large number of these triangles are present compared to all the triangles possible. From a project management perspective, a high clustering coefficient means strong groupwork and coordination, as the developers are clustered together, where most of them are connected to each other. We expect the clustering coefficients to rise before a release, because the tasks shift from individual development to integration and regression testing, plus the coordination effort from the core members also increases, which promotes cross-checking tasks and reviewing each other's code. The clustering coefficient is expected to drop after a release, as activity becomes normal again, when everyone is working on their own sections and functions.
 
-\textbf{Hierarchy}, as the third choice of metrics, considers both the clustering coefficient and the degree number by setting a trendline on a clustering coefficient-degree number plot, and takes the slope of this trend. Hierarchy describes how strict the management roles are in the network. A node with a low clustering coefficient, but a high degree number is likely to play an organizer or management role in the development process, as they are not collaborating on the source code as much as the other developers, but rather they enable said developers by connecting them to other groups. In networks, where there is a high rate of hierarchy, the clustering coefficient decreases much faster by the increase of degree number, which results in a steeper declining trendline. Therefore the lower the slope is, the mire hierarchical the network is. Regarding the releases, due to the increase in activity before a release from all parties, our expectation is that the network gets less hierarchical due to the more cross-group collaboration, which causes the slope to rise. We expect the hierarchy to rise immediately after the release, because the next development cycle needs to be planned, which requires organization and a highly structured breakdown of the backlog. Then later it gets back to normal levels between two releases.
 
-Lastly, we take the \textbf{core-periphery ratio} measure. This metric is a percentage of how many developers in the network are classified as core members compared to the overall number of nodes within it. We have two methods to classify a developer as core. The first is the K-core method, which is the number of nodes having at least $k$ degrees, and the second is the degree centrality core method, with which we simply calculate the degree centrality for each node. For both methods, we consider a developer core, if they are in the top 20th percentile of nodes. For both K-core and degree centrality core, the percentile is calculated starting from 0 and not from the lowest value within the network. This ensures, that in time periods, when only the core are active, all of the core members can be still identified as core, since their absolute values are still high. Before a release, the core-periphery ratio is expected to fall, because more periphery developers are being involved in the testing and intergartion tasks, but the number of core members stays the same during the project's lifecycle. This causes the ratio to fall as the overall number of nodes increase, but not the number of cores. After a release, this is expected to rise again due to the project focus shifting to planning and organizing, which involves more the core development team. \\
+\begin{quote}
+    \textit{H3: Developers are clustered together significantly more during a release.}
+\end{quote}
+
+
+\textbf{Hierarchy}, as the third choice of metrics, considers both the clustering coefficient and the degree number by setting a trendline on a clustering coefficient-degree number plot, and takes the slope of this trend. Hierarchy describes how strict the management roles are in the network. A node with a low clustering coefficient, but a high degree number is likely to play an organizer or management role in the development process, as they are not collaborating on the source code as much as the other developers, but rather they enable said developers by connecting them to other groups. In networks, where there is a high rate of hierarchy, the clustering coefficient decreases much faster by the increase of degree number, which results in a steeper declining trendline. Therefore the lower the slope is, the more hierarchical the network is. Regarding the releases, due to the increase in activity before a release from all parties, our expectation is that the network gets less hierarchical due to the more cross-group collaboration, which causes the slope to rise. 
+
+\begin{quote}
+    \textit{H4: The developer network becomes less hierarchical during a release.}
+\end{quote}
+
+We expect the hierarchy to rise immediately after the release, because the next development cycle needs to be planned, which requires organization and a highly structured breakdown of the backlog. Then later it gets back to normal levels between two releases.
+
+Lastly, we take the \textbf{core-periphery ratio} measure. This metric is a percentage of how many developers in the network are classified as core members compared to the overall number of nodes within it. We have two methods to classify a developer as core. The first is the K-core method, which is the number of nodes having at least $k$ degrees, and the second is the degree centrality core method, with which we simply calculate the degree centrality for each node. For both methods, we consider a developer core, if they are in the top 20th percentile of nodes. For both K-core and degree centrality core, the percentile is calculated starting from 0 and not from the lowest value within the network. This ensures, that in time periods, when only the core are active, all of the core members can be still identified as core, since their absolute values are still high. Before a release, the core-periphery ratio is expected to fall, because more periphery developers are being involved in the testing and intergartion tasks, but the number of core members stays the same during the project's lifecycle. This causes the ratio to fall as the overall number of nodes increase, but not the number of cores. After a release, this is expected to rise again due to the project focus shifting to planning and organizing, which involves more the core development team.
+
+\begin{quote}
+    \textit{H5: More periphery developers are involved at a release.}
+\end{quote}
 
 In order to confirm or reject the above hypotheses, we perform an Ordinary Least Squares (OLS) linear regression on the mentioned network statistics before and after a new release. Our assumption is, that the larger the network change is before and after the new version, the larger the release is. We use the following formula for this:
 
@@ -1064,6 +1096,14 @@ The regression results are depicted in Table \ref{tab:size-metrics}. We run the 
 \subsubsection{Release size and issues opened and closed}
 
 One explanation could be for the increase in clustering coefficient, that a larger release with more lines changed leaves more room for errors and bugs within the code. The increase in issues leads to a higher bug fixing activity within the project, which requires cross-checking and integration tests, and ultimately causes more developer triangles to form, which raises the clustering coefficient value. To test this theory, we perform a similar OLS linear regression, but with two new metrics: number of issues opened and number of issues closed. If our assumptions are correct, there should be also a positive linear relationship between the release size measured in number of lines changed and the difference between number of issues opened after and before the release. We also perform the regression for the number of issues closed, however, since the observed period after a new version is 28 days, but an issue might take longer than that on average to fix, we might not see the surge of new issues closed within this period.
+
+\begin{quote}
+    \textit{H6a: More issues opened before and after a release means more lines changed in the new version.}
+\end{quote}
+
+\begin{quote}
+    \textit{H6b: More issues closed before and after a release means more lines changed in the new version.}
+\end{quote}
 
 Since the number of issues are not related to the collaboration network and they are unrelated variables, we leave it out of the regression. Also, we use the values from before and after the release separately, and without subtracting them from each other. The network metrics needed to consider the change between the 'before' and 'after' values because the change is measured from 0 on a scalar scale, but that is not necessarily the normal value in a network. The number of issues, on the other hand, are 0 by default, when there is no activity or no issues being created.
 
@@ -1150,7 +1190,7 @@ The results for \textbf{mean path lenght} can be seen on Figure \ref{fig:box-mea
     \label{fig:box-mean-path}
 \end{figure}
 
-Due to the heterogenity of each project, there could be large differences and patterns different than the one descibed above. Therefore, we plot each repository's mean path length boxplot separately. We exclude repositories, that have less than 10 observed releases before \texttt{1 January, 2021}, because that would reduce the number of releases aggregated on the plot, and the unique traits of the single particular releases would show.
+Because of the heterogenity of each project, there could be large differences and patterns different than the one descibed above. Therefore, we plot each repository's mean path length boxplot separately. We exclude repositories that have less than 10 observed releases before \texttt{1 January, 2021}, because that would reduce the number of releases aggregated on the plot, and the unique traits of the single particular releases would show.
 
 After observing the total $53$ plots, we identify four main reoccurring patterns, that can be observed within the projects. We name these patterns based on the two half-curve's steepness, that would connect the five boxes depicted. These are:
 
@@ -1241,10 +1281,6 @@ With the remaining 45 repositories in aggregation a slight V-shaped trend can be
 
 There could be several organizational reasons why these patterns exist. For the rising trend in the core-periphery ratio, the obvious reason could be the rush before the release to include as much change as possible before it is released. This increase in activity involves more non-core developers, which keeps the ratio low before the release. After the new version is available, however, the focus shifts from development to planning, which generates more core involvement than from the periphery developers, which raisese the ratio value. The opposite, falling pattern could indicate the opposite effect: before the release, the development team might announce a 'code-freeze', which prohibits the change of code before the release (or rather merging it into the release candidate). Since only authorised developers chan change the release candidate, who are most likely core members, the cp ratio gets high. After the release, the sidelined changes are included and the bugfixing period starts, which requires collaboration effort from not just the core developers, therefore the ratio decreases. The wave pattern could be the same effect as in the falling case, just happening in a much shorter period of time, which causes the outtermost timespans to already show the normal ratio level. \\
 
-Lastly, we take a look at the \textbf{hierarchy} boxplots in Figure \ref{fig:hierarchy-box}. The hierarchy is getting more widely distributed towards the positive values as we approach the release date, then the reversal can be seen. Although the change is rather small, it is still significant, as it follows a regular pattern. We can also see, that the distribution is heavily skewed towards $0$ in all boxes, which indicates that the majority of values are $0$. Hierarchy takes on the value $0$ when the linear trendline is parallel to the X-axis on the scatter plot of degrees-CC, which is interpreted as the network being decentralized, without any hierarchy. As we have discussed before, negative values mean a hierarchy exists in the network. Here we see positive values, which we can interpret as the increase of central hubs (developers) in the network. 
-
-The trend towards the positive values describes a positive correlation between the degree number and the clustering coefficient, which signals that the developers connecting different segments of the DSN are also clustered with each other. These developers therfore comprise the core developer team, who do not exhibit any hierarchical properties, and are rather connected directly to each other, and loosely to the periphery developers during the release. This is directly opposite to out hypothesis: An increasingly hierarchical network was theoretized due to the increased centralization and required approvals and planning. Here we confirm the opposite, as the network gets more 'chaotic' at the release, and less organized than during the normal development periods.
-
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/boxplots/hierarchy.png}
@@ -1252,9 +1288,42 @@ The trend towards the positive values describes a positive correlation between t
     \label{fig:hierarchy-box}
 \end{figure}
 
+Lastly, we take a look at the \textbf{hierarchy} boxplots in Figure \ref{fig:hierarchy-box}. The hierarchy is getting more widely distributed towards the positive values as we approach the release date, then the reversal can be seen. Although the change is rather small, it is still significant, as it follows a regular pattern. We can also see, that the distribution is heavily skewed towards $0$ in all boxes, which indicates that the majority of values are $0$. Hierarchy takes on the value $0$ when the linear trendline is parallel to the X-axis on the scatter plot of degrees-CC, which is interpreted as the network being decentralized, without any hierarchy. As we have discussed before, negative values mean a hierarchy exists in the network. Here we see positive values, which we can interpret as the increase of central hubs (developers) in the network. 
+
+The trend towards the positive values describes a positive correlation between the degree number and the clustering coefficient, which signals that the developers connecting different segments of the DSN are also clustered with each other. These developers therfore comprise the core developer team, who do not exhibit any hierarchical properties, and are rather connected directly to each other, and loosely to the periphery developers during the release. This is directly opposite to out hypothesis: An increasingly hierarchical network was theoretized due to the increased centralization and required approvals and planning. Here we confirm the opposite, as the network gets more 'chaotic' at the release, and less organized than during the normal development periods.
 
 \section{Discussion and results}
 
+In Section \ref{sec:quantitative} we looked at a large number of randomly selected repositories in order to generalize how the developer network properties change within FLOSS projects. After mining the selected repositories and discarding the not mineable and badly versioned projects, we were left with 68 repositories with a diverse range of used languages, sizes and release cycles. 
 
+\dots
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{|l|p{5cm}|l|l|}
+            \hline
+            \textbf{\#} & \textbf{Hypothesis}  & \textbf{Variable} & \textbf{Result} \\
+            \hline
+            H1a & A minor release has more lines changed than a patch release. & lines changed & Supported \\
+            \hline
+            H1b & A major release has more lines changed than a minor release. & lines changed & Not supported \\
+            \hline
+            H2 & There is less independence between developers at releases. & mean path length & Reverse supported \\
+            \hline
+            H3 & Developers are clustered together significantly more during a release. & clustering coefficient & Not supported \\
+            \hline
+            H4 & The developer network becomes less hierarchical during a release. & hiearachy & Supported \\
+            \hline
+            H5 & More periphery developers are involved at a release. & core/periphery ratio & Supported \\
+            \hline
+            H6a &  More issues opened before and after a release means more lines changed in the new version. & issues opened & Not supported \\
+            \hline
+            H6b &  More issues closed before and after a release means more lines changed in the new version. & issues opened & Not supported \\
+            \hline
+
+        \end{tabular}
+    }
+\end{table}
 
 \section{Conclusion and future work}
