@@ -176,7 +176,7 @@ The generated static weighted bipartite network loses its time-varying component
 \begin{figure}
     \centering
     \includegraphics[width=0.65\textwidth]{figures/bipartite.png}
-    \caption{A bipartite network of authors (green) and edited files (light blue) in the \texttt{pandas} project within the timeframe 31/01/2021 and 15/02/2021}
+    \caption{A bipartite network of authors (green) and edited files (light blue) in the \texttt{pandas} project within the timeframe 31/01/2021 and 15/02/2021.}
     \label{fig:bipartite}
 \end{figure}
 
@@ -194,7 +194,7 @@ A disadvantage of the WOMP method is that the generated collaboration network is
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{figures/jaccard.png}
-    \caption{Weighted Jaccard similarity collaboration network of \texttt{pandas} generated from the bipartite network in Figure \ref{fig:bipartite}.}
+    \caption{Weighted Jaccard similarity collaboration network of \texttt{pandas} generated from the bipartite network in Figure \ref{fig:bipartite} showing the weighted edges within the network.}
     \label{fig:jaccard}
 \end{figure}
 
@@ -224,7 +224,7 @@ We use the degree centrality of each node (i.e., developer) to identify the core
         \caption{Curl}
         \label{fig:centrality b}
     \end{subfigure}
-    \caption{Degree centrality within the \texttt{pandas} and \texttt{curl} projects' collaboration networks. }
+    \caption{Degree centrality within the \texttt{pandas} and \texttt{curl} projects' collaboration networks, showcasing a decentralized (a) and heavily centralized (b) network as examples.}
     \label{fig:degree centrality}
 \end{figure}
 
@@ -282,7 +282,7 @@ We can visualize the degree of hierarchy by plotting each node's clustering coef
     \hfill
     \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=0.98\textwidth]{figures/hierarchy_plot.png}
+        \includegraphics[width=0.98\textwidth]{figures/hierarchy_plot2.png}
         \caption{Network hierarchy}
         \label{fig:hierarchy plot}
     \end{subfigure}
@@ -365,7 +365,7 @@ The \textit{issue title} is a short description of the issue. Most projects crea
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{figures/issues_open.png}
-    \caption{Survival curves of the \texttt{pandas} library.}
+    \caption{Survival curves of the \texttt{pandas} library depicting the slightly lower-than-average lifespan of bug issues, and the relatively long time the features are open.}
     \label{fig:survival}
 \end{figure}
 
@@ -1166,16 +1166,16 @@ After applying the normalization described above on our dataset, box plots are c
 
 Each metric's normalized value is calculated for each release's corresponding five timespans (from $t_{-2}$ to $t_2$). With this approach another issue arises: releases, which were within 2 months of the data collection, will only have partial data available for the last 3 timespans. This can skew the results, since for these values the results will be 0, and it would falsely show a decline in activities. Therefore, we filter out those releases, which were created after \textit{1 January, 2021}.
 
-The results for \textbf{mean path length} can be seen in Figure \ref{fig:box-mean-path}. Contrary to our expectations, we see an increase in mean path length up until the release, and a slight decrease afterwards. A decrease in mean path length means less interdependency among developers, as fewer people are fulfilling the 'middle man' role within the network, which was expected at a release since closer collaboration is required and different tasks, therefore developers have to move out of their usual role and collaborate with those, who they do not often collaborate with. The reverse in the results suggests that the level of activity is not as high as expected at a release. The likely reason is that around the releases not many changes are approved, and the focus is on finishing up the current tasks. Before the shorter mean path length can be explained with the rush to finish the tasks, and after it can be explained with the bug reports and new issues, and consequently their activity from the developers' side.
+The results for \textbf{mean path length} can be seen in Figure \ref{fig:box-mean-path}. Contrary to our expectations, we see an increase in mean path length up until the release, and a sharp decrease afterwards. A decrease in mean path length means less interdependency among developers, as fewer people are fulfilling the 'middle man' role within the network, which was expected at a release since closer collaboration is required and different tasks, therefore developers have to move out of their usual role and collaborate with those, who they do not often collaborate with. The reverse in the results suggests that the level of activity is not as high as expected at a release. The likely reason is that around the releases not many changes are approved, and the focus is on finishing up the current tasks. Before the shorter mean path length can be explained with the rush to finish the tasks, and after it can be explained with the bug reports and new issues, and consequently their activity from the developers' side.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/mean_path.png}
+    \includegraphics[width=\textwidth]{figures/quantitative/pointplots/mean_path_length.png}
     \caption{Normalized mean path length values before, during and after releases.}
     \label{fig:box-mean-path}
 \end{figure}
 
-Because of the heterogeneity of each project, there could be large differences and patterns different from the one described above. Therefore, we plot each repository's mean path length boxplot separately. We exclude repositories that have less than 10 observed releases before \texttt{1 January, 2021}, because that would reduce the number of releases aggregated on the plot, and the unique traits of the single particular releases would show.
+Because of the heterogeneity of each project, there could be large differences and patterns different from the one described above. Therefore, we plot each repository's mean path length boxplot separately, which are depicted in Appendix \ref{app:mean_path-box-app}. We exclude repositories that have less than 10 observed releases before \texttt{1 January, 2021}, because that would reduce the number of releases aggregated on the plot, and the unique traits of the single particular releases would show.
 
 After observing the total $53$ plots, we identify four main reoccurring patterns that can be observed within the projects. We name these patterns based on the two half-curve's steepness that would connect the five boxes depicted. These are:
 
@@ -1192,25 +1192,25 @@ Examples for all four categories are shown in Figure \ref{fig:box-mean-path-patt
     \centering
     \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/quantitative/boxplots/vuetifyjs_vuetify_flat.png}
-        \caption{Flat (\textit{vuetifyjs/vuetify})}
+        \includegraphics[width=\textwidth]{figures/quantitative/pointplots/nunit_nunit.png}
+        \caption{Flat (\textit{nunit/nunit})}
         \label{fig:mean-path-pattern1}
     \end{subfigure}
     \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/quantitative/boxplots/fioprotocol_fio_rise-decline.png}
+        \includegraphics[width=\textwidth]{figures/quantitative/pointplots/stack-of-tasks_pinocchio.png}
         \caption{Rise-decline (\textit{fioprotocol/fio})}
         \label{fig:mean-path-pattern2}
     \end{subfigure}
     \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/quantitative/boxplots/Flowminder_FlowKit_flat-decline.png}
-        \caption{Flat-decline (\textit{Flowminder/FlowKit})}
+        \includegraphics[width=\textwidth]{figures/quantitative/pointplots/frappe_erpnext.png}
+        \caption{Flat-decline (\textit{frappe/erpnext})}
         \label{fig:mean-path-pattern3}
     \end{subfigure}
     \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figures/quantitative/boxplots/swaywm_sway_decline-rise.png}
+        \includegraphics[width=\textwidth]{figures/quantitative/pointplots/swaywm_sway.png}
         \caption{Decline-rise (\textit{swaywm/sway})}
         \label{fig:mean-path-pattern4}
     \end{subfigure}
@@ -1222,14 +1222,14 @@ We also performed the same analysis on the \textbf{normalized clustering coeffic
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/clustering.png}
+    \includegraphics[width=\textwidth]{figures/quantitative/pointplots/clustering_coeff_filtered.png}
     \caption{Clustering coefficient release trend after the removal of 0 values.}
     \label{fig:clustering-box}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/issues.png}
+    \includegraphics[width=\textwidth]{figures/quantitative/pointplots/issues.png}
     \caption{Number of issues opened and closed in different timespans relative to a release.}
     \label{fig:issues-box}
 \end{figure}
@@ -1242,7 +1242,7 @@ Just with the other metrics, the \textbf{core-periphery ratio} is also heavily d
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/cp-ratio.png}
+    \includegraphics[width=\textwidth]{figures/quantitative/pointplots/cp_ratio.png}
     \caption{Core/periphery ratio within relative timespans to a release.}
     \label{fig:cp-box}
 \end{figure}
@@ -1258,7 +1258,7 @@ With the remaining 45 repositories in aggregation a slight V-shaped trend can be
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/grid.png}
+    \includegraphics[width=\textwidth]{figures/quantitative/pointplots/cp_ratio_trends.png}
     \caption{Core/periphery ratio trends.}
     \label{fig:cp-box-grid}
 \end{figure}
@@ -1268,7 +1268,7 @@ There could be several organizational reasons why these patterns exist. For the 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/quantitative/boxplots/hierarchy.png}
+    \includegraphics[width=\textwidth]{figures/quantitative/pointplots/hierarchy.png}
     \caption{Hierarchy boxplot.}
     \label{fig:hierarchy-box}
 \end{figure}

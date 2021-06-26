@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Networkx temporal networks</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <h1>Networkx repository collaboration networks</h1>
+            <p>Repository available at: <a href="https://github.com/networkx/networkx.git">https://github.com/networkx/networkx.git</a></p>
+            <h2>Commit frequency</h2>
+            <img src="networkx_commit_freq.png">
+            <h2>Collaboration networks</h2>
+            <div class="alert alert-info" role="alert">
+                <h5 class="font-italic">Explanation:</h4>
+                <p><u>Interval:</u> The continuous time period observed at each snapshot of the network. E.g. a 7-day interval means that each <span class="font-italic">t</span> frame of the temporal network takes into account a 7-day period.</p>
+                <p><u>Step size:</u> Time difference between the beginning of two consecutive network snapshots.</p>
+                <p><u>File-based and line-based network: </u> Which algorithm was used to generate the network. File-based considers collaboration based on edits from two different authors on the same file. Line-based mode uses the git2net 'get_coauthorship_network' method, which considers collaboration based on edits in the same line or in the same block of code.</p>
+            </div>
+            <div class="card-group">
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <img src="networkx_1_two_years.svg" />
+                    <div class="card-body">
+                        <h5 class="card-title">Two years</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.01.01.-2015.12.31.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">1 day</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_1_two_years.svg</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="MpVzCsTe" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='MpVzCsTe_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='MpVzCsTe_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='MpVzCsTe_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One month line-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.04.01.-2014.04.30.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">1 day</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">1 day</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140401_tt20140430_i1_d1_l.html</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="cNcrrPbX" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='cNcrrPbX_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='cNcrrPbX_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='cNcrrPbX_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One month file-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.04.01.-2014.05.06.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">7 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">1 day</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140401_tt20140506_i7_d1_f.html</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="tZdNiNsS" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='tZdNiNsS_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='tZdNiNsS_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='tZdNiNsS_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One month line-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.04.01.-2014.05.06.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">7 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">1 day</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140401_tt20140506_i7_d1_l.html</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-group">
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="QLYKaGhZ" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='QLYKaGhZ_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='QLYKaGhZ_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='QLYKaGhZ_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One month file-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.04.01.-2014.05.13.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">14 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">1 day</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140401_tt20140513_i14_d1_f.html</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="ZbczDydi" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='ZbczDydi_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='ZbczDydi_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='ZbczDydi_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One month line-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.04.01.-2014.05.13.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">14 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">1 day</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140401_tt20140513_i14_d1_l.html</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="isfFviLa" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='isfFviLa_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='isfFviLa_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='isfFviLa_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One year file-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.01.01.-2014.12.31.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">30 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">7 days</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140101_tt20141231_i30_d7_f.html</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="fFoaRYBr" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='fFoaRYBr_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='fFoaRYBr_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='fFoaRYBr_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One year line-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.01.01.-2014.12.31.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">30 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">7 days</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140101_tt20141231_i30_d7_l.html</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-group">
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="vdHfGYFn" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='vdHfGYFn_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='vdHfGYFn_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='vdHfGYFn_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One year file-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.01.01.-2014.12.13.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">60 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">7 days</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140101_tt20141231_i60_d7_f.html</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="aXadwLGU" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='aXadwLGU_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='aXadwLGU_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='aXadwLGU_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">One year line-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.01.01.-2014.12.13.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">60 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">7 days</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140101_tt20141231_i60_d7_l.html</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="osmOFeIT" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='osmOFeIT_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='osmOFeIT_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='osmOFeIT_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">Two years file-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.01.01.-2015.12.13.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">30 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">14 days</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140101_tt20151231_i30_d14_f.html</small>
+                    </div>
+                </div>
+                <div class="card rounded-lg mt-1" style="min-width: 400px; ">
+                    <svg width="400" height="400" id="gFJlPimX" style="margin: auto;">
+                        <text x="10" y="20" font-family="sans-serif" font-size="14px" fill="red"
+                            id='gFJlPimX_time_txt'>t</text>
+                        <text x="120" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='gFJlPimX_start_txt'>stop</text>
+                        <text x="170" y="20" font-family="sans-serif" font-size="14px" fill="#9999bb" style="cursor: pointer"
+                            id='gFJlPimX_restart_txt'>restart</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">Two years line-based</h5>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>Observed period:</td>
+                                <td class="font-italic">2014.01.01.-2015.12.13.</td>
+                            </tr>
+                            <tr>
+                                <td>Interval:</td>
+                                <td class="font-italic">30 days</td>
+                            </tr>
+                            <tr>
+                                <td>Step size:</td>
+                                <td class="font-italic">14 days</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">networkx_tf20140101_tt20151231_i30_d14_l.html</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script charset="utf-8" src="https://d3js.org/d3.v4.min.js"></script>
+    </body>
+</html>
