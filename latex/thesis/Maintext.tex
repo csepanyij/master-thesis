@@ -23,7 +23,7 @@ Because contributions to FLOSS projects are voluntary, participants have a diffe
 % AUTHOR NAME HARDCODED HERE
 Collaboration networks of open-source software (OSS) have been a subject of much academic research. Crowston and Howison \cite{crowstonSocialStructureFree2005} have defined collaboration based on bug report interaction and observed the collaboration network of 124 large-scale SourceForge projects. The generated networks have widely different centralization properties, but it was observed that larger-sized projects tend to be more decentralized. They also identified the broad community roles contributors tend to take, which are depicted in Figure \ref{fig:onion1}. Later this model was coined as the \textit{onion model} \cite{martinez-romoUsingSocialNetwork2008}.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/onion_model.png}
     \caption{Onion model of collaboration types in FLOSS projects \cite{crowstonSocialStructureFree2005}.}
@@ -121,7 +121,7 @@ When creating a DCN from the mined data, we have multiple methods at hand. The \
 \subsubsection{Temporal bipartite network}
 As a first step, we generate a temporal bipartite network of authors and their edited files with the \texttt{git2net} built-in \textit{get\_bipartite\_network} method. A temporal network is a \texttt{pathpy} \footnote{\url{https://www.pathpy.net/}} graph object, which contains a collection of timestamped graphs of a single network at each point in time within the observed timeframe. Such a snapshot $S_t = (U, V, E_t)$, where $U$ is the set of authors, $V$ is the set of files, and $E_t$ is the set of file edits as edges at $t$ timestamp. By connecting the authors, who touched the same files, and removing the nodes representing the edited files (converting the bipartite network to a regular network), we can observe the evolution of the collaboration over time, represented in Figure \ref{fig:temporal net}.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.3\textwidth}
         \centering
@@ -173,7 +173,7 @@ Although a temporal network preserves the time aspect of the graph by the edges 
 \subsubsection{Static networks}
 The generated static weighted bipartite network loses its time-varying component, but now we can manipulate and calculate complex statistics over it. Figure \ref{fig:bipartite} is an example of such a network. As a next step, we convert the bipartite network into an authors' network by removing the nodes representing files.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.65\textwidth]{figures/bipartite.png}
     \caption{A bipartite network of authors (green) and edited files (light blue) in the \texttt{pandas} project within the timeframe 31/01/2021 and 15/02/2021.}
@@ -191,7 +191,7 @@ A disadvantage of the WOMP method is that the generated collaboration network is
 
 \[ w_{ab} = \frac{\sum_{f \in F}min(f_a, f_b)}{\sum_{f \in F}max(f_a, f_b)}. \]
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/jaccard.png}
     \caption{Weighted Jaccard similarity collaboration network of \texttt{pandas} generated from the bipartite network in Figure \ref{fig:bipartite} showing the weighted edges within the network.}
@@ -209,7 +209,7 @@ A critical part of the OSS software projects is the existence of core and periph
 
 We use the degree centrality of each node (i.e., developer) to identify the core members. The degree centrality of a node is the fraction of all possible nodes it is connected to. We can calculate it by dividing the degree with $n-1$, where $n = |G|$ the number of nodes within the network. Since the core developers contribute the majority of commits and edits of the project, they are expected to be connected with more nodes. Joblin et al. \cite{joblinClassifyingDevelopersCore2016, joblinEvolutionaryTrendsDeveloper2017} have also identified degree centrality as the best predictor of core developers. When binary classification of core or periphery is needed, we assign developers to the core network if their degree centrality score is in the top 20th percentile; otherwise, they are considered periphery. We also note that this method does not consider the weighted edges, only the number of edges (degree) a node has. Although this method could be refined to consider the node degree weighted with the edges, we argue that this could lead to invalidity. In case of two developers, who only contributed to one file, they will be represented with a strong connection and would receive a high weighted degree value, whereas a core contributor, who edits many files, can have many weak connections, but these might not add up to one strong connection of the two isolated developers when weighted with the edge weights. It is clear that a developer with many connections, regardless of the strength of the collaboration, should be considered core. Figure \ref{fig:degree centrality} shows two examples for degree centrality within a collaboration network. In the figure, darker colors represent a higher degree centrality value. The highlighted nodes are in the highest 20th percentile of degree centrality, classifying them as members of the core developers. We can observe that \texttt{pandas} is much more decentralized in both one-month periods, whereas \texttt{curl} is mainly dependent on one developer.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.49\textwidth}
         \centering
@@ -245,14 +245,14 @@ When a project is inactive within certain timeframes, it could happen that the n
 \subsubsection{Clustering coefficient}
 \label{sec:clustering}
 
-While centralization helps us describe the centralness of the network and how much it is centered around a single or a few developers, it does not help us describe the structure of the network in more detail. Our goal is to gain an understanding of also the modularity of our network, meaning how much developers tend to cluster together \cite{joblinEvolutionaryTrendsDeveloper2017}. We expect that authors form smaller clusters, which are more tightly connected, and these clusters have somewhat weaker ties to other clusters. This builds on the assumption that the collaboration network of the software follows the modules which build up the software itself, thus authors of a specific function should also cluster together within the network \cite{conwayHowCommitteesInvent1968, joblinEvolutionaryTrendsDeveloper2017}. To measure this 'clusteredness', we calculate the \textit{local clustering coefficient} for each node.
-
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=1\textwidth]{figures/loc_clust_coeff.png}
     \caption{The local clustering coefficient demonstrated on an unweighted network of 4 vertices \cite{jedrzejewskiRoleComplexNetworks2016}.}
     \label{fig:loc clust coeff}
 \end{figure}
+
+While centralization helps us describe the centralness of the network and how much it is centered around a single or a few developers, it does not help us describe the structure of the network in more detail. Our goal is to gain an understanding of also the modularity of our network, meaning how much developers tend to cluster together \cite{joblinEvolutionaryTrendsDeveloper2017}. We expect that authors form smaller clusters, which are more tightly connected, and these clusters have somewhat weaker ties to other clusters. This builds on the assumption that the collaboration network of the software follows the modules which build up the software itself, thus authors of a specific function should also cluster together within the network \cite{conwayHowCommitteesInvent1968, joblinEvolutionaryTrendsDeveloper2017}. To measure this 'clusteredness', we calculate the \textit{local clustering coefficient} for each node.
 
 The \textit{local clustering coefficient} quantifies on a scale $[0, 1]$ how likely it is that a node's neighbors are also neighbors. We use the number of triangles (also called clique, triplet) between neighbors the node is a part of. This is illustrated for unweighted networks in Figure \ref{fig:loc clust coeff} with the formula:
 
@@ -271,7 +271,7 @@ The degree centrality and the clustering coefficient are in themselves able to e
 
 We can visualize the degree of hierarchy by plotting each node's clustering coefficient against the number of degrees, shown in Figure \ref{fig:hierarchy}. The plotted linear regression trendline will decrease steeply in hierarchical networks, as there is a negative correlation between the degree and clustering coefficient. In networks where this cannot be observed, the trendline stays flat, meaning these two metrics are independent of each other, and the structure is not hierarchical. To measure the hierarchical level numerically within a network, we take the trendline's slope, which is $\beta_1$ in the $y=\beta_1x + \beta_0$ general linear regression equation.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.49\textwidth}
         \centering
@@ -300,20 +300,20 @@ One of our assumptions is that the collaboration network structure changes depen
 
 To measure the network changes around releases, we first collect the list of releases for the given project. Our goal is to gather the version number of each release, as well as the dates they were released. There are two relevant APIs regarding the release version numbers: GitHub releases and Git tags. Tags are marked and annotated commits supported by Git, therefore other projects that are not on GitHub can also have tags. \textit{Tags} are most commonly used to mark new release versions, but they can also be used to annotate other information, such as release editions or milestones. On the other hand, a \textit{Release} is a high-level GitHub concept, which allows the project organizers to announce Git tags as project releases by adding a version number, release notes, and binary artifacts \cite{olsonReleaseYourSoftware2013}. A commit that represents a new GitHub release must be tagged, but a tagged commit does not necessarily need to be a new GitHub release.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\textwidth]{figures/semantic-versioning.png}
-    \caption{Semantic versioning. Figure source: \cite{mariogripSemanticVersioningUT2018}.}
-    \label{fig:semver}
-\end{figure}
-
 Throughout our analysis, we use the tags as indicators of a new release, because there could be new versions of a software that are not released publicly and therefore do not have a GitHub release. Furthermore, GitHub only announced the Releases workflow in 2013, when the release versioning by Git tags was already a common practice. This means that releases before 2013 can only be analyzed via the repository tags.
 
 Most large-scale OSS projects follow the semantic versioning convention, but only to a certain extent. The majority of tags follow the major-minor-patch (also known as breaking-feature-fix) semantic version naming convention in the format of X.Y.Z, where X is the major number, Y is the minor number, and Z is the patch number \cite{preston-wernerSemanticVersioning}. At the end, optionally, pre-release and build data can be marked, for example, \textit{1.11.6-pre}. The major number signifies an API-breaking change compared to the previous release, meaning backward compatibility is not guaranteed for depending applications. Minor releases add new features, but compatibility is ensured with the older version. Patch releases usually handle bugs and security updates within the package.
 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/semantic-versioning.png}
+    \caption{Semantic versioning illustrated. Figure source: \cite{mariogripSemanticVersioningUT2018}.}
+    \label{fig:semver}
+\end{figure}
+
 During the network analysis, we expect the network measures to change around a release, but it is also expected that a larger release requiring more collaboration will have a more significant impact, while smaller changes have minor or no impact at all. The issue with the semantic versioning and release names is that there are no constraints, which would enforce a strict version naming, and it is entirely up to the developers to set the tag names. This leads to inconveniences when measuring collaboration effort through release version number because a patch might require more collaboration effort than a minor release, and a minor release within one project could require significantly more teamwork than in another. Furthermore, tag names can be inconsistent, and there could be version numbers that do not adhere to the major-minor-patch naming convention at all (e.g., test releases, or releases like 'latest-release-v11'). The possibility to add extra information at the end of tag names, like \texttt{-beta} or \texttt{rc}, further complicates tracking the collaboration effort because the majority of collaboration effort might happen before the \texttt{rc} version, or it might happen after it. As it can also be seen in Table \ref{tab:releases}, the \texttt{v0.14.0rc1} tag contains more modifications than the final \texttt{v0.14.0} version, whereas the \texttt{v1.2.0rc0} only contains a small fraction of modifications compared to \texttt{v1.2.0}.
 
-\begin{table}
+\begin{table}[!htbp]
     \centering
     \resizebox{\textwidth}{!}{%
         \begin{tabular}{| c | c | c | c | c | c | c | c | c |}
@@ -362,18 +362,9 @@ To measure the productivity within the project, we collect some basic informatio
 
 The \textit{issue title} is a short description of the issue. Most projects create their own convention of naming and tagging issues. For example, each issue starts with a 3-letter abbreviation of a category, e.g., \texttt{BUG} or \texttt{DOC}. \textit{Issue number} is a unique number for each issue that is increased sequentially. \textit{Created at} is the date and time of the issue being created, and \textit{closed at} is the time when it was closed. If the issue was still open on the day of data mining (May 9, 2021), this field is empty. The \textit{open for} field is the difference between the \textit{closed at} and \textit{created at} dates, or it is empty if the issue was never closed.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figures/issues_open.png}
-    \caption{Survival curves of the \texttt{pandas} library depicting the slightly lower-than-average lifespan of bug issues, and the relatively long time the features are open.}
-    \label{fig:survival}
-\end{figure}
-
 The last measure is \textit{bug or feature}. Because issues can cover a wide range of possible topics, from discussions to performance, it is worth categorizing them to analyze the differences. However, categorization in practice proves to be difficult due to the different conventions each project uses and because GitHub does not apply any constraints to the text of the title. We search for specific keywords in the \textit{issue title} to categorize each issue into either a bug or a feature. We also drop some words from the text because they would give us 'false positive' matches. If keywords for both or neither categories are found, the issue is marked as unknown. The dropped words, as well as the bug and feature keywords, can be seen in Table \ref{tab:keywords} Although this simple method can already classify 10-15 percent of issues, it would require extensive manual effort to improve this ratio further. In future research, sentiment analysis of issue titles and issue descriptions could achieve much higher percentages.
 
-Statistics for issues like average close time also prove to be difficult because there are continuously open issues, which inevitably leads to the fact that a large portion of issues was still open and continues to be open. We cannot know the issue close time for these issues, and if we try to calculate global measures by aggregating all (or portion) of issues, we have to consider the \textit{survival bias} \cite{jarczykSurgicalTeamsGitHub2018}. Figure \ref{fig:survival} shows the issues survival curve of the \texttt{pandas} library. It is clearly visible that a large portion (20 percent) of issues are not closed, and if we left them out of aggregate values such as average open time, our data would be skewed. Nevertheless, we can see in the example that the categorization of issues makes a difference, as bugs get closed a bit earlier than an average (unknown) issue because, after the same amount of days pass for both categories, more bugs tend to be closed in this example. In contrast, features have a high life expectancy, as they are more likely to be still open than a bug if the same number of days pass. The reason could be that features take longer to develop and plan than bugs, which is consistent with the findings of Jarczky et al. \cite{jarczykSurgicalTeamsGitHub2018}.
-
-\begin{table}
+\begin{table}[!htbp]
     \centering
         \begin{tabular}{| c | c | c |}
             \hline
@@ -392,6 +383,15 @@ Statistics for issues like average close time also prove to be difficult because
     \caption{Keywords and drop words for \textit{bug} and \textit{feature} categorization.}
     \label{tab:keywords}
 \end{table}
+
+Statistics for issues like average close time also prove to be difficult because there are continuously open issues, which inevitably leads to the fact that a large portion of issues was still open and continues to be open. We cannot know the issue close time for these issues, and if we try to calculate global measures by aggregating all (or portion) of issues, we have to consider the \textit{survival bias} \cite{jarczykSurgicalTeamsGitHub2018}. Figure \ref{fig:survival} shows the issues survival curve of the \texttt{pandas} library. It is clearly visible that a large portion (20 percent) of issues are not closed, and if we left them out of aggregate values such as average open time, our data would be skewed. Nevertheless, we can see in the example that the categorization of issues makes a difference, as bugs get closed a bit earlier than an average (unknown) issue because, after the same amount of days pass for both categories, more bugs tend to be closed in this example. In contrast, features have a high life expectancy, as they are more likely to be still open than a bug if the same number of days pass. The reason could be that features take longer to develop and plan than bugs, which is consistent with the findings of Jarczky et al. \cite{jarczykSurgicalTeamsGitHub2018}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/issues_open.png}
+    \caption{Survival curves of the \texttt{pandas} library depicting the slightly lower-than-average lifespan of bug issues, and the relatively long time the features are open.}
+    \label{fig:survival}
+\end{figure}
 
 
 \section{Collaboration pattern analysis}
@@ -416,7 +416,7 @@ Altogether, we choose eight projects to analyze; these can be seen in Table \ref
 
 The project \texttt{curl} is an example Of a highly centralized project, as its source code is famously maintained by a single developer \cite{crowstonHierarchyCentralizationFree2006}. Based on the number of contributors, it is a medium-sized project, although the number of commits is much higher than \texttt{NetworkX} or \texttt{seaborn}. Being the oldest project from the selection might contribute to the large number of commits.
 
-\begin{table}
+\begin{table}[!htbp]
     \centering
     \resizebox{0.85\textwidth}{!}{%
         \begin{tabular}{| c | c | c | c | c | c | c |}
@@ -447,7 +447,7 @@ For the selected period, we check the number of commits in each project as a fir
 
 There is a noticeable decrease in the number of commits to \texttt{servo} at the time of the layoffs (August 2020), which signals that the project could have been affected. However, this cannot be observed for \texttt{Wasmtime}. Furthermore, we do not see any evidence of reoccurring trends within the number of commits, e.g., decreased activity during the holiday season. There is a reduction in all repositories at the end of 2018, but this is contradicted by a spike in the number of commits at the end of 2019. However, we cannot rule out any periodicity, because this could be hidden due to the 28-day aggregation.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/commits.png}
     \caption{Number of commits in each month.}
@@ -464,14 +464,14 @@ The issue with generating the collaboration network is the time aspect: we canno
 
 First, we take a look at the number of developers in the network over time. The number of nodes (i.e., developers) in the network indicates the level of activity within the project, where a relatively high number of nodes imply a peak in project activity, and a low number can imply a decreasing activity, or that the project has become more centralized. It is easy to see that if the only source of activity is one single developer over the observed period, then the network will only have one node, whereas if the same activities are distributed, more developers will be shown in the network, and the number of nodes will rise. However, this does not describe the relationship between developers, they could be completely isolated, or they could be relying a lot on each other regarding collaboration.
 
-\begin{figure}
+In Figure \ref{fig:nnodes} the number of nodes is plotted with the time of releases marked with a vertical black line for each project. The type of release corresponds to the type of line: major releases are shown with a continuous line, minor releases are thick dashed lines, and patch releases are thin dotted lines. The red continuous lines mark an unexpected layoff event, which might have an effect on the project. Each node count data point at $t$ time represents the number of nodes within the collaboration network that is generated between $t$ and $t+28$ days, with a 7-day step size. The average node counts correlate with the size of the project, as the smaller repositories like \texttt{py-junos-eznc} and \texttt{seaborn} have the number of nodes consistently below 10, while the larger projects can reach 30, 50 or even 100 at specific time periods.
+
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/qualitative/number_of_nodes/all_v2.png}
     \caption{Number of nodes over time.}
     \label{fig:nnodes}
 \end{figure}
-
-In Figure \ref{fig:nnodes} the number of nodes is plotted with the time of releases marked with a vertical black line for each project. The type of release corresponds to the type of line: major releases are shown with a continuous line, minor releases are thick dashed lines, and patch releases are thin dotted lines. The red continuous lines mark an unexpected layoff event, which might have an effect on the project. Each node count data point at $t$ time represents the number of nodes within the collaboration network that is generated between $t$ and $t+28$ days, with a 7-day step size. The average node counts correlate with the size of the project, as the smaller repositories like \texttt{py-junos-eznc} and \texttt{seaborn} have the number of nodes consistently below 10, while the larger projects can reach 30, 50 or even 100 at specific time periods.
 
 Regarding the releases, we can see that each project can have a completely different release planning and schedule, which makes it hard to compare them. Some projects, like \texttt{NetworkX}, \texttt{pandas}, or \texttt{NumPy} release a minor version approximately every six months, while \texttt{curl} does the same every two months. \texttt{Wasmtime}'s release schedule regarding minor releases is even shorter, but we do not have any data available before 2020, which does not allow us to confirm whether this is a long-term trend. The release data for \texttt{servo} was available to us; however, the repository has a very high frequency of releases, with sometimes multiple minor releases in the same week, and displaying this information on the chart would have obscured the number of nodes plot; therefore, we only display the unexpected events. Also, releases can be arbitrarily named by the developers; therefore, a minor release in one project might be considered a patch or a major release in others.
 
@@ -485,7 +485,7 @@ As a next step, we plot the network density and mean degrees of the projects. Th
 
 By plotting the two measures on the same figure in Figure \ref{fig:density_a}, we can confirm that they are closely correlated. The values are also highly sensitive regarding the number of nudes within the graph, and a low node count makes the graph values change radically. This is why the smaller projects are not shown, as their graph did not convey any meaningful observations. We can identify some troughs at the release times of minor releases, however, these could also be the results of the changes in the number of nodes.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.53\textwidth}
         \centering
@@ -517,7 +517,7 @@ Almost all projects have a significantly low network density, meaning that the e
 
 The weighted global clustering coefficients explained in Section \ref{sec:clustering} is plotted over time in Figure \ref{fig:clust}. Because it would be difficult to show both the Z-values and the clustering coefficients on the same graph for each project, we only show the Z-values, as they both indicate the direction and the significance of the change. Where the clustering coefficient is significantly different from a random network to the negative side (meaning the Z-value at the corresponding date is less than $-2$) it drops below the highlighted $[-2, 2]$ area within each subgraph. Likewise, when there is a significant difference to the positive direction, the plot is above the highlighted area.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/qualitative/clustering_coeff/clustering_z.png}
     \caption{Clustering coefficient Z-values over time.}
@@ -534,7 +534,7 @@ Another measure that could be affected by a release is the length between nodes 
 
 In an undirected unweighted graph, the shortest path between two nodes is the least amount of edges needed to be touched in order to get from one node to the other. However, our collaboration network is a weighted undirected graph, where the edge weights represent the collaboration effort between two developers. A strong collaboration is represented as a higher edge weight, whereas a lower edge weight means there is less collaboration between the two contributors. The shortest path between two nodes in a weighted graph is the path, which has the least summed weight of the edges touched. In our case, we want to measure how far away each developer are from all the others in order to quantify the effort for reaching out to each other in case they want to involve a specific community member. To select the closest connection, we need to look for the strongest connection, meaning we have to consider the longest path between nodes.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/qualitative/mean_path_length/path_length_all_normalized.png}
     \caption{Normalized mean longest path length over time.}
@@ -561,7 +561,7 @@ Besides taking the 20th percentile of the top clustering coefficients to identif
 
 We observe the ratio between the number of core and periphery developers by dividing the number of core developers with the number of nodes within the network. This gives us a ratio between $0$ and $1$ for both the \textit{Degree centrality core} and the \textit{K-core value} methods, where $1$ means the network only contains core developers. It is important to note that the only case both methods can have $0$ as a core/periphery ratio is when there is no collaboration within the network and all nodes are isolated with a degree of $0$. We then plot the Z-values for both methods' core/developer ratio as before, which can be seen in Figure \ref{fig:core-periphery}.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.99\textwidth}
         \centering
@@ -584,9 +584,7 @@ Figure \ref{fig:cp-k-core} depicts the core/periphery ratio calculated with the 
 
 In contrast, the large projects have their K-core ratios consistently below $-2$, indicating that the core ratio is consistently lower than a randomly generated network, which signals its centralized property. This cannot be said for the Degree centrality core ratios, which are consistently within the insignificant range. Just as with the smaller projects like \texttt{NetworkX}, \texttt{seaborn} and \texttt{py-junos-eznc}, we can observe a significant drop in K-core ratio Z-values within 2 to 3 months after the release. The difference between the two networks are demonstrated for \texttt{NumPy}'s minor release on 22.12.2019, where the networks for 1-month after, and 1-month before are contrasted in Figure \ref{fig:core-periphery-numpy}.
 
-We can see the nodes identified as core highlighted with blue. In Figure \ref{fig:numpy-before}, we can see that the maximum number of degree is paired with a couple of similarly connected nodes, and this is combined with a relatively small number of nodes in the graph, which results in a relatively high number of core members with a low number of periphery developers, therefore the ratio gets higher, which is more similar to an almost completely dispersed random network. Whereas in Figure \ref{fig:numpy-after}, we can observe the opposite: the small number of core member (only one) is combined with a large number of nodes, which creates a low core-periphery ratio that is significantly lower than in a randomly generated same-sized network. The fact that the second graph has more nodes, and they are more connected lets us draw the conclusion that the increase in activity is the effect of the release, where after the new version release to the public led to an increase in bug reports, which caused a surge in activity as they are being fixed.
-
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.49\textwidth}
         \centering
@@ -601,9 +599,11 @@ We can see the nodes identified as core highlighted with blue. In Figure \ref{fi
         \caption{Between 2020-01-06 and 2020-02-03}
         \label{fig:numpy-after}
     \end{subfigure}
-    \caption{\texttt{NumPy} collaboration network before and after the 2020-12-22 minor release.}
+    \caption{\texttt{NumPy} collaboration network before and after the 2020-12-22 minor release, depicting how the netowrk becomes more numerous, it is also becoming more centralized.}
     \label{fig:core-periphery-numpy}
 \end{figure}
+
+The nodes identified as core are highlighted with blue. In Figure \ref{fig:numpy-before}, we can see that the maximum number of degree is paired with a couple of similarly connected nodes, and this is combined with a relatively small number of nodes in the graph, which results in a relatively high number of core members with a low number of periphery developers, therefore the ratio gets higher, which is more similar to an almost completely dispersed random network. Whereas in Figure \ref{fig:numpy-after}, we can observe the opposite: the small number of core member (only one) is combined with a large number of nodes, which creates a low core-periphery ratio that is significantly lower than in a randomly generated same-sized network. The fact that the second graph has more nodes, and they are more connected lets us draw the conclusion that the increase in activity is the effect of the release, where after the new version release to the public led to an increase in bug reports, which caused a surge in activity as they are being fixed.
 
 The notable exception for the K-core values in Figure \ref{fig:core-periphery} is again \texttt{pandas}, where the Degree centrality core-periphery ratio determines each release nicely: we can consistently see a positive spike above the significance level 2 months before each release. This finding is consistent with the degree centrality analysis, however, here it is more pronounced. The drop after the release in K-core ratio also seems to hold true.
 
@@ -613,7 +613,7 @@ In general, we can say that especially in larger projects the core can be clearl
 
 As a last step, we take a look at the hierarchy of the networks over time. We use the method described in Section \ref{sec:hierarchy}, and we plot the linear regression's $\beta_1$ value (the slope of the trendline). Figure \ref{fig:hierarchy_all} shows these values over time per observed project, where the highlighted area indicates the zone where the Z-value is not significant.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/qualitative/hierarchy/hierarchy_all_z.png}
     \caption{Hierarchy over time}
@@ -639,7 +639,7 @@ In order to quantify the regularity of the releases within the project, we calcu
 
 It must be determined for each type of release, because we have seen that the type can have an effect of regularity. For example, in some projects patches follow up on a minor or major release, which can make the overall releases irregular, even though major and minor releases could still follow a regular pattern. We measure the release regularity CV in Table \ref{tab:regularity}. In order to calculate the value, the project must have at least two releases per type to have at least one value for days passed between releases. In cases when this condition is not met, we leave the values empty.
 
-\begin{table}
+\begin{table}[!htbp]
     \centering
     \resizebox{\textwidth}{!}{%
         \begin{tabular}{| l | c | c | c | c | c | c | c | c |}
@@ -691,7 +691,7 @@ As a new version is released, the users of the software are notified through the
 
 The number of issues opened and closed can be seen in Figure \ref{fig:issues_created_closed}. The issues are sampled in every 14 days, where the 7 days before and after are aggregated, separately for issues closed and issues created. For example, the month January will have two data points: January 8, which aggregates the period January 1-14, and January 22, which will sum up all the number of issues created and closed between January 15-28.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/qualitative/issues_closed_created/issues.png}
     \caption{Issues closed and created per project.}
@@ -706,14 +706,14 @@ The number of issues closed follows a similar trend. The expectation was that th
 
 Now that we have seen some regularities regarding issue creation and close, we also examine how the number of open issues change with the releases. As we discussed in Section \ref{sec:project_issues}, since there are continuously open issues in an active project, some of which are not closed at the time of taking the project snapshots, we cannot take any averages or aggregation due to the survival bias.
 
-\begin{figure}
+Figure \ref{fig:open_issues} shows the number of open issues for each project in the observed 3 years. We can see that in almost all projects, the number of open issues steadily rises, with smaller dips occurring around some, but not all releases. This shows that maintaining and organizing the issues becomes a larger challenge as the project grows, and confirms the large spikes in the number of issues closed in Figure \ref{fig:issues_created_closed} that these are 'clean-up' events, where the backlog is decluttered by closing the obsolete issues.
+
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/qualitative/issues_closed_created/open_issues.png}
-    \caption{Open issues over time}
+    \caption{The open issues keeps steadily increasing in almost all projects.}
     \label{fig:open_issues}
 \end{figure}
-
-Figure \ref{fig:open_issues} shows the number of open issues for each project in the observed 3 years. We can see that in almost all projects, the number of open issues steadily rises, with smaller dips occurring around some, but not all releases. This shows that maintaining and organizing the issues becomes a larger challenge as the project grows, and confirms the large spikes in the number of issues closed in Figure \ref{fig:issues_created_closed} that these are 'clean-up' events, where the backlog is decluttered by closing the obsolete issues.
 
 The only exception from the ever-growing number of open issues is the \texttt{curl} library, which manages to keep the number of open issues below 60, despite being the oldest project of all 8 subject to our analysis. This could also be related to the short release cycle. As Khomh et al. \cite{khomhFasterReleasesImprove2012} have found, bugs are fixed significantly faster with rapid release plans. Furthermore, as \texttt{curl} is the most centralized project, with one single main developer, issue management is much more efficient, as there is no need for group discussions and prioritization between developers. Interestingly, \texttt{servo} has the shortest release timing strategy, with sometimes multiple minor releases in a week, yet it is still struggling with the increasing number of issues, indicating that a strongly centralized organizational structure can have a much heavier weight in the increase of open issues over time.
 
@@ -723,10 +723,10 @@ Issues can describe many tasks within a project, including ideas, features, disc
 
 Seeing which types of issues are affected the most by a release could also provide insight into how the project, and by extension the collaboration network changes. Instead of using the labels, we categorize them with pattern matching in the title as described in Section \ref{sec:project_issues} with the same keywords and method. Even though the matching rate is not expected to be high, we can still apply the method for the projects, because the issues matching a category have a high chance of actually belonging to that category due to the low number of keywords being used, meaning our false positive rate for the classification is presumably low. However, we cannot confirm this, as the manual effort to classify the issues would be too large. The results can be seen in Figure \ref{fig:open_bugs_features}.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/qualitative/issues_closed_created/features_and_bugs.png}
-    \caption{Open bugs and features over time.}
+    \caption{The number of open bugs and features mostly overlap, with some exceptions.}
     \label{fig:open_bugs_features}
 \end{figure}
 
@@ -734,7 +734,7 @@ The bugs and features are presented on two different scales, because their magni
 
 Since both the features and the bugs curves follow the same shape, which is also the same as the overall shape of the issues, we cannot draw any definitive conclusions regarding the difference between bug and feature issues. The reason for this, is that we are only able to classify a small portion of the issues. When the overall number of issues rise, it makes it more likely to find a feature or bug just by sheer luck, and that is why both curves follow the overall curve. Therefore, we cannot confirm the statement that there is no difference either.
 
-\begin{table}
+\begin{table}[!htbp]
     \centering
     \resizebox{\textwidth}{!}{%
         \begin{tabular}{| l | c | c | c | c | c | c | c |}
@@ -756,7 +756,7 @@ Since both the features and the bugs curves follow the same shape, which is also
             \hline
         \end{tabular}
     }
-    \caption{Issue classification results.}
+    \caption{Issue classification results. The vast majority of issues could not be classified with the proposed keyword-based classification.}
     \label{tab:issues_class}
 \end{table}
 
@@ -823,7 +823,7 @@ Since following the semantic versioning standards is a crucial part of the analy
 
 The above exclusion criteria results in 84 repositories, which we start mining with both \texttt{git2net} and \texttt{repo\_tools}. Just like in the qualitative analysis, the data regarding the commits and edits, which are used to generate the collaboration networks, are gathered by \texttt{git2net}, and the releases and issues details are collected with \texttt{repo\_tools}. During the two-week-long mining process, 6 repositories were skipped due to the commits and edits mining running into an error or getting stuck. Presumably this is due to certain files (possibly large binary files), which require too many resources to compare the changes line by line. Part of the mining process is the disambiguation of commit authors, as renamed users can show up multiple times within the collaboration network. The original author names are kept in \texttt{.csv} files for each mined repo.
 
-\begin{table}
+\begin{table}[!htbp]
     \centering
     %\begin{subtable}{0.55\textwidth}
         %\resizebox{1.02\textwidth}{!}{%
@@ -852,7 +852,7 @@ The above exclusion criteria results in 84 repositories, which we start mining w
 
 As a last step in the mining process, we mine the repositories with the \texttt{repo\_tools} miner. Of the remaining 78 projects, 10 could not be mined for various reasons, including the miner getting stuck with some of them during the commits mining or the repository being renamed and therefore does not match the provided URL anymore. We show the summary of the 78 projects in Table \ref{tab:repo_stats} and the main programming languages and their distribution in Table \ref{tab:repo_lang}. We also included the 10 repositories skipped, because they finished for the \texttt{git2net} mining process, but we will exclude them during the analysis going forward, and we will only work with the fully successful 68 repos. The full list of the 110 randomized repositories can be found in Appendix \ref{app:repos}.
 
-\begin{table}
+\begin{table}[!htbp]
     \centering
         %    \resizebox{0.82\textwidth}{!}{%
     \begin{tabular}{| l | c | c |}
@@ -884,7 +884,7 @@ To calculate the CV value, the patch releases must be excluded as we mentioned i
 
 Another problem with the version classification are the irregular release names, such as beta releases or release candidates. These versions usually have the same semantic version number, and they are only different in the optional tags at the end. As an example, during major releases it is common to see multiple release candidate versions following each other, like \texttt{v3.9.12} followed by \texttt{v4.0.0rc1} and \texttt{v4.0.0rc2}. The issue rises from the fact that by looking at only the release number, the latter two releases are the same to the classifying algorithm (4.0.0), which leads to \texttt{v4.0.0rc1} being classified as a major release, and \texttt{v4.0.0rc2} will be unknown. We could mark these versions as rc versions, and skip them during the analysis, but the heterogeneity of conventions is a great issue, as some projects mark release candidate, beta and alpha versions as \texttt{v4.0.0-rc1}, \texttt{v4.0.0beta5} or even subversioning them such as \texttt{v4.0.0-rc1.2}. Some projects also have different editions marked with an \@ symbol, for example \texttt{v3.1.5@latest} and \texttt{v3.1.5@browser-only}, which also results in the same issue. To resolve all the releases, which are uncategorizable, we could only make it 100\% accurate without any unknowns if we manually modified or deleted the release data. Provided that the 68 mined repositories contain over 5200 distinct releases, this task would be too cumbersome, and therefore we marked all releases affected by this as 'unknown'. Because we would like to perform a linear regression on our dataset, we must convert all nominal categorical labels to numbers, thus we add 3 columns to the current dataset named 'major', 'minor' and 'patch', where these values will have 1 in their respective release type column, and the other two will be 0. All three columns are zero if the release type is unknown. We also keep the nominal category in case of models, which can handle categorical values.
 
-\begin{table}
+\begin{table}[!htbp]
     \centering
     \resizebox{0.99\textwidth}{!}{%
     \footnotesize
@@ -916,7 +916,7 @@ Because the semantic version can be highly unreliable in certain repositories, w
 
 \subsubsection{Semantic version number and number of changed lines}
 
-First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the y value. We expect the number of lines changed to be larger in a minor release than in a patch release, and even larger in a major release.
+First, we observe how the semantic version numbers predict the number of changed lines by setting the \textit{major}, \textit{minor} and \textit{patch} columns as predictors and the \textit{Change size} as the Y value. We expect the number of lines changed to be larger in a minor release than in a patch release, and even larger in a major release.
 
 \begin{quote}
     \textit{H1a: A minor release has more lines changed than a patch release on average.}
@@ -927,34 +927,48 @@ First, we observe how the semantic version numbers predict the number of changed
 
 Our null hypothesis is that the semantic version number and type does not have an effect on the number of lines changed in a new release compared to the previous version.
 
-The OLS regression results with \textit{patch} being the reference level can be seen in Table \ref{tab:linreg_lines}. We used the formula $ log(change) \sim C(repo) + C(type) $, where the $change$ is the number of lines changed, $repo$ is the repository's name and $type$ is the semantic version type as string (major, minor or patch). The $log()$ is used for the number of lines changed because a larger release is expected to have exponentially more lines changed, and the $C()$ signals the \texttt{statsmodels} package that the variable is a nominal variable. The resulting linear regression equation 
-
-\[ F(61,3417) = 30.87, p < .000 \]
-
-with $R^2 = .355$ is found to be significant, based on which we reject the null hypothesis. Surprisingly, the major version's coefficient is twice lower than the minor version's, which is contrary to our expectations. The number of lines changed were expected to be higher in a major release than in a minor, but this was found not to be true. We partially contribute this to the misclassification due to parallel versioning, since most projects support only major versions parallelly — if they do. Because of this, the most falsely labelled versions are major versions, which causes inconsistency when determining the number of lines changed.
-
-\begin{table}
-    \centering
-    %\resizebox{\textwidth}{!}{%
-        \begin{tabular}{|c|c|c|c|c|c|c|}
-            \hline
-            \textbf{Variable} & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P>|t|} & \multicolumn{2}{|c|}{\textbf{[0.025  0.975]}} \\
-            \hline
-            major & 0.87 & 0.2 & 4.0 & 0.0 & 0.43 & 1.3 \\
-            minor & 1.61 & 0.2 & 10.3 & 0.0 & 1.3 & 1.9 \\
-            \hline
-        \end{tabular}
-    %}
-    \caption{OLS regression results for number of line changes with semantic version type as predictor.}
+\begin{table}[!htbp] \centering
+    \begin{tabular}{@{\extracolsep{5pt}}lc}
+    \\[-1.8ex]\hline
+    \hline \\[-1.8ex]
+    & \multicolumn{1}{c}{\textit{Dependent variable:}} \
+    \cr \cline{1-2}
+    \\[-1.8ex] & (1) \\
+    \hline \\[-1.8ex]
+     Major & 0.649$^{***}$ \\
+      & (0.193) \\
+     Minor & 1.642$^{***}$ \\
+      & (0.150) \\
+     Intercept & 17.925$^{***}$ \\
+      & (3.859) \\
+    \hline \\[-1.8ex]
+     Observations & 4,386 \\
+     $R^2$ & 0.296 \\
+     Adjusted $R^2$ & 0.286 \\
+     Residual Std. Error & 3.856(df = 4322)  \\
+     F Statistic & 28.851$^{***}$ (df = 63.0; 4322.0) \\
+    \hline
+    \hline \\[-1.8ex]
+    \textit{Note:} & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+    \end{tabular}
+    \caption{Both major and minor versions change significantly more lines than a patch release, but the major version's coefficient is lower.}
     \label{tab:linreg_lines}
 \end{table}
+
+The OLS regression results with \textit{patch} being the reference level can be seen in Table \ref{tab:linreg_lines}. We used the formula $ log(change) \sim C(repo) + C(type) $, where the $change$ is the number of lines changed, $repo$ is the repository's name and $type$ is the semantic version type as string (major, minor or patch). The $log()$ is used for the number of lines changed because a larger release is expected to have exponentially more lines changed, and the $C()$ signals the \texttt{statsmodels} package that the variable is a nominal variable. The resulting linear regression equation 
+
+\[ F(63,4322) = 28.851, p < .000 \]
+
+with $R^2 = .296$ is found to be significant, based on which we reject the null hypothesis. Surprisingly, the major version's coefficient is twice lower than the minor version's, which is contrary to our expectations. The number of lines changed were expected to be higher in a major release than in a minor, but this was found not to be true. We partially contribute this to the misclassification due to parallel versioning, since most projects support only major versions parallelly (if they do at all). Because of this, the most falsely labelled versions are major versions, which causes inconsistency when determining the number of lines changed.
+
+
 
 \subsubsection{Correlation between network metrics}
 In Section \ref{sec:patterns} we observed that the collaboration network metrics can be dependent on each other. In this section, we analyze their correlation by creating a matrix of correlations, which is depicted in Figure \ref{fig:corr_matrix}.
 
 Correlation coefficients, whose value is between 0.9 and 1.0 are classified as very highly correlated. Values between magnitudes 0.7 and 0.9 are considered as highly correlated, between 0.5 and 0.7 the two variables are moderately correlated, and datasets with a correlation coefficient between 0.3 and 0.5 are categorized as having low correlation. Variables, whose correlation coefficient is between 0 and 0.3 do not have any significant correlation, as the two datasets are so different that the occasional similarities are most likely caused by chance and no underlying correlation. These ranges are also applicable to values below 0 with a reversed sign, and the negative sign signaling an inverse relationship.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/quantitative/corr_matrix/corr_before.png}
     \caption{Correlation matrix of release regularity, lines changed and the other collaboration metrics before the release.}
@@ -1039,44 +1053,76 @@ In order to confirm or reject the above hypotheses, we perform an Ordinary Least
 
  where $m_1$ is the network metric value for one of the four chosen measures before the release, $m_2$ is directly after the release, $N_1$ is the number of nodes in the network before the release, and $C(repo)$ is the categorical value of the repository name as a dummy variable. The 'before' metric is calculated for the network generated from the period starting 28 days before and ending on the release day, and the 'after' value is calculated from the release day until 28 days past the release. We use the difference between the 'before' and 'after' values to represent the change. The number of nodes is also added in the regression to normalize for the inherent differences that stem from the project's size.
 
-\begin{table}
-    \centering
+ \begin{table}[!htbp] \centering
     \resizebox{\textwidth}{!}{%
-        \begin{threeparttable}
-            \begin{tabular}{|c|r|r|r|r|r|r|}
-                \hline
-                \textbf{Variable (m)} & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P>|t|} & \multicolumn{2}{|c|}{\textbf{[0.025  0.975]}} \\
-                \hline
-                \hline
-                \multicolumn{7}{|c|}{$log(change) \sim (m_2 - m_1) + N_1 + C(repo)$*} \\
-                \hline
-                Clustering coeff & $-0.18$ & $0.29$ & $-0.63$ & $0.53$ & $-0.74$ & $0.38$ \\
-                Mean path length & $0.41$ & $0.25$ & $1.67$ & $0.10$ & $-0.07$ & $0.90$ \\
-                Hierarchy & $-0.29$ & $0.49$ & $-0.60$ & $0.55$ & $-1.26$ & $0.67$ \\
-                C/P (degree) & $-0.06$ & $0.19$ & $-0.29$ & $0.77$ & $-0.43$ & $0.32$ \\
-                C/P (k-core) & $0.08$ & $0.26$ & $0.32$ & $0.75$ & $-0.42$ & $0.58$ \\
-                \hline
-                \multicolumn{7}{|c|}{$change \sim (m_2 - m_1) + N_1 + C(repo)$**} \\
-                \hline
-                Clustering coeff & \num{4.2e+8} & \num{2.0e+8} &$2.05$ & $0.04$ & \num{0.2e+8} & \num{8.2e+8} \\
-                Mean path length & \num{0.7e+8} & \num{1.8e+8} & $0.39$ & $0.70$ & \num{-2.8e+8} & \num{4.2e+8} \\
-                Hierarchy & \num{1.0e+8} & \num{3.5e+8} & $0.29$ & $0.77$ & \num{-5.9e+8} & \num{7.9e+8} \\
-                C/P (degree) & \num{0.8e+8} & \num{1.4e+8} & $0.59$ & $0.55$ & \num{-1.9e+8} & \num{3.5e+8} \\
-                C/P (k-core) & \num{-0.5e+8} & \num{1.8e+8} & $-0.28$ & $0.78$ & \num{-4.1e+8} & \num{3.1e+8} \\
-                \hline
-            \end{tabular}
-            \begin{tablenotes}
-                \small
-                \item  *$F(61,4016) = 30.2, p < .000, R^2 = 0.31$
-                \item **$F(61, 4016) = 5.1, p< .000, R^2 = 0.07$
-            \end{tablenotes}
-        \end{threeparttable}
+    \begin{tabular}{@{\extracolsep{5pt}}lccccc}
+    \\[-1.8ex]\hline
+    \hline \\[-1.8ex]
+    & \multicolumn{5}{c}{\textit{Dependent variable:}} \
+    \cr \cline{5-6}
+    \\[-1.8ex] & (1) & (2) & (3) & (4) & (5) \\
+    \hline \\[-1.8ex]
+     Clustering coeff & -0.18$^{}$ & & & & \\
+      & (0.29) & & & & \\
+     Core periphery degree & & & & -0.06$^{}$ & \\
+      & & & & (0.19) & \\
+     Core periphery k-core & & & & & 0.08$^{}$ \\
+      & & & & & (0.26) \\
+     Hierarchy & & & -0.29$^{}$ & & \\
+      & & & (0.49) & & \\
+     Mean path length & & 0.41$^{*}$ & & & \\
+      & & (0.25) & & & \\
+    \hline \\[-1.8ex]
+     Observations & 4,078 & 4,078 & 4,078 & 4,078 & 4,078 \\
+     $R^2$ & 0.31 & 0.31 & 0.31 & 0.31 & 0.31 \\
+     Residual Std. Error & 0.29 & 0.25 & 0.49 & 0.19 & 0.26 \\
+     F Statistic & 30.2$^{***}$ & 30.2$^{***}$ & 30.2$^{***}$ & 30.2$^{***}$ & 30.2$^{***}$ \\
+     & (df = 61; 4016) & (df = 61; 4016) & (df = 61; 4016) & (df = 61; 4016) & (df = 61; 4016) \\
+    \hline
+    \hline \\[-1.8ex]
+    \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+    \end{tabular}
     }
-    \caption{Change size and network measures regression results.}
-    \label{tab:size-metrics}
+    \caption{The network statistics do not have a statistically significant influence on the \textbf{log} of the number of lines changed in the release.}
+    \label{tab:size-metrics-log}
 \end{table}
 
-The regression results are depicted in Table \ref{tab:size-metrics}. We run the regressions for both the logarithm of the change size, and the change size itself for all the metrics one by one, a total of 10 runs. With the alpha $\alpha = 0.05$ significance level, the only variable where $p < \alpha$ is the clustering coefficient in the normal, non-logarithmic change size regression with a value of $p = 0.04$. Based on this result, we can only reject the null hypothesis for the clustering coefficient, and we cannot reject it for the other metrics. Surprisingly the coefficient of the clustering coefficient is positive, which is contrary to our expectations. Our theory expected the clustering coefficient (CC) rise before a release, and drop afterwards, which would result in a negative value when subtracting the 'before' value from the 'after' value. Therefore, in the regression model the coefficient of CC would be negative, indicating an inverse relationship between the number of lines changed in the release and the CC change. Our findings, however, provide evidence for a positive linear relationship, which indicates that a unit of increase in the CC after the release corresponds to \num{4.2e+8} more lines changed in the release. Since the CC can only be between $0$ and $1$, we use $0.1$ as a base unit, which means that a $0.1$ increase in CC from before to after a new version causes the release to have \num{4.2e+7} more lines changed on average.
+
+\begin{table}[!htbp] \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{\extracolsep{5pt}}lccccc}
+    \\[-1.8ex]\hline
+    \hline \\[-1.8ex]
+    & \multicolumn{5}{c}{\textit{Dependent variable:}} \
+    \cr \cline{5-6}
+    \\[-1.8ex] & (1) & (2) & (3) & (4) & (5) \\
+    \hline \\[-1.8ex]
+     Clustering coeff & \num{4.2e+8}$^{**}$ & & & & \\
+      & (\num{2.0e+8}) & & & & \\
+     Core periphery degree & & & & \num{0.8e+8}$^{}$ & \\
+      & & & & (\num{1.4e+8}) & \\
+     Core periphery k-core & & & & & \num{-0.5e+8}$^{}$ \\
+      & & & & & (\num{1.8e+8}) \\
+     Hierarchy & & & \num{1.0e+8}$^{}$ & & \\
+      & & & (\num{3.5e+8}) & & \\
+     Mean path length & & \num{0.7e+8}$^{}$ & & & \\
+      & & (\num{1.8e+8}) & & & \\
+    \hline \\[-1.8ex]
+     Observations & 4,078 & 4,078 & 4,078 & 4,078 & 4,078 \\
+     $R^2$ & 0.07 & 0.07 & 0.07 & 0.07 & 0.07 \\
+     Residual Std. Error & \num{2.0e+8} & \num{1.8e+8} & \num{3.5e+8} & \num{1.4e+8} & \num{1.8e+8} \\
+     F Statistic & 5.1$^{***}$ & 5.1$^{***}$ & 5.1$^{***}$ & 5.1$^{***}$ & 5.1$^{***}$ \\
+     & (df = 61; 4016) & (df = 61; 4016) & (df = 61; 4016) & (df = 61; 4016) & (df = 61; 4016) \\
+    \hline
+    \hline \\[-1.8ex]
+    \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+    \end{tabular}
+    }
+    \caption{Only the clustering coefficient has a significance level of less than $0.05$ for explaining the number of lines changed in the new version.}
+    \label{tab:size-metrics-normal}
+\end{table}
+
+The regression results are depicted in Table \ref{tab:size-metrics-log} and \ref{tab:size-metrics-normal}. We run the regressions for both the logarithm of the change size, and the change size itself for all the metrics one by one, a total of 10 runs. With the alpha $\alpha = 0.05$ significance level, the only variable where $p < \alpha$ is the clustering coefficient in the normal, non-logarithmic change size regression with a value of $p = 0.04$. Based on this result, we can only reject the null hypothesis for the clustering coefficient, and we cannot reject it for the other metrics. Surprisingly the coefficient of the clustering coefficient is positive, which is contrary to our expectations. Our theory expected the clustering coefficient (CC) rise before a release, and drop afterwards, which would result in a negative value when subtracting the 'before' value from the 'after' value. Therefore, in the regression model the coefficient of CC would be negative, indicating an inverse relationship between the number of lines changed in the release and the CC change. Our findings, however, provide evidence for a positive linear relationship, which indicates that a unit of increase in the CC after the release corresponds to \num{4.2e+8} more lines changed in the release. Since the CC can only be between $0$ and $1$, we use $0.1$ as a base unit, which means that a $0.1$ increase in CC from before to after a new version causes the release to have \num{4.2e+7} more lines changed on average.
 
 \subsubsection{Release size and issues opened and closed}
 
@@ -1092,44 +1138,79 @@ One explanation could be for the increase in clustering coefficient that a large
 
 Since the number of issues are not related to the collaboration network, and they are unrelated variables, we leave it out of the regression. Also, we use the values from before and after the release separately, and without subtracting them from each other. The network metrics needed to consider the change between the 'before' and 'after' values because the change is measured from 0 on a scalar scale, but that is not necessarily the normal value in a network. The number of issues, on the other hand, are 0 by default, when there is no activity or no issues being created.
 
-Table \ref{tab:size-issues} shows the OLS regression results for the number of issues opened and closed, both for 28 days before the release date and 28 days after it, respectively. We run the model for both the logarithm of the number of lines changed and the normal values separately. Two of our variables do not exceed the $\alpha = 0.05$ significance level, these are the number of issues closed before, and number of issues closed after a release, both with the logarithmic scale of number of lines changed.
+Table \ref{tab:size-issues-log} and \ref{tab:size-issues} and shows the OLS regression results for the number of issues opened and closed, both for 28 days before the release date and 28 days after it, respectively. We run the model for both the logarithm of the number of lines changed and the normal values separately. All four of our variables do not exceed the $\alpha = 0.05$ significance level for the $log$ of number of lines changed; however, this cannot be said for the number of lines changed without the logarithm, as none of them reach the required significance level.
 
-\begin{table}
-    \centering
+\begin{table}[!htbp] \centering
     \resizebox{\textwidth}{!}{%
-        \begin{threeparttable}
-            \begin{tabular}{|c|r|r|r|r|r|r|}
-                \hline
-                \textbf{Variable (m)} & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P>|t|} & \multicolumn{2}{|c|}{\textbf{[0.025  0.975]}} \\
-                \hline
-                \hline
-                \multicolumn{7}{|c|}{$log(change) \sim m_i + C(repo)$*} \\
-                \hline
-                Issues opened (before) & $-0.0056$ & $0.003$ & $-1.933$ & $0.053$ & $-0.011$ & $0.000$ \\
-                Issues closed (before) & $-0.0132$ & $0.004$ & $-3.275$ & $0.001$ & $-0.021$ & $-0.005$ \\
-                Issues opened (after) & $-0.0031$ & $0.003$ & $-1.004$ & $0.315$ & $-0.009$ & $0.003$ \\
-                Issues closed (after) & $-0.0064$ & $0.003$ & $-2.033$ & $0.042$ & $-0.013$ & $0.000$ \\
-                \hline
-                \multicolumn{7}{|c|}{$change \sim m_i + C(repo)$**} \\
-                \hline
-                Issues opened (before) & \num{-2.2e+06} & \num{1.9e+06} &$-1.176$ & $0.240$ & \num{-6e+06} & \num{1.5e+06} \\
-                Issues closed (before) & \num{-3.6e+06} & \num{2.7e+06} & $-1.362$ & $0.173$ & \num{-8.83e+06} & \num{1.59e+06} \\
-                Issues opened (after) & \num{-3.3e+06} & \num{2e+06} &$-1.665$ & $0.096$ & \num{-7.2e+06} & \num{5.9e+05} \\
-                Issues closed (after) & \num{-2.8e+06} & \num{2.1e+06} & $-1.355$ & $0.176$ & \num{-6.86e+06} & \num{1.25e+06} \\
-                \hline
-            \end{tabular}
-            \begin{tablenotes}
-                \small
-                \item  *$F(62,5153) = 30.3, p < .000, R^2 = 0.31$
-                \item **$F(62,5153) = 6.7, p < .000, R^2 = 0.08$
-            \end{tablenotes}
-        \end{threeparttable}
+    \begin{tabular}{@{\extracolsep{5pt}}lcccc}
+    \\[-1.8ex]\hline
+    \hline \\[-1.8ex]
+    & \multicolumn{4}{c}{\textit{Dependent variable: Number of lines changed (log)}} \
+    \cr \cline{4-5}
+    \\[-1.8ex] & (1) & (2) & (3) & (4) \\
+    \hline \\[-1.8ex]
+     Intercept & 19.567$^{***}$ & 19.582$^{***}$ & 19.567$^{***}$ & 19.567$^{***}$ \\
+      & (3.873) & (3.873) & (3.872) & (3.873) \\
+     Issues closed (log) $t_1$ & & & & -0.008$^{**}$ \\
+      & & & & (0.003) \\
+     Issues closed (log) $t_{-1}$ & & & -0.016$^{***}$ & \\
+      & & & (0.005) & \\
+     Issues opened (log) $t_1$ & & -0.007$^{**}$ & & \\
+      & & (0.003) & & \\
+     Issues opened (log) $t_{-1}$ & -0.007$^{**}$ & & & \\
+      & (0.003) & & & \\
+    \hline \\[-1.8ex]
+     Observations & 5,216 & 5,216 & 5,216 & 5,216 \\
+     $R^2$ & 0.267 & 0.267 & 0.268 & 0.267 \\
+     Adjusted $R^2$ & 0.258 & 0.258 & 0.259 & 0.258 \\
+     Residual Std. Error & 3.873(df = 5153) & 3.873(df = 5153) & 3.872(df = 5153) & 3.873(df = 5153)  \\
+     F Statistic & 30.293$^{***}$ & 30.280$^{***}$ & 30.363$^{***}$  & 30.288$^{***}$  \\
+     &  (df = 62; 5153) & (df = 62.0; 5153) & (df = 62; 5153) & (df = 62; 5153) \\
+     \hline
+    \hline \\[-1.8ex]
+    \textit{Note:} & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+    \end{tabular}
     }
-    \caption{Change size and number of issues opened and closed.}
+    \caption{The number of issues opened and closed both predict the $log$ of number of lines changed with a negative coefficient.}
+    \label{tab:size-issues-log}
+\end{table}
+
+\begin{table}[!htbp] \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{\extracolsep{5pt}}lcccc}
+    \\[-1.8ex]\hline
+    \hline \\[-1.8ex]
+    & \multicolumn{4}{c}{\textit{Dependent variable:}} \
+    \cr \cline{4-5}
+    \\[-1.8ex] & (1) & (2) & (3) & (4) \\
+    \hline \\[-1.8ex]
+     Intercept & \num{3.1e+8}$^{}$ & \num{3.2e+8}$^{}$ & \num{3.1e+8}$^{}$ & \num{3.1e+8}$^{}$ \\
+      & (\num{2.5e+9}) & (\num{2.5e+9}) & (\num{2.5e+9}) & (\num{2.5e+9}) \\
+     Issues closed $t_1$ & & & & \num{-2.5e+6}$^{}$ \\
+      & & & & (\num{2.0e+6}) \\
+     Issues closed $t_{-1}$ & & & \num{-4.9e+6}$^{}$ & \\
+      & & & (\num{3.4e+6}) & \\
+     Issues opened $t_1$ & & \num{-3.2e+6}$^{*}$ & & \\
+      & & (\num{2.0e+6}) & & \\
+     Issues opened $t_{-1}$ & \num{-2.0e+6}$^{}$ & & & \\
+      & (\num{1.9e+6}) & & & \\
+    \hline \\[-1.8ex]
+     Observations & 5,216 & 5,216 & 5,216 & 5,216 \\
+     $R^2$ & 0.075 & 0.075 & 0.075 & 0.075 \\
+     Adjusted $R^2$ & 0.064 & 0.064 & 0.064 & 0.064 \\
+     Residual Std. Error & \num{2.5e+9}(df = 5153) & \num{2.5e+9}(df = 5153) & \num{2.5e+9}(df = 5153) & \num{2.5e+9}(df = 5153)  \\
+     F Statistic & 6.716$^{***}$ & 6.744$^{***}$  & 6.733$^{***}$ & 6.724$^{***}$ \\
+      &  (df = 62.0; 5153.0) & (df = 62.0; 5153.0) & (df = 62.0; 5153.0) & (df = 62.0; 5153.0) \\
+     \hline
+    \hline \\[-1.8ex]
+    \textit{Note:} & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+    \end{tabular}
+    }
+    \caption{The amount of lines changed also has a negative coefficient with the issues opened and closed, but the $p$ values are not significant.}
     \label{tab:size-issues}
 \end{table}
 
-Interestingly, there is a negative correlation between the number of lines changed and the number of issues closed before and after the release. Because we have seen that patch releases tend to have the lowest number of lines changed in the source code, by combining the results we can see that the patch releases result in more issues closed. From a development point of perspective, this can be explained by the difference in handling a bug and a feature issue differently: By the definition of the semantic versioning system, a major and a minor release introduces new features to the software, whereas a patch mostly contains bugs. This creates an imbalance in the number of lines changed, as a completely new feature is likely to require more changes to the source code than a bug. Based on the data it can be confirmed that major and minor releases have much more lines changed due to incorporating overwhelmingly feature issues, whereas patch releases resolve many bug issues with only small number of lines changed. We separated the issues opened before and after into two variables, but since both of them are significant according to the model, we do not draw conclusions regarding specifically closing the issue before or after the new version. Especially, because we have seen previously that the time of close can be somewhat arbitrary: Some projects can follow a release plan, in which they close the issues resolved in the new version shortly before the release, or they can also wait for the release first and close the issues afterwards in order to see the acceptance and reactions of the change (or just by pure administration purposes). 
+Interestingly, there is a negative correlation between the number of lines changed and the number of issues closed and opened both before and after the release. Because we have seen that patch releases tend to have the lowest number of lines changed in the source code, by combining the results we can see that the patch releases result in more issues closed. From a development point of perspective, this can be explained by the difference in handling a bug and a feature issue differently: By the definition of the semantic versioning system, a major and a minor release introduces new features to the software, whereas a patch mostly contains bugs. This creates an imbalance in the number of lines changed, as a completely new feature is likely to require more changes to the source code than a bug. Based on the data it can be confirmed that major and minor releases have much more lines changed due to incorporating overwhelmingly feature issues, whereas patch releases resolve many bug issues with only small number of lines changed. We separated the issues opened before and after into two variables, but since both of them are significant according to the model, we do not draw conclusions regarding specifically closing the issue before or after the new version. Especially, because we have seen previously that the time of close can be somewhat arbitrary: Some projects can follow a release plan, in which they close the issues resolved in the new version shortly before the release, or they can also wait for the release first and close the issues afterwards in order to see the acceptance and reactions of the change (or just by pure administration purposes). 
 
 \subsubsection{Normalizing the network metrics}
 
@@ -1157,7 +1238,7 @@ The \textbf{core-periphery ratio} already takes into account the number of nodes
 
 After applying the normalization described above on our dataset, box plots are created to show the overall trend in measures at a release. However, this requires to gather and calculate metrics for more than two time periods (before and after a release) in order to well represent the changes over time. In order to make the plots clearer, we shift the time window, so that the chosen day is not at the beginning, but in the middle of the observation period. This is depicted in Figure \ref{fig:time-window}, where the numbers on the timeline represent the number of weeks passed relative to the release day.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/time_window.png}
     \caption{Time windows in weeks and their respective variable names.}
@@ -1168,10 +1249,10 @@ Each metric's normalized value is calculated for each release's corresponding fi
 
 The results for \textbf{mean path length} can be seen in Figure \ref{fig:box-mean-path}. Contrary to our expectations, we see an increase in mean path length up until the release, and a sharp decrease afterwards. A decrease in mean path length means less interdependency among developers, as fewer people are fulfilling the 'middle man' role within the network, which was expected at a release since closer collaboration is required and different tasks, therefore developers have to move out of their usual role and collaborate with those, who they do not often collaborate with. The reverse in the results suggests that the level of activity is not as high as expected at a release. The likely reason is that around the releases not many changes are approved, and the focus is on finishing up the current tasks. Before the shorter mean path length can be explained with the rush to finish the tasks, and after it can be explained with the bug reports and new issues, and consequently their activity from the developers' side.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/pointplots/mean_path_length.png}
-    \caption{Normalized mean path length values before, during and after releases.}
+    \caption{Normalized mean path length reaches its maximum at a release, and then sharply falls below usual.}
     \label{fig:box-mean-path}
 \end{figure}
 
@@ -1186,9 +1267,7 @@ After observing the total $53$ plots, we identify four main reoccurring patterns
     \item \textit{Decline-rise (6)}: Repositories following this pattern show the opposite observation than the aggregated view that is, their metric declines until the release date, then it rises again.
 \end{itemize}
 
-Examples for all four categories are shown in Figure \ref{fig:box-mean-path-patterns}. The first, flat type can be easily interpreted: in some projects, there is no relation between release and mean path length, and the distance between developers is the same all along the project lifecycle. The rise-decline pattern can be explained with the network getting bigger or with the absence of core members at a release, which would lengthen the average distance between developers. Therefore, the opposite, decline-rise pattern is an example of the heavier involvement of the core, who also connect to more periphery due to their increased activity and organizational tasks. Finally, the flat-decline pattern suggests that some projects can be unaffected by the preparation for a new version, and they are only affected at the later timespans, when the core is more involved (as explained before).
-
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.49\textwidth}
         \centering
@@ -1214,36 +1293,38 @@ Examples for all four categories are shown in Figure \ref{fig:box-mean-path-patt
         \caption{Decline-rise (\textit{swaywm/sway})}
         \label{fig:mean-path-pattern4}
     \end{subfigure}
-    \caption{Four observed patterns for mean path length.}
+    \caption{The four observed patterns for mean path length.}
     \label{fig:box-mean-path-patterns}
 \end{figure}
 
-We also performed the same analysis on the \textbf{normalized clustering coefficient}, however, the results are inconclusive, as the majority of all release's normalized clustering coefficient is $0$. Therefore, we removed the releases from the plot data, which had at least one CC value equal to $0$. The resulting box plot (shown in Figure \ref{fig:clustering-box}) follows a \textit{flat-rise} pattern, which is especially visible at timespan $t2$, where the box is significantly higher than the other periods. However, the removal of 0-values reduced below 10\% the number of releases included in the observation, therefore we cannot conclude anything definitive regarding the clustering coefficient. For all repositories separately, the clustering coefficient boxplots can be seen in Appendix \ref{app:boxplots}. \\
+Examples for all four categories are shown in Figure \ref{fig:box-mean-path-patterns}. The first, flat type can be easily interpreted: in some projects, there is no relation between release and mean path length, and the distance between developers is the same all along the project lifecycle. The rise-decline pattern can be explained with the network getting bigger or with the absence of core members at a release, which would lengthen the average distance between developers. Therefore, the opposite, decline-rise pattern is an example of the heavier involvement of the core, who also connect to more periphery due to their increased activity and organizational tasks. Finally, the flat-decline pattern suggests that some projects can be unaffected by the preparation for a new version, and they are only affected at the later timespans, when the core is more involved (as explained before).
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/pointplots/clustering_coeff_filtered.png}
     \caption{Clustering coefficient release trend after the removal of 0 values.}
     \label{fig:clustering-box}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/quantitative/pointplots/issues.png}
-    \caption{Number of issues opened and closed in different timespans relative to a release.}
-    \label{fig:issues-box}
-\end{figure}
+We also performed the same analysis on the \textbf{normalized clustering coefficient}, however, the results are inconclusive, as the majority of all release's normalized clustering coefficient is $0$. Therefore, we removed the releases from the plot data, which had at least one CC value equal to $0$. The resulting box plot (shown in Figure \ref{fig:clustering-box}) follows a \textit{flat-rise} pattern, which is especially visible at timespan $t2$, where the box is significantly higher than the other periods. However, the removal of 0-values reduced below 10\% the number of releases included in the observation, therefore we cannot conclude anything definitive regarding the clustering coefficient. For all repositories separately, the clustering coefficient pointplots can be seen in Appendix \ref{app:boxplots}. \\
 
 The same method is used to visualize the \textbf{number of issues opened and closed} for the releases. This is depicted in Figure \ref{fig:issues-box}. We can see a clear increase in both issues opened and issues closed. The number of issues opened shows a steady and constant increase  for all five timespans, which can mean that the rate at which new issues are opened tends to increase in general within a project over time. If the issues opened slowly increases over time regardless of other events, such as a new release, then naturally the $t_2$ timespan will show a slight increase in opened issues compared to the $t_{-2}$, since it always takes into account a time period 5 months later, and by that time the issue rate could have changed. In order to attribute the increase in number of issues opened, we would need to see a sharp change at $t_0$ to rule out the option of the steady increase.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/quantitative/pointplots/issues.png}
+    \caption{The issue activities are higher after a release than before, but at all times, there are more issues opened than closed.}
+    \label{fig:issues-box}
+\end{figure}
 
 The number of issues closed, on the other hand, shows a much more sudden change. Up until, and including the timespan containing the release day, the average stays zero, but after the release, in $t_1$ and $t_2$ we see a sharp rise. This indicates that a new version and number of issues closed are related. The issues being closed are likely to be those features and bugs that were implemented and distributed with the new release. Therefore, we can say that most projects manage the issues by first implementing and deploying it, and only then closing it. Otherwise, we would see the sharp increase before the release timespan, and not after it. \\
 
 Just with the other metrics, the \textbf{core-periphery ratio} is also heavily dependent on the unique properties of the observed repositories, which is also the cause why the box plot of all projects aggregated does not show any change, regardless of the timespans. On further investigation, we found that a significant number (16) of repositories have the box plots 'stuck' to the maximum value $1$. This is attributed to the very low number of nodes in the generated networks: when there are only 2 or 3 developers in the network, their degree centralities are more likely to be in the top 20th percentile starting from zero. We remove these projects from the aggregation not to obscure the trends of the other repositories with a more extended developer network, and depict their box plot for the degree centralization core-periphery ratio in Figure \ref{fig:cp-box}.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/pointplots/cp_ratio.png}
-    \caption{Core/periphery ratio within relative timespans to a release.}
+    \caption{The core/periphery ratio shows a U-shape, where the minimum is reached at a release, showing that the DCN becomes significantly less clustered around that time.}
     \label{fig:cp-box}
 \end{figure}
 
@@ -1256,20 +1337,20 @@ With the remaining 45 repositories in aggregation a slight V-shaped trend can be
     \item \textit{Wave}: These repositories show a wave form with the boxplots, as they start on a normal level, then there is a significant increase in $t_{-1}$, a continued decrease until $t_1$ and then a slight increase to reach the normal level again at $t_2$.
 \end{itemize}
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/pointplots/cp_ratio_trends.png}
-    \caption{Core/periphery ratio trends.}
+    \caption{The four abservable core/periphery trneds (rising, falling, parabola and wave), showing the most popular parabola as the most numerous, which causes the overall C/P to also take this form.}
     \label{fig:cp-box-grid}
 \end{figure}
 
 
 There could be several organizational reasons why these patterns exist. For the rising trend in the core-periphery ratio, the obvious reason could be the rush before the release to include as much change as possible before it is released. This increase in activity involves more non-core developers, which keeps the ratio low before the release. After the new version is available, however, the focus shifts from development to planning, which generates more core involvement than from the periphery developers, which raises the ratio value. The opposite, falling pattern could indicate the opposite effect: before the release, the development team might announce a 'code-freeze', which prohibits the change of code before the release (or rather merging it into the release candidate). Since only authorized developers can change the release candidate, who are most likely core members, the cp ratio gets high. After the release, the sidelined changes are included and the bug fixing period starts, which requires collaboration effort from not just the core developers, therefore the ratio decreases. The wave pattern could be the same effect as in the falling case, just happening in a much shorter period of time, which causes the outermost timespans to already show the normal ratio level. \\
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/pointplots/hierarchy.png}
-    \caption{Hierarchy boxplot.}
+    \caption{The hierarchy tends to take on the highest values (lowest hierarchy in the network) at a release, and stays relatively high after it.}
     \label{fig:hierarchy-box}
 \end{figure}
 
@@ -1287,7 +1368,7 @@ The issue management also differs within each project, as each follows a differe
 
 To come to a general conclusion on what trends are applicable for the majority of OSS projects, we looked at a large number of randomly selected repositories in order to generalize how the developer network properties change on average in Section \ref{sec:quantitative}. After mining the selected repositories and discarding the not minable and badly versioned projects, we were left with 68 repositories with a diverse range of used languages, sizes and release cycles. Based on our observations in Section \ref{sec:patterns}, we set eight hypotheses regarding the behavior of the DCN at a new release. A summary of these, along with the results, can be found in Table \ref{tab:hypothesis-results}. 
 
-\begin{table}
+\begin{table}[!htbp]
     \centering
     \resizebox{\textwidth}{!}{%
         \begin{tabular}{|l|p{5cm}|l|l|}
@@ -1306,7 +1387,7 @@ To come to a general conclusion on what trends are applicable for the majority o
             \hline
             $H_5$ & More periphery developers are involved at a release. & core/periphery ratio & Supported \\
             \hline
-            $H_{6a}$ &  More issues opened before and after a release means more lines changed in the new version. & issues opened & Not supported \\
+            $H_{6a}$ &  More issues opened before and after a release means more lines changed in the new version. & issues opened & Reverse supported \\
             \hline
             $H_{6b}$ &  More issues closed before and after a release means more lines changed in the new version. & issues opened & Reverse supported \\
             \hline
@@ -1319,7 +1400,7 @@ To come to a general conclusion on what trends are applicable for the majority o
 
 Regarding $H_{1a}$ and $H_{1b}$, we could only partially prove the positive relation between the semantic version number and the volume of source code change. While we proved that both minor and major releases contain more source code line changes than a patch release ($H_{1a}$ supported), we could not prove that a major release is also more significant in terms of lines than a minor release ($H_{1b}$ rejected). We contributed the latter result partially to the ambiguous version naming, such as parallel support for multiple major versions and the problem of how to classify \textit{beta} and \textit{rc} versions.
 
-However, the rejection of $H_{1b}$ is consistent with the findings of $H_{6b}$. Contrary to our expectations, the number of issues closed before and after a release negatively, and not positively correlate with the magnitude of the semantic version number. This implies that a major release does not lead to as many closed issues as a patch, thereby proving, that the majority of tickets and issues are closed with patch releases. Combined with $H_{1b}$, we can reasonably propose that major releases mainly focus on new, experimental features. Regarding issues opened, our model also found a negative relationship, but the confidence interval was larger than our accepted significance level, and therefore we cannot support the H6a statement.
+However, the rejection of $H_{1b}$ is consistent with the findings of $H_{6a}$ and $H_{6b}$. Contrary to our expectations, the number of issues closed and opened, both before and after a release negatively, and not positively correlate with the magnitude of the semantic version number. This implies that a major release does not lead to as many changes in issues as a patch, thereby proving, that the majority of tickets and issues are opened and closed with patch releases. Combined with $H_{1b}$, we can reasonably propose that major releases mainly focus on new, experimental features.
 
 Considering the collaboration network structure at releases, we are also presented with mixed results. On one hand, we could find substantial evidence for the increased involvement of the periphery developers within a project ($H_5$). Their theorized role is to help out in the preparation tasks, such as regression testing, but also they could be rushing to add changes to the source code, so that their modifications are included in the new version as well.
 
