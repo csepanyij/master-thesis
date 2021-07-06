@@ -396,7 +396,7 @@ Statistics for issues like average close time also prove to be difficult because
 
 \section{Collaboration pattern analysis}
 \label{sec:patterns}
-The focus of our analysis is how the collaboration network of FLOSS projects changes during their lifecycle. Moreover, we are also interested in the cause of the changes, rather than just observing the changes. Therefore, we determined two types of events that we want to observe to see the effects on the collaboration. The events during a project's lifecycle can be one of two types: regular or irregular events. Regular events repeat over time, with roughly the same time passing between events. This can be a holiday season (e.g., summer holidays or at the end of the year) or regular software releases. Our research focuses on only the software releases, and we suggest the analysis of collaboration and seasonality as a future research topic. In contrast to releases, which are usually well documented and easily discoverable when exactly they were released, irregular events are harder to discover, as these do not necessarily stem from within the developer community but from external sources. Examples could be a supporting company's organizational restructuring, the sudden increase of work from home during the Covid-19 pandemic, or mass layoffs within the support team. In our analysis, we mainly focus on layoff events, because of our expectation that this will have the largest effect on collaboration. Usually when a company develops an open-source software, the company relies on the external community of the project, but the core developers are mainly from the company. Therefore, when a company officially pulls out from further development, this results in the removal of most core developers in a short amount of time. Our main goal is to identify how this affects the collaboration network, how the network restructures itself, or if any restructuring occurs at all. %TODO
+The focus of our analysis is how the collaboration network of FLOSS projects changes during their lifecycle. Moreover, we are also interested in the cause of the changes, rather than just observing the changes. Therefore, we determined two types of events that we want to observe to see the effects on the collaboration. The events during a project's lifecycle can be one of two types: regular or irregular events. Regular events repeat over time, with roughly the same time passing between events. This can be a holiday season (e.g., summer holidays or at the end of the year) or regular software releases. Our research focuses on only the software releases, and we suggest the analysis of collaboration and seasonality as a future research topic. In contrast to releases, which are usually well documented and easily discoverable when exactly they were released, irregular events are harder to discover, as these do not necessarily stem from within the developer community but from external sources. Examples could be a supporting company's organizational restructuring, the sudden increase of work from home during the Covid-19 pandemic, or mass layoffs within the support team. In our analysis, we mainly focus on releases, because unexpected events such as layoffs are difficult to collect. The main source for such events are general news sources, which are often based on rumors rather than facts, therefore they can be unreliable. Also, layoffs can have wildly different effects on the collaboration network based on how much the support is being withdrawn, making general conclusions about these events much harder to find. On the other hand, releases can be more easily and reliably collected via git tags and GitHub releases. Our main goal is to observe how the DCN changes before, during and after a release, what patterns emerge and how these observations correlate with the project issues and release frequency.
 
 As a first step, we conduct a qualitative analysis on several hand-picked repositories to observe the network statistics in detail and identify cause and effect relationships. In order to avoid bias when selecting repositories, we choose projects based on a variety of factors:
 
@@ -599,7 +599,7 @@ In contrast, the large projects have their K-core ratios consistently below $-2$
         \caption{Between 2020-01-06 and 2020-02-03}
         \label{fig:numpy-after}
     \end{subfigure}
-    \caption{\texttt{NumPy} collaboration network before and after the 2020-12-22 minor release, depicting how the netowrk becomes more numerous, it is also becoming more centralized.}
+    \caption{\texttt{NumPy} collaboration network before and after the 2020-12-22 minor release, depicting how the network becomes more numerous, it is also becoming more centralized.}
     \label{fig:core-periphery-numpy}
 \end{figure}
 
@@ -813,7 +813,7 @@ We use the \textit{GitHub Search}\footnote{\url{https://seart-ghs.si.usi.ch/}} t
 
 The main selection criterion is the number of commits, as this measures the best how much work has been put into the project. All other variables might change in any direction over time; for example, repos can be unwatched, stars can be removed, forks can be deleted or merged, and contributors might decline over time. However, the number of commits always rises as time passes.
 
-In our qualitative analysis and during its mining process, we have seen that the larger projects, which showed activity in a 28-day window regardless of whether a release was coming up or not, had at least 5000 commits; this is why we used this number as a filter. The other criteria (contributors, issues, pull requests, etc\dots) are filtered so that we are making sure that all the GitHub functionalities are being used, e.g., issues are managed in GitHub, it has at least a minimum number of contributors so the networks will not be empty, and it has at least a small community due to having stars, watchers and being forked. We exclude forked results, as we are only interested in the main source code, and we mark the 'Has open issues' and 'Has open pull requests' to filter for active projects.
+In our qualitative analysis and during its mining process, we have seen that the larger projects, which showed activity in a 28-day window regardless of whether a release was coming up or not, had at least 5000 commits; this is why we used this number as a filter. The other criteria (contributors, issues, pull requests, etc\dots) are filtered so that we are making sure that all the GitHub functionalities are being used, e.g., issues are managed in GitHub, it has at least a minimum number of contributors, so the networks will not be empty, and it has at least a small community due to having stars, watchers and being forked. We exclude forked results, as we are only interested in the main source code, and we mark the 'Has open issues' and 'Has open pull requests' to filter for active projects.
 
 Applying the above inclusion and exclusion criteria, the search resulted in 2211 repositories in total. We further narrow this result set down to 110 by randomized selection. Our goal is to analyze about 100 repositories, but this number is expected to be further reduced due to various mining and release problems. Therefore, we choose an extra ten repositories to compensate for the expected reduction.
 
@@ -1341,7 +1341,7 @@ With the remaining 45 repositories in aggregation, a slight V-shaped trend can b
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/pointplots/cp_ratio_trends.png}
-    \caption{The four abservable core/periphery trneds (rising, falling, parabola and wave), showing the most popular parabola as the most numerous, which causes the overall C/P to also take this form.}
+    \caption{The four observable core/periphery trends (rising, falling, parabola and wave), showing the most popular parabola as the most numerous, which causes the overall C/P to also take this form.}
     \label{fig:cp-box-grid}
 \end{figure}
 
@@ -1351,7 +1351,7 @@ There could be several organizational reasons why these patterns exist. The obvi
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/quantitative/pointplots/hierarchy.png}
-    \caption{The hierarchy tends to take on the highest values (lowest hierarchy in the network) at a release, and stays relatively high after it.}
+    \caption{The hierarchy tends to take on the highest values (the lowest hierarchy in the network) at a release, and stays relatively high after it.}
     \label{fig:hierarchy-box}
 \end{figure}
 
